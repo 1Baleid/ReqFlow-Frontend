@@ -104,6 +104,52 @@ Use these credentials to log in with different user roles:
 - **Manager**: Full access, approve/reject requirements, assign to team, manage workflow
 - **Team Member**: View assigned work, refine requirements, submit for review
 
+## Team Testing Assignments
+
+### Tester 1 — Client Role
+**Login:** `abdullah@kfupm.edu.sa` / `abdullah123`
+
+**Test these features:**
+- Create a new requirement
+- View requirement status and details
+- Respond to clarification requests
+- Track progress of submitted requirements
+
+**Write down:** Any bugs, confusing UI, or suggestions.
+
+---
+
+### Tester 2 — Manager Role
+**Login:** `khalid@kfupm.edu.sa` / `khalid123`
+
+**Test these features:**
+- Approve/reject requirements
+- Assign requirements to team members
+- View all requirements and team activity
+- Manage overall workflow
+
+**Write down:** Any bugs, confusing UI, or suggestions.
+
+---
+
+### Tester 3 — Team Member Role
+**Login:** `omar@kfupm.edu.sa` / `omar123`
+
+**Test these features:**
+- View assigned requirements
+- Refine requirement details
+- Submit requirements for review
+- Check workflow transitions
+
+**Write down:** Any bugs, confusing UI, or suggestions.
+
+---
+
+**Each tester should note:**
+1. Steps to reproduce any bugs
+2. What they expected vs. what happened
+3. Any UI/UX improvements they suggest
+
 ## Features
 
 - Login and role-based authentication
