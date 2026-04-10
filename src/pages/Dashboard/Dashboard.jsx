@@ -10,7 +10,7 @@ import EmptyState from '../../components/EmptyState'
 import StatCard from '../../components/StatCard'
 import ActivityFeed from '../../components/ActivityFeed'
 import {
-  currentUser,
+  getCurrentUser,
   requirements,
   activities,
   projectStats,
@@ -20,6 +20,7 @@ import {
 import './Dashboard.css'
 
 function Dashboard() {
+  const currentUser = getCurrentUser()
   const navigate = useNavigate()
   const [activeFilter, setActiveFilter] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')

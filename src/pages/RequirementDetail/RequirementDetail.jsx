@@ -1,7 +1,8 @@
+import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import MainLayout from '../../layouts/MainLayout'
 import Button from '../../components/Button'
-import { currentUser, requirements } from '../../data/mockData'
+import { getCurrentUser, requirements } from '../../data/mockData'
 import './RequirementDetail.css'
 
 // Extended mock data for the detail view
@@ -91,6 +92,7 @@ const STATUS_CONFIG = {
 }
 
 function RequirementDetail() {
+  const currentUser = getCurrentUser()
   const { id } = useParams()
   const navigate = useNavigate()
 
@@ -108,6 +110,29 @@ function RequirementDetail() {
   const normalizedStatus = requirement.status?.toLowerCase().replace(/\s+/g, '-') || 'draft'
   const statusConfig = STATUS_CONFIG[normalizedStatus] || STATUS_CONFIG.draft
 
+  // State for interactive features
+  const [commentText, setCommentText] = useState('')
+  const [comments, setComments] = useState(details.discussion)
+  const [criteriaList, setCriteriaList] = useState(details.acceptanceCriteria)
+  const [newCriteria, setNewCriteria] = useState('')
+  const [showAddCriteria, setShowAddCriteria] = useState(false)
+  const [linkedReqs, setLinkedReqs] = useState(details.linkedRequirements)
+  const [showLinkModal, setShowLinkModal] = useState(false)
+  const [linkSearch, setLinkSearch] = useState('')
+  const [showDeadlineModal, setShowDeadlineModal] = useState(false)
+  const [deadline, setDeadline] = useState('')
+  const [savedDeadline, setSavedDeadline] = useState('')
+  const [reqStatus, setReqStatus] = useState(normalizedStatus)
+  const [showLockConfirm, setShowLockConfirm] = useState(false)
+  const [showRejectModal, setShowRejectModal] = useState(false)
+  const [rejectReason, setRejectReason] = useState('')
+  const [showApproveConfirm, setShowApproveConfirm] = useState(false)
+
+  // Available requirements for linking
+  const availableForLink = requirements
+    .filter(r => r.id !== id && !linkedReqs.includes(r.id))
+    .filter(r => linkSearch === '' || r.id.toLowerCase().includes(linkSearch.toLowerCase()) || r.title.toLowerCase().includes(linkSearch.toLowerCase()))
+
   const handleBack = () => {
     navigate('/requirements')
   }
@@ -115,6 +140,58 @@ function RequirementDetail() {
   const handleEdit = () => {
     navigate(`/requirements/${id}/edit`)
   }
+
+  const handlePostComment = () => {
+    if (!commentText.trim()) return
+    const newComment = {
+      id: `disc-${Date.now()}`,
+      author: currentUser.name,
+      role: currentUser.role === 'client' ? 'Client' : currentUser.role === 'manager' ? 'Manager' : 'Team Member',
+      avatar: null,
+      time: 'Just now',
+      message: commentText.trim()
+    }
+    setComments(prev => [...prev, newComment])
+    setCommentText('')
+  }
+
+  const handleAddCriteria = () => {
+    if (!newCriteria.trim()) return
+    setCriteriaList(prev => [...prev, newCriteria.trim()])
+    setNewCriteria('')
+    setShowAddCriteria(false)
+  }
+
+  const handleLinkRequirement = (reqId) => {
+    setLinkedReqs(prev => [...prev, reqId])
+    setShowLinkModal(false)
+    setLinkSearch('')
+  }
+
+  const handleSetDeadline = () => {
+    if (!deadline) return
+    setSavedDeadline(deadline)
+    setShowDeadlineModal(false)
+  }
+
+  const handleLock = () => {
+    setReqStatus('locked')
+    setShowLockConfirm(false)
+  }
+
+  const handleApprove = () => {
+    setReqStatus('approved')
+    setShowApproveConfirm(false)
+  }
+
+  const handleReject = () => {
+    if (!rejectReason.trim()) return
+    setReqStatus('rejected')
+    setShowRejectModal(false)
+    setRejectReason('')
+  }
+
+  const activeStatusConfig = STATUS_CONFIG[reqStatus] || statusConfig
 
   const renderDiffContent = () => {
     if (!details.refinedDescription) return null
@@ -138,9 +215,9 @@ function RequirementDetail() {
           <div className="req-detail__header-left">
             <div className="req-detail__header-meta">
               <span className="req-detail__id">{requirement.id}</span>
-              <span className={`req-detail__status ${statusConfig.className}`}>
+              <span className={`req-detail__status ${activeStatusConfig.className}`}>
                 <span className="req-detail__status-dot"></span>
-                {statusConfig.label}
+                {activeStatusConfig.label}
               </span>
             </div>
             <h1 className="req-detail__title">{requirement.title}</h1>
@@ -149,19 +226,31 @@ function RequirementDetail() {
             <Button variant="secondary" icon="arrow_back" iconPosition="left" onClick={handleBack}>
               Back
             </Button>
-            {normalizedStatus === 'under-review' && (
+            {(currentUser.role === 'manager') && reqStatus !== 'locked' && (
+              <button className="req-detail__deadline-btn" onClick={() => setShowDeadlineModal(true)}>
+                <span className="material-symbols-outlined">calendar_month</span>
+                {savedDeadline ? `Due: ${new Date(savedDeadline).toLocaleDateString()}` : 'Set Deadline'}
+              </button>
+            )}
+            {reqStatus === 'under-review' && (
               <>
-                <button className="req-detail__reject-btn">
+                <button className="req-detail__reject-btn" onClick={() => setShowRejectModal(true)}>
                   <span className="material-symbols-outlined">close</span>
                   Reject
                 </button>
-                <button className="req-detail__approve-btn">
+                <button className="req-detail__approve-btn" onClick={() => setShowApproveConfirm(true)}>
                   <span className="material-symbols-outlined">check_circle</span>
                   Approve
                 </button>
               </>
             )}
-            {(normalizedStatus === 'draft' || normalizedStatus === 'under-review' || normalizedStatus === 'rejected') && (
+            {reqStatus === 'approved' && currentUser.role === 'manager' && (
+              <button className="req-detail__lock-btn" onClick={() => setShowLockConfirm(true)}>
+                <span className="material-symbols-outlined">lock</span>
+                Lock Requirement
+              </button>
+            )}
+            {(reqStatus === 'draft' || reqStatus === 'under-review' || reqStatus === 'rejected') && (
               <Button variant="primary" icon="edit" iconPosition="left" onClick={handleEdit}>
                 Edit
               </Button>
@@ -203,22 +292,47 @@ function RequirementDetail() {
             )}
 
             {/* Acceptance Criteria */}
-            {details.acceptanceCriteria.length > 0 && (
-              <section className="req-detail__card">
-                <div className="req-detail__card-header">
-                  <h3 className="req-detail__card-title">Acceptance Criteria</h3>
+            <section className="req-detail__card">
+              <div className="req-detail__card-header">
+                <h3 className="req-detail__card-title">Acceptance Criteria</h3>
+                <div className="req-detail__card-header-right">
+                  {reqStatus !== 'locked' && (
+                    <button className="req-detail__add-criteria-btn" onClick={() => setShowAddCriteria(true)}>
+                      <span className="material-symbols-outlined">add</span>
+                      Add Criteria
+                    </button>
+                  )}
                   <span className="material-symbols-outlined req-detail__card-icon">rule</span>
                 </div>
-                <ul className="req-detail__criteria-list">
-                  {details.acceptanceCriteria.map((criteria, index) => (
-                    <li key={index} className="req-detail__criteria-item">
-                      <span className="material-symbols-outlined req-detail__criteria-icon">task_alt</span>
-                      <span>{criteria}</span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
+              </div>
+              <ul className="req-detail__criteria-list">
+                {criteriaList.map((criteria, index) => (
+                  <li key={index} className="req-detail__criteria-item">
+                    <span className="material-symbols-outlined req-detail__criteria-icon">task_alt</span>
+                    <span>{criteria}</span>
+                  </li>
+                ))}
+              </ul>
+              {criteriaList.length === 0 && (
+                <p className="req-detail__empty-text">No acceptance criteria defined yet.</p>
+              )}
+              {showAddCriteria && (
+                <div className="req-detail__add-criteria-form">
+                  <input
+                    type="text"
+                    className="req-detail__criteria-input"
+                    placeholder="Enter acceptance criteria..."
+                    value={newCriteria}
+                    onChange={(e) => setNewCriteria(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleAddCriteria()}
+                  />
+                  <div className="req-detail__criteria-form-actions">
+                    <button className="req-detail__criteria-cancel" onClick={() => { setShowAddCriteria(false); setNewCriteria('') }}>Cancel</button>
+                    <button className="req-detail__criteria-save" onClick={handleAddCriteria}>Add</button>
+                  </div>
+                </div>
+              )}
+            </section>
 
             {/* Discussion */}
             <section className="req-detail__card">
@@ -227,7 +341,7 @@ function RequirementDetail() {
                 <span className="material-symbols-outlined req-detail__card-icon">forum</span>
               </div>
               <div className="req-detail__discussion">
-                {details.discussion.map((comment) => (
+                {comments.map((comment) => (
                   <div key={comment.id} className="req-detail__comment">
                     <div className="req-detail__comment-avatar">
                       {comment.author.charAt(0)}
@@ -244,6 +358,9 @@ function RequirementDetail() {
                     </div>
                   </div>
                 ))}
+                {comments.length === 0 && (
+                  <p className="req-detail__empty-text">No comments yet. Start the discussion below.</p>
+                )}
 
                 {/* Reply Field */}
                 <div className="req-detail__reply">
@@ -253,11 +370,19 @@ function RequirementDetail() {
                   <div className="req-detail__reply-input-wrapper">
                     <textarea
                       className="req-detail__reply-input"
-                      placeholder="Add a comment..."
+                      placeholder="Add a comment or request clarification..."
                       rows="3"
+                      value={commentText}
+                      onChange={(e) => setCommentText(e.target.value)}
                     />
                     <div className="req-detail__reply-actions">
-                      <button className="req-detail__reply-btn">Send Reply</button>
+                      <button className="req-detail__clarify-btn" onClick={() => { setCommentText(prev => prev ? prev : '[Clarification Request] '); }}>
+                        <span className="material-symbols-outlined">contact_support</span>
+                        Request Clarification
+                      </button>
+                      <button className="req-detail__reply-btn" onClick={handlePostComment} disabled={!commentText.trim()}>
+                        Send Reply
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -271,7 +396,7 @@ function RequirementDetail() {
             <section className="req-detail__sidebar-card">
               <h3 className="req-detail__sidebar-title">Linked Requirements</h3>
               <div className="req-detail__links">
-                {details.linkedRequirements.map((linkId) => (
+                {linkedReqs.map((linkId) => (
                   <a
                     key={linkId}
                     href={`/requirements/${linkId}`}
@@ -285,7 +410,10 @@ function RequirementDetail() {
                     {linkId}
                   </a>
                 ))}
-                <button className="req-detail__link-add">+ Link</button>
+                {linkedReqs.length === 0 && <span className="req-detail__empty-text">No linked requirements</span>}
+                {reqStatus !== 'locked' && (
+                  <button className="req-detail__link-add" onClick={() => setShowLinkModal(true)}>+ Link</button>
+                )}
               </div>
             </section>
 
@@ -350,6 +478,151 @@ function RequirementDetail() {
             </section>
           </aside>
         </div>
+
+        {/* Link Requirements Modal */}
+        {showLinkModal && (
+          <div className="req-detail__modal-overlay" onClick={() => setShowLinkModal(false)}>
+            <div className="req-detail__modal" onClick={(e) => e.stopPropagation()}>
+              <div className="req-detail__modal-header">
+                <h3>Link Requirement</h3>
+                <button className="req-detail__modal-close" onClick={() => setShowLinkModal(false)}>
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+              <input
+                type="text"
+                className="req-detail__modal-search"
+                placeholder="Search requirements by ID or title..."
+                value={linkSearch}
+                onChange={(e) => setLinkSearch(e.target.value)}
+              />
+              <div className="req-detail__modal-list">
+                {availableForLink.map((req) => (
+                  <button
+                    key={req.id}
+                    className="req-detail__modal-item"
+                    onClick={() => handleLinkRequirement(req.id)}
+                  >
+                    <span className="req-detail__modal-item-id">{req.id}</span>
+                    <span className="req-detail__modal-item-title">{req.title}</span>
+                  </button>
+                ))}
+                {availableForLink.length === 0 && (
+                  <p className="req-detail__modal-empty">No requirements available to link.</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Set Deadline Modal */}
+        {showDeadlineModal && (
+          <div className="req-detail__modal-overlay" onClick={() => setShowDeadlineModal(false)}>
+            <div className="req-detail__modal req-detail__modal--sm" onClick={(e) => e.stopPropagation()}>
+              <div className="req-detail__modal-header">
+                <h3>Set Deadline</h3>
+                <button className="req-detail__modal-close" onClick={() => setShowDeadlineModal(false)}>
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+              <div className="req-detail__modal-body">
+                <label className="req-detail__modal-label">Select deadline date</label>
+                <input
+                  type="date"
+                  className="req-detail__date-input"
+                  value={deadline}
+                  onChange={(e) => setDeadline(e.target.value)}
+                  min={new Date().toISOString().split('T')[0]}
+                />
+              </div>
+              <div className="req-detail__modal-footer">
+                <button className="req-detail__modal-cancel" onClick={() => setShowDeadlineModal(false)}>Cancel</button>
+                <button className="req-detail__modal-confirm" onClick={handleSetDeadline} disabled={!deadline}>Set Deadline</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Lock Confirmation Modal */}
+        {showLockConfirm && (
+          <div className="req-detail__modal-overlay" onClick={() => setShowLockConfirm(false)}>
+            <div className="req-detail__modal req-detail__modal--sm" onClick={(e) => e.stopPropagation()}>
+              <div className="req-detail__modal-header">
+                <h3>Lock Requirement</h3>
+                <button className="req-detail__modal-close" onClick={() => setShowLockConfirm(false)}>
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+              <div className="req-detail__modal-body">
+                <div className="req-detail__modal-icon-wrapper">
+                  <span className="material-symbols-outlined">lock</span>
+                </div>
+                <p className="req-detail__modal-text">Are you sure you want to lock <strong>{requirement.id}</strong>? This will disable editing for all roles.</p>
+              </div>
+              <div className="req-detail__modal-footer">
+                <button className="req-detail__modal-cancel" onClick={() => setShowLockConfirm(false)}>Cancel</button>
+                <button className="req-detail__modal-confirm req-detail__modal-confirm--lock" onClick={handleLock}>Lock Requirement</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Approve Confirmation Modal */}
+        {showApproveConfirm && (
+          <div className="req-detail__modal-overlay" onClick={() => setShowApproveConfirm(false)}>
+            <div className="req-detail__modal req-detail__modal--sm" onClick={(e) => e.stopPropagation()}>
+              <div className="req-detail__modal-header">
+                <h3>Approve Requirement</h3>
+                <button className="req-detail__modal-close" onClick={() => setShowApproveConfirm(false)}>
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+              <div className="req-detail__modal-body">
+                <p className="req-detail__modal-text">Are you sure you want to approve <strong>{requirement.id}</strong>? The status will change to Approved.</p>
+              </div>
+              <div className="req-detail__modal-footer">
+                <button className="req-detail__modal-cancel" onClick={() => setShowApproveConfirm(false)}>Cancel</button>
+                <button className="req-detail__modal-confirm" onClick={handleApprove}>Approve</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Reject Modal */}
+        {showRejectModal && (
+          <div className="req-detail__modal-overlay" onClick={() => setShowRejectModal(false)}>
+            <div className="req-detail__modal req-detail__modal--sm" onClick={(e) => e.stopPropagation()}>
+              <div className="req-detail__modal-header">
+                <h3>Reject Requirement</h3>
+                <button className="req-detail__modal-close" onClick={() => setShowRejectModal(false)}>
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+              <div className="req-detail__modal-body">
+                <label className="req-detail__modal-label">Justification (required)</label>
+                <textarea
+                  className="req-detail__modal-textarea"
+                  placeholder="Explain why this requirement is being rejected..."
+                  rows="4"
+                  value={rejectReason}
+                  onChange={(e) => setRejectReason(e.target.value)}
+                />
+              </div>
+              <div className="req-detail__modal-footer">
+                <button className="req-detail__modal-cancel" onClick={() => setShowRejectModal(false)}>Cancel</button>
+                <button className="req-detail__modal-confirm req-detail__modal-confirm--reject" onClick={handleReject} disabled={!rejectReason.trim()}>Reject</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Deadline Badge */}
+        {savedDeadline && (
+          <div className="req-detail__deadline-badge">
+            <span className="material-symbols-outlined">schedule</span>
+            Deadline: {new Date(savedDeadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+          </div>
+        )}
       </div>
     </MainLayout>
   )

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import MainLayout from '../../layouts/MainLayout'
 import Button from '../../components/Button'
-import { currentUser } from '../../data/mockData'
+import { getCurrentUser } from '../../data/mockData'
 import './Settings.css'
 
 // Workflow stages
@@ -59,6 +59,7 @@ const initialRules = [
 ]
 
 function Settings() {
+  const currentUser = getCurrentUser()
   const [stages, setStages] = useState(initialStages)
   const [rules, setRules] = useState(initialRules)
   const [showToast, setShowToast] = useState(false)

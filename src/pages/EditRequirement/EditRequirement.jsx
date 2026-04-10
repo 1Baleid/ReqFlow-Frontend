@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import MainLayout from '../../layouts/MainLayout'
 import Button from '../../components/Button'
-import { currentUser, requirements } from '../../data/mockData'
+import { getCurrentUser, requirements } from '../../data/mockData'
 import './EditRequirement.css'
 
 // Extended mock data for editable requirements
@@ -43,6 +43,7 @@ const editableData = {
 }
 
 function EditRequirement() {
+  const currentUser = getCurrentUser()
   const { id } = useParams()
   const navigate = useNavigate()
 
@@ -70,6 +71,7 @@ function EditRequirement() {
   const [title, setTitle] = useState(editData.title)
   const [description, setDescription] = useState(editData.description)
   const [versionNote, setVersionNote] = useState('')
+  const [reqType, setReqType] = useState('functional')
   const [showToast, setShowToast] = useState(false)
 
   const normalizedStatus = requirement.status?.toLowerCase().replace(/\s+/g, '-') || 'draft'
@@ -147,6 +149,18 @@ function EditRequirement() {
                     style={{ width: `${calculateProgress()}%` }}
                   />
                 </div>
+              </div>
+
+              <div className="edit-req__field">
+                <label className="edit-req__label">Requirement Type</label>
+                <select
+                  className="edit-req__type-select"
+                  value={reqType}
+                  onChange={(e) => setReqType(e.target.value)}
+                >
+                  <option value="functional">Functional</option>
+                  <option value="non-functional">Non-Functional</option>
+                </select>
               </div>
 
               <div className="edit-req__field">

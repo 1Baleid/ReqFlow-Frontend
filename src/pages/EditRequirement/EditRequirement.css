@@ -237,6 +237,27 @@
   color: #abb3b7;
 }
 
+/* Type Select */
+.edit-req__type-select {
+  width: 100%;
+  padding: 12px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #2b3437;
+  background: #f1f4f6;
+  border: 1px solid rgba(171, 179, 183, 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.15s ease;
+  appearance: auto;
+}
+
+.edit-req__type-select:focus {
+  border-color: rgba(19, 83, 216, 0.3);
+  box-shadow: 0 0 0 3px rgba(19, 83, 216, 0.1);
+}
+
 /* Version Card */
 .edit-req__version-card {
   background: #f1f4f6;

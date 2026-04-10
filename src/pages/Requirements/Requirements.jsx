@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import MainLayout from '../../layouts/MainLayout'
 import Button from '../../components/Button'
 import FilterChips from '../../components/FilterChips'
-import { currentUser, requirements, statusFilters } from '../../data/mockData'
+import { getCurrentUser, requirements, statusFilters } from '../../data/mockData'
 import './Requirements.css'
 
 const STATUS_CONFIG = {
@@ -15,6 +15,7 @@ const STATUS_CONFIG = {
 }
 
 function Requirements() {
+  const currentUser = getCurrentUser()
   const navigate = useNavigate()
   const [activeFilter, setActiveFilter] = useState('all')
   const [currentPage, setCurrentPage] = useState(1)

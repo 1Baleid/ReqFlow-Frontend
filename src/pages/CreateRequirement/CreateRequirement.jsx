@@ -5,7 +5,7 @@ import TextInput from '../../components/TextInput'
 import TextArea from '../../components/TextArea'
 import Select from '../../components/Select'
 import Button from '../../components/Button'
-import { currentUser } from '../../data/mockData'
+import { getCurrentUser } from '../../data/mockData'
 import './CreateRequirement.css'
 
 const priorityOptions = [
@@ -19,12 +19,19 @@ const statusOptions = [
   { value: 'draft', label: 'Draft' }
 ]
 
+const typeOptions = [
+  { value: 'functional', label: 'Functional' },
+  { value: 'non-functional', label: 'Non-Functional' }
+]
+
 function CreateRequirement() {
+  const currentUser = getCurrentUser()
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     title: '',
     status: 'draft',
     priority: 'medium',
+    type: 'functional',
     description: ''
   })
   const [errors, setErrors] = useState({})
@@ -102,7 +109,7 @@ function CreateRequirement() {
               required
             />
 
-            {/* Status & Priority Row */}
+            {/* Status, Priority & Type Row */}
             <div className="create-req__row">
               <Select
                 label="Status"
@@ -119,6 +126,15 @@ function CreateRequirement() {
                 id="priority"
                 options={priorityOptions}
                 value={formData.priority}
+                onChange={handleChange}
+              />
+              <Select
+                label="Type"
+                name="type"
+                id="type"
+                icon="category"
+                options={typeOptions}
+                value={formData.type}
                 onChange={handleChange}
               />
             </div>

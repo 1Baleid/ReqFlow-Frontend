@@ -64,10 +64,18 @@ function AllRequirementsManager() {
   const navigate = useNavigate()
   const [selectedIds, setSelectedIds] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
+  const [showDuplicateConfirm, setShowDuplicateConfirm] = useState(false)
+  const [showMergeModal, setShowMergeModal] = useState(false)
+  const [mergedRequirements, setMergedRequirements] = useState([])
+  const [primaryReq, setPrimaryReq] = useState('')
+  const [showDeadlineModal, setShowDeadlineModal] = useState(false)
+  const [deadlineReqId, setDeadlineReqId] = useState('')
+  const [deadlineDate, setDeadlineDate] = useState('')
+  const [reqData, setReqData] = useState(mockRequirements)
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      setSelectedIds(mockRequirements.map(r => r.id))
+      setSelectedIds(reqData.map(r => r.id))
     } else {
       setSelectedIds([])
     }
@@ -88,6 +96,51 @@ function AllRequirementsManager() {
 
   const handleNewRequirement = () => {
     navigate('/requirements/new')
+  }
+
+  const handleMarkDuplicate = () => {
+    if (selectedIds.length < 2) return
+    setShowDuplicateConfirm(true)
+  }
+
+  const confirmMarkDuplicate = () => {
+    setReqData(prev => prev.map(r => selectedIds.includes(r.id) ? { ...r, hasDuplicate: true } : r))
+    setMergedRequirements(selectedIds)
+    setShowDuplicateConfirm(false)
+    setSelectedIds([])
+  }
+
+  const handleOpenMerge = () => {
+    const dupes = reqData.filter(r => r.hasDuplicate)
+    if (dupes.length < 2) return
+    setMergedRequirements(dupes.map(r => r.id))
+    setPrimaryReq(dupes[0].id)
+    setShowMergeModal(true)
+  }
+
+  const handleMerge = () => {
+    if (!primaryReq) return
+    setReqData(prev => prev.filter(r => r.id === primaryReq || !mergedRequirements.includes(r.id)))
+    setShowMergeModal(false)
+    setMergedRequirements([])
+    setPrimaryReq('')
+    setSelectedIds([])
+  }
+
+  const handleSetDeadline = (reqId) => {
+    setDeadlineReqId(reqId)
+    setDeadlineDate('')
+    setShowDeadlineModal(true)
+  }
+
+  const confirmSetDeadline = () => {
+    if (!deadlineDate) return
+    setReqData(prev => prev.map(r => r.id === deadlineReqId ? { ...r, deadline: new Date(deadlineDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) } : r))
+    setShowDeadlineModal(false)
+  }
+
+  const handleLockReq = (reqId) => {
+    setReqData(prev => prev.map(r => r.id === reqId ? { ...r, status: 'locked' } : r))
   }
 
   const getStatusBadge = (status) => {
@@ -131,6 +184,9 @@ function AllRequirementsManager() {
             <h1 className="all-reqs__title">All Requirements</h1>
           </div>
           <div className="all-reqs__header-actions">
+            <Button variant="secondary" icon="merge_type" onClick={handleOpenMerge}>
+              Merge Duplicates
+            </Button>
             <Button variant="secondary" icon="filter_list">
               Filters
             </Button>
@@ -148,7 +204,7 @@ function AllRequirementsManager() {
                 <th className="all-reqs__th all-reqs__th--checkbox">
                   <input
                     type="checkbox"
-                    checked={selectedIds.length === mockRequirements.length}
+                    checked={selectedIds.length === reqData.length}
                     onChange={handleSelectAll}
                   />
                 </th>
@@ -163,7 +219,7 @@ function AllRequirementsManager() {
               </tr>
             </thead>
             <tbody>
-              {mockRequirements.map((req) => (
+              {reqData.map((req) => (
                 <tr
                   key={req.id}
                   className={`all-reqs__row ${selectedIds.includes(req.id) ? 'all-reqs__row--selected' : ''}`}
@@ -212,9 +268,19 @@ function AllRequirementsManager() {
                     </span>
                   </td>
                   <td className="all-reqs__td all-reqs__td--actions">
-                    <button className="all-reqs__more-btn">
-                      <span className="material-symbols-outlined">more_vert</span>
-                    </button>
+                    <div className="all-reqs__action-group">
+                      <button className="all-reqs__action-btn" title="Set Deadline" onClick={() => handleSetDeadline(req.id)}>
+                        <span className="material-symbols-outlined">calendar_month</span>
+                      </button>
+                      {req.status === 'approved' && (
+                        <button className="all-reqs__action-btn all-reqs__action-btn--lock" title="Lock" onClick={() => handleLockReq(req.id)}>
+                          <span className="material-symbols-outlined">lock</span>
+                        </button>
+                      )}
+                      <button className="all-reqs__more-btn">
+                        <span className="material-symbols-outlined">more_vert</span>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -256,7 +322,7 @@ function AllRequirementsManager() {
                   <span className="material-symbols-outlined">person_outline</span>
                   Reassign
                 </button>
-                <button className="all-reqs__bulk-action all-reqs__bulk-action--warning">
+                <button className="all-reqs__bulk-action all-reqs__bulk-action--warning" onClick={handleMarkDuplicate}>
                   <span className="material-symbols-outlined">content_copy</span>
                   Mark as Duplicate
                 </button>
@@ -264,6 +330,94 @@ function AllRequirementsManager() {
                   <span className="material-symbols-outlined">delete</span>
                   Delete
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Mark as Duplicate Confirmation */}
+        {showDuplicateConfirm && (
+          <div className="all-reqs__modal-overlay" onClick={() => setShowDuplicateConfirm(false)}>
+            <div className="all-reqs__modal" onClick={(e) => e.stopPropagation()}>
+              <div className="all-reqs__modal-header">
+                <h3>Mark as Duplicates</h3>
+                <button className="all-reqs__modal-close" onClick={() => setShowDuplicateConfirm(false)}>
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+              <div className="all-reqs__modal-body">
+                <p>Mark the following {selectedIds.length} requirements as duplicates?</p>
+                <div className="all-reqs__modal-reqlist">
+                  {selectedIds.map(sid => {
+                    const r = reqData.find(rr => rr.id === sid)
+                    return r ? <div key={sid} className="all-reqs__modal-reqitem"><span className="all-reqs__modal-reqid">{r.id}</span> {r.title}</div> : null
+                  })}
+                </div>
+              </div>
+              <div className="all-reqs__modal-footer">
+                <button className="all-reqs__modal-cancel" onClick={() => setShowDuplicateConfirm(false)}>Cancel</button>
+                <button className="all-reqs__modal-confirm" onClick={confirmMarkDuplicate}>Mark as Duplicates</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Merge Duplicates Modal */}
+        {showMergeModal && (
+          <div className="all-reqs__modal-overlay" onClick={() => setShowMergeModal(false)}>
+            <div className="all-reqs__modal" onClick={(e) => e.stopPropagation()}>
+              <div className="all-reqs__modal-header">
+                <h3>Merge Duplicate Requirements</h3>
+                <button className="all-reqs__modal-close" onClick={() => setShowMergeModal(false)}>
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+              <div className="all-reqs__modal-body">
+                <p>Select the primary requirement to keep. Others will be archived.</p>
+                <div className="all-reqs__modal-reqlist">
+                  {mergedRequirements.map(rid => {
+                    const r = reqData.find(rr => rr.id === rid)
+                    return r ? (
+                      <label key={rid} className={`all-reqs__modal-radio ${primaryReq === rid ? 'all-reqs__modal-radio--active' : ''}`}>
+                        <input type="radio" name="primary" value={rid} checked={primaryReq === rid} onChange={() => setPrimaryReq(rid)} />
+                        <span className="all-reqs__modal-reqid">{r.id}</span>
+                        <span>{r.title}</span>
+                      </label>
+                    ) : null
+                  })}
+                </div>
+              </div>
+              <div className="all-reqs__modal-footer">
+                <button className="all-reqs__modal-cancel" onClick={() => setShowMergeModal(false)}>Cancel</button>
+                <button className="all-reqs__modal-confirm all-reqs__modal-confirm--merge" onClick={handleMerge}>Merge Requirements</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Set Deadline Modal */}
+        {showDeadlineModal && (
+          <div className="all-reqs__modal-overlay" onClick={() => setShowDeadlineModal(false)}>
+            <div className="all-reqs__modal all-reqs__modal--sm" onClick={(e) => e.stopPropagation()}>
+              <div className="all-reqs__modal-header">
+                <h3>Set Deadline for {deadlineReqId}</h3>
+                <button className="all-reqs__modal-close" onClick={() => setShowDeadlineModal(false)}>
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+              <div className="all-reqs__modal-body">
+                <label className="all-reqs__modal-label">Select deadline date</label>
+                <input
+                  type="date"
+                  className="all-reqs__date-input"
+                  value={deadlineDate}
+                  onChange={(e) => setDeadlineDate(e.target.value)}
+                  min={new Date().toISOString().split('T')[0]}
+                />
+              </div>
+              <div className="all-reqs__modal-footer">
+                <button className="all-reqs__modal-cancel" onClick={() => setShowDeadlineModal(false)}>Cancel</button>
+                <button className="all-reqs__modal-confirm" onClick={confirmSetDeadline} disabled={!deadlineDate}>Set Deadline</button>
               </div>
             </div>
           </div>

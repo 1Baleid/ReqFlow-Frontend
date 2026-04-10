@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import MainLayout from '../../layouts/MainLayout'
 import Button from '../../components/Button'
-import { currentUser, teamMembers } from '../../data/mockData'
+import { getCurrentUser, teamMembers } from '../../data/mockData'
 import './Team.css'
 
 const ROLE_CONFIG = {
@@ -20,6 +20,7 @@ const TABS = [
 ]
 
 function Team() {
+  const currentUser = getCurrentUser()
   const [activeTab, setActiveTab] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [showWarning, setShowWarning] = useState(true)

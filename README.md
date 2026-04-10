@@ -2,6 +2,21 @@
 
 ReqFlow Frontend is an interactive React-based prototype for a lightweight requirements management system designed for student projects and small teams. It supports requirement creation, refinement, clarification, assignment, approval, rejection, traceability, and version comparison through role-based interfaces for clients, team members, and managers.
 
+## Figma Design Reference
+
+- [Figma Prototype](https://www.figma.com/) — *(Replace with your actual Figma link)*
+
+## Team Members
+
+| Name | Role | GitHub |
+|------|------|--------|
+| Abdullah Al-Rashid | Client / Frontend Developer | [@abdullah](https://github.com/) |
+| Khalid Hassan | Manager / Frontend Developer | [@khalid](https://github.com/) |
+| Omar Faisal | Team Member / Frontend Developer | [@omar](https://github.com/) |
+| Rayan | Frontend Developer | [@rayan](https://github.com/) |
+
+> **Note:** Replace the names, roles, and GitHub links above with your actual team members.
+
 ## Tech Stack
 
 - React 18
@@ -23,6 +38,8 @@ ReqFlow Frontend is an interactive React-based prototype for a lightweight requi
 git clone https://github.com/YOUR_USERNAME/ReqFlow-Frontend.git
 cd ReqFlow-Frontend
 ```
+
+> **Important:** Replace `YOUR_USERNAME` with your actual GitHub username.
 
 2. Install dependencies:
 ```bash
@@ -93,9 +110,15 @@ Use these credentials to log in with different user roles:
 - Dashboard for each user role
 - Requirement list and details view
 - Create and edit requirements
-- Clarification threads
-- Approve/reject workflows
+- Requirement type classification (Functional / Non-Functional)
+- Set deadlines with date picker
+- Clarification threads and discussions
+- Approve/reject workflows with justification
+- Lock approved requirements
 - Assign/reassign requirements
-- Acceptance criteria management
-- Linked requirements and traceability
+- Mark and merge duplicate requirements
+- Acceptance criteria management (add/view)
+- Linked requirements with search modal
 - Version history and comparison
+- Responsive design for desktop and mobile
+- Workflow settings configuration
