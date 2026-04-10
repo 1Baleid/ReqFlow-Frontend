@@ -238,19 +238,35 @@ function Login() {
             <div className="login__demo-title">
               <span className="material-symbols-outlined">info</span>
               Demo Credentials
+              <span className="login__demo-subtitle">Click to copy</span>
             </div>
             <div className="login__demo-credentials">
               <div className="login__demo-item">
                 <span className="login__demo-role">Client:</span>
-                <span>abdullah@kfupm.edu.sa / abdullah123</span>
+                <button type="button" className="login__demo-copy" onClick={() => {navigator.clipboard.writeText('abdullah@kfupm.edu.sa')}}>
+                  abdullah@kfupm.edu.sa
+                </button>
+                <button type="button" className="login__demo-copy" onClick={() => {navigator.clipboard.writeText('abdullah123')}}>
+                  abdullah123
+                </button>
               </div>
               <div className="login__demo-item">
                 <span className="login__demo-role">Manager:</span>
-                <span>khalid@kfupm.edu.sa / khalid123</span>
+                <button type="button" className="login__demo-copy" onClick={() => {navigator.clipboard.writeText('khalid@kfupm.edu.sa')}}>
+                  khalid@kfupm.edu.sa
+                </button>
+                <button type="button" className="login__demo-copy" onClick={() => {navigator.clipboard.writeText('khalid123')}}>
+                  khalid123
+                </button>
               </div>
               <div className="login__demo-item">
                 <span className="login__demo-role">Member:</span>
-                <span>omar@kfupm.edu.sa / omar123</span>
+                <button type="button" className="login__demo-copy" onClick={() => {navigator.clipboard.writeText('omar@kfupm.edu.sa')}}>
+                  omar@kfupm.edu.sa
+                </button>
+                <button type="button" className="login__demo-copy" onClick={() => {navigator.clipboard.writeText('omar123')}}>
+                  omar123
+                </button>
               </div>
             </div>
           </div>

@@ -609,10 +609,17 @@
   font-size: 16px;
 }
 
+.login__demo-subtitle {
+  font-size: 10px;
+  font-weight: 500;
+  color: #64748b;
+  margin-left: auto;
+}
+
 .login__demo-credentials {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .login__demo-item {
@@ -620,13 +627,35 @@
   font-size: 11px;
   color: #586064;
   display: flex;
+  align-items: center;
   gap: 8px;
 }
 
 .login__demo-role {
   font-weight: 600;
   color: #2b3437;
-  min-width: 60px;
+  min-width: 55px;
+}
+
+.login__demo-copy {
+  background: white;
+  border: 1px solid rgba(19, 83, 216, 0.2);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #1353d8;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.login__demo-copy:hover {
+  background: rgba(19, 83, 216, 0.1);
+  border-color: #1353d8;
+}
+
+.login__demo-copy:active {
+  transform: scale(0.95);
 }
 
 /* Form */
