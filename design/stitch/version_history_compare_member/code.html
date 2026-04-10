@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Requirement Version History | ReqFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#525c6a",
+                        "on-tertiary-container": "#4b4e69",
+                        "surface-container-low": "#f1f4f6",
+                        "surface-variant": "#dbe4e7",
+                        "secondary-fixed-dim": "#cbd5e6",
+                        "surface-container": "#eaeff1",
+                        "primary-dim": "#0047c5",
+                        "secondary": "#56606e",
+                        "on-surface": "#2b3437",
+                        "surface-container-highest": "#dbe4e7",
+                        "on-secondary": "#f7f9ff",
+                        "surface": "#f8f9fa",
+                        "tertiary-container": "#dbddfe",
+                        "inverse-surface": "#0c0f10",
+                        "primary-fixed-dim": "#c8d3ff",
+                        "on-primary": "#f8f7ff",
+                        "secondary-dim": "#4a5462",
+                        "on-tertiary-fixed-variant": "#555873",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#faf8ff",
+                        "primary": "#1353d8",
+                        "on-surface-variant": "#586064",
+                        "on-secondary-fixed": "#36404d",
+                        "on-background": "#2b3437",
+                        "inverse-primary": "#638aff",
+                        "on-secondary-container": "#485260",
+                        "outline-variant": "#abb3b7",
+                        "tertiary": "#5a5d78",
+                        "surface-tint": "#1353d8",
+                        "on-error": "#fff7f6",
+                        "on-primary-fixed": "#00369b",
+                        "on-tertiary-fixed": "#383c55",
+                        "tertiary-fixed": "#dbddfe",
+                        "secondary-fixed": "#d9e3f4",
+                        "inverse-on-surface": "#9b9d9e",
+                        "surface-container-high": "#e2e9ec",
+                        "error-container": "#fe8983",
+                        "tertiary-dim": "#4e516c",
+                        "primary-fixed": "#dbe1ff",
+                        "on-error-container": "#752121",
+                        "surface-bright": "#f8f9fa",
+                        "error-dim": "#4e0309",
+                        "background": "#f8f9fa",
+                        "error": "#9f403d",
+                        "outline": "#737c7f",
+                        "on-primary-container": "#0046c3",
+                        "secondary-container": "#d9e3f4",
+                        "primary-container": "#dbe1ff",
+                        "on-primary-fixed-variant": "#0b50d5",
+                        "surface-dim": "#d1dce0",
+                        "tertiary-fixed-dim": "#cdcfef"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .diff-added { background-color: rgba(34, 197, 94, 0.1); color: #166534; text-decoration: none; }
+        .diff-removed { background-color: rgba(239, 68, 68, 0.1); color: #991b1b; text-decoration: line-through; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased overflow-hidden">
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full flex flex-col p-4 bg-slate-50 dark:bg-slate-900 h-screen w-64 border-r border-transparent z-50">
+<div class="mb-8 px-2">
+<h1 class="text-xl font-bold text-slate-900 dark:text-white font-headline tracking-tight">ReqFlow</h1>
+<p class="text-xs font-medium text-on-surface-variant Inter opacity-70">Enterprise Suite</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-semibold scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="text-sm font-medium">Requirements</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span class="text-sm font-medium">Traceability</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-sm font-medium">Team</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-sm font-medium">Project Settings</span>
+</a>
+</nav>
+<button class="mt-auto w-full bg-primary hover:bg-primary-dim text-white py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all shadow-md">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+<span>New Requirement</span>
+</button>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen flex flex-col">
+<!-- TopNavBar (Shared Component) -->
+<header class="sticky top-0 z-40 flex justify-between items-center px-8 h-16 w-full bg-white/85 dark:bg-slate-950/85 backdrop-blur-md border-b border-transparent shadow-sm dark:shadow-none">
+<div class="flex items-center gap-8">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-surface-container-low border-none rounded-full text-sm focus:ring-2 focus:ring-primary w-64 transition-all" placeholder="Search requirements..." type="text"/>
+</div>
+<div class="flex gap-6">
+<a class="text-xs tracking-wider uppercase Inter font-bold text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 pb-1" href="#">Project Alpha</a>
+<a class="text-xs tracking-wider uppercase Inter font-bold text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 pb-1 transition-all" href="#">Beta Phase</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-all active:opacity-70">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-all active:opacity-70">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="close-up portrait of a professional male software architect in a bright office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyy5mvyI8QbKVlQ3MDmAUgcrqZzYMjdt-OYKi160q-1KLHatLfaQEY8BdOPAqKbESqLpsTv6Owj7HRmBnaQDVL-0i3TdtXsTQbL52cZcWV5lXmU5yEH-XMPCXv5usVTMk4PQ-4-t_oohk6earojPLPaQtHiq22grQsuIDQXsh13SQOvofJXztVSNIMuKOeuonjB_yeLwJ-nluADbYnbpgh52sgcnpkDvklktEnodA1WunPa2d9RaA56YJSCg-s7I_Z_k2_p4dhndQ"/>
+</div>
+</div>
+</header>
+<!-- View Content: Version Comparison -->
+<section class="flex flex-1 overflow-hidden">
+<!-- Left Panel: Version Timeline -->
+<aside class="w-80 bg-surface-container-lowest flex flex-col border-r border-surface-container-high">
+<div class="p-6">
+<h2 class="font-headline font-bold text-lg mb-1">Version History</h2>
+<p class="text-xs text-on-surface-variant Inter">Select two versions to compare</p>
+</div>
+<div class="flex-1 overflow-y-auto px-4 space-y-3 pb-8">
+<!-- Version Card: Active/V2.1 -->
+<div class="group relative bg-surface-container-low p-4 rounded-xl cursor-pointer hover:bg-surface-container transition-all ring-2 ring-primary ring-inset">
+<div class="flex justify-between items-start mb-2">
+<div>
+<span class="label-sm font-bold text-[10px] tracking-widest text-primary uppercase block mb-0.5">CURRENT</span>
+<h3 class="font-bold text-sm">Version 2.1</h3>
+</div>
+<input checked="" class="rounded-full border-outline-variant text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+</div>
+<div class="flex items-center gap-2 mb-3">
+<img class="w-5 h-5 rounded-full object-cover" data-alt="professional woman avatar in a creative studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyIoE70J3f5bSPB7mlwQN0MQ0c8lYc6OwkktcWYXP8qbUCYv1fRBYSbtLNRTL9eIPI1s2qACMg1pQBffFgv6grWVXIMP_O8urPiFvxROiSOSJF-y7JhLha0sTyliue68npgo6lrIIIHNBY2psbxp-AxlfCA45KFzZ-NjuVIxRn6zOX4C5kQ4KQT9mMasUbEj19aO3XhtfPCA3dxk1GcBBzrf0AEJVD6KUZaniEh4v8iLbDUb-CVpltS4MpP1DQBXD0gvUiGAt2smQ"/>
+<span class="text-xs font-medium">Sarah Jenkins</span>
+</div>
+<p class="text-[11px] text-on-surface-variant">Updated API endpoints for OAuth integration.</p>
+<time class="block mt-2 text-[10px] font-bold text-on-surface-variant/60">OCT 24, 2023 • 14:30</time>
+</div>
+<!-- Version Card: V2.0 -->
+<div class="group relative p-4 rounded-xl cursor-pointer hover:bg-surface-container-low transition-all">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="font-bold text-sm text-on-surface">Version 2.0</h3>
+</div>
+<input checked="" class="rounded-full border-outline-variant text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+</div>
+<div class="flex items-center gap-2 mb-3">
+<div class="w-5 h-5 rounded-full bg-tertiary-container flex items-center justify-center text-[10px] font-bold">MK</div>
+<span class="text-xs font-medium">Marcus Kim</span>
+</div>
+<p class="text-[11px] text-on-surface-variant">Major revision for compliance standards.</p>
+<time class="block mt-2 text-[10px] font-bold text-on-surface-variant/60">OCT 12, 2023 • 09:15</time>
+</div>
+<!-- Version Card: V1.1 -->
+<div class="group relative p-4 rounded-xl cursor-pointer hover:bg-surface-container-low transition-all opacity-60">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="font-bold text-sm text-on-surface">Version 1.1</h3>
+</div>
+<input class="rounded-full border-outline-variant text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+</div>
+<div class="flex items-center gap-2 mb-3">
+<img class="w-5 h-5 rounded-full object-cover" data-alt="smiling male professional in a clean office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByD5HSz04QMDaYtfce2zQnW9HeBnnI_MQ50BCQEfrX6xdxZyqd7wjplT980TFC6W2pIImzLAZXsiumW2uAWdR55PNq3FZyBFpIasL9edIPkOOyTuRb3erxIS4Kmq6-fdQSMOUCDmmcvES4nLEz7Pgo9SObeg0V588CK7WquaW5g_fwlvXump_rtf3tgs3PKXjrtIrepH5r0Ek7aucdTjPAvFmhX4yt_2jG9wRYoLXvkL5eqg9eC4AhDmJlnMuhWg1m6LGWBTpKMxk"/>
+<span class="text-xs font-medium">David Lee</span>
+</div>
+<p class="text-[11px] text-on-surface-variant">Initial stakeholder feedback integrated.</p>
+<time class="block mt-2 text-[10px] font-bold text-on-surface-variant/60">SEP 30, 2023 • 16:45</time>
+</div>
+<!-- Version Card: V1.0 -->
+<div class="group relative p-4 rounded-xl cursor-pointer hover:bg-surface-container-low transition-all opacity-60">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="font-bold text-sm text-on-surface">Version 1.0</h3>
+</div>
+<input class="rounded-full border-outline-variant text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+</div>
+<div class="flex items-center gap-2 mb-3">
+<div class="w-5 h-5 rounded-full bg-secondary-container flex items-center justify-center text-[10px] font-bold text-on-secondary-container">SJ</div>
+<span class="text-xs font-medium">Sarah Jenkins</span>
+</div>
+<p class="text-[11px] text-on-surface-variant">Baseline requirement draft.</p>
+<time class="block mt-2 text-[10px] font-bold text-on-surface-variant/60">SEP 15, 2023 • 11:00</time>
+</div>
+</div>
+</aside>
+<!-- Center Panel: Diff View -->
+<div class="flex-1 overflow-y-auto bg-surface">
+<!-- Comparison Header -->
+<div class="p-8 sticky top-0 bg-surface/90 backdrop-blur-sm z-10">
+<div class="flex justify-between items-center mb-6">
+<div>
+<span class="label-sm text-[10px] tracking-widest text-on-surface-variant uppercase font-bold">Requirement ID: REQ-402</span>
+<h2 class="text-2xl font-headline font-extrabold tracking-tight mt-1">Authentication Handshake Protocol</h2>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 rounded-lg bg-surface-container-lowest shadow-sm border border-outline-variant/10 text-sm font-semibold hover:bg-white transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="history_edu">history_edu</span>
+                                Rollback
+                            </button>
+<button class="px-5 py-2 rounded-lg bg-primary text-white text-sm font-bold shadow-md hover:bg-primary-dim transition-all">
+                                Approve Changes
+                            </button>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-surface-container-lowest p-2 rounded-xl shadow-sm border border-outline-variant/5">
+<div class="flex-1 flex items-center justify-center gap-3 py-2 px-4 rounded-lg bg-surface-container-low">
+<span class="text-xs font-bold text-on-surface-variant">v2.0</span>
+<span class="material-symbols-outlined text-xs text-outline-variant" data-icon="arrow_forward">arrow_forward</span>
+<span class="text-xs font-bold text-primary">v2.1</span>
+</div>
+<div class="h-4 w-px bg-outline-variant/20"></div>
+<div class="flex gap-4 px-4">
+<div class="flex items-center gap-1.5">
+<div class="w-2.5 h-2.5 rounded-sm bg-green-500/20 border border-green-500/30"></div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-green-700">12 Insertions</span>
+</div>
+<div class="flex items-center gap-1.5">
+<div class="w-2.5 h-2.5 rounded-sm bg-red-500/20 border border-red-500/30"></div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-red-700">4 Deletions</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Diff Content Body -->
+<div class="px-8 pb-12 space-y-12">
+<!-- Metadata Diff Section -->
+<div class="space-y-4">
+<h4 class="label-sm font-bold tracking-widest text-on-surface-variant uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="tune">tune</span>
+                            Metadata Changes
+                        </h4>
+<div class="grid grid-cols-2 gap-8">
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant/10">
+<p class="text-[10px] font-bold text-on-surface-variant uppercase mb-3 tracking-wider">Priority</p>
+<div class="flex items-center gap-4">
+<div class="flex-1 px-3 py-2 rounded-lg bg-surface-container-low text-xs text-on-surface-variant line-through opacity-50">Medium</div>
+<span class="material-symbols-outlined text-xs text-primary" data-icon="trending_up">trending_up</span>
+<div class="flex-1 px-3 py-2 rounded-lg bg-error-container/20 text-xs font-bold text-on-error-container">High</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant/10">
+<p class="text-[10px] font-bold text-on-surface-variant uppercase mb-3 tracking-wider">Status</p>
+<div class="flex items-center gap-4">
+<div class="flex-1 px-3 py-2 rounded-lg bg-surface-container-low text-xs text-on-surface-variant line-through opacity-50">Draft</div>
+<span class="material-symbols-outlined text-xs text-primary" data-icon="arrow_forward">arrow_forward</span>
+<div class="flex-1 px-3 py-2 rounded-lg bg-tertiary-container text-xs font-bold text-on-tertiary-container">In Review</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Textual Diff: Description -->
+<div class="space-y-4">
+<h4 class="label-sm font-bold tracking-widest text-on-surface-variant uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="description">description</span>
+                            Description Diff
+                        </h4>
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 overflow-hidden">
+<div class="grid grid-cols-12 bg-surface-container-high/30 border-b border-outline-variant/10">
+<div class="col-span-1 p-2 text-center text-[10px] font-bold text-on-surface-variant border-r border-outline-variant/10">LN</div>
+<div class="col-span-11 p-2 pl-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Unified View</div>
+</div>
+<div class="p-6 font-body text-sm leading-relaxed space-y-4">
+<p>
+                                    The system shall implement a <span class="diff-removed">three-step</span> <span class="diff-added">multi-factor</span> handshake protocol for all incoming API requests from <span class="diff-removed">third-party</span> <span class="diff-added">external verified</span> partners. 
+                                </p>
+<p>
+                                    This ensures that <span class="diff-added">session tokens are rotated every 15 minutes, and</span> all data transmitted remains encrypted using the AES-256 standard <span class="diff-removed">or better</span>.
+                                </p>
+<div class="bg-green-50/50 p-3 rounded-lg border-l-4 border-green-500 italic text-green-800 text-xs">
+                                    "Added explicit mention of session rotation as per security audit v4.2" — sarah_jenkins
+                                </div>
+<p>
+                                    Failure to provide a valid HMAC signature will result in an immediate <span class="diff-removed">403 Forbidden</span> <span class="diff-added">401 Unauthorized</span> response with a descriptive error payload.
+                                </p>
+</div>
+</div>
+</div>
+<!-- Side-by-side Technical Specs -->
+<div class="space-y-4">
+<h4 class="label-sm font-bold tracking-widest text-on-surface-variant uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="code">code</span>
+                            Technical Constraints
+                        </h4>
+<div class="grid grid-cols-2 gap-px bg-outline-variant/10 border border-outline-variant/10 rounded-xl overflow-hidden shadow-sm">
+<!-- Version 2.0 (Old) -->
+<div class="bg-surface-container-lowest p-6">
+<div class="flex items-center gap-2 mb-4">
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-[10px] font-bold">v2.0</span>
+<span class="text-xs font-bold opacity-60">Baseline</span>
+</div>
+<ul class="space-y-3 text-xs text-on-surface/70 list-disc pl-4">
+<li>Supports TLS 1.2 minimum</li>
+<li>Response time &lt; 250ms</li>
+<li class="line-through text-red-500/60">Maximum 5 retries per session</li>
+<li>Logging required for all errors</li>
+</ul>
+</div>
+<!-- Version 2.1 (New) -->
+<div class="bg-surface-container-lowest p-6 border-l border-outline-variant/10">
+<div class="flex items-center gap-2 mb-4">
+<span class="px-2 py-0.5 rounded bg-primary-container text-primary text-[10px] font-bold">v2.1</span>
+<span class="text-xs font-bold">Revision</span>
+</div>
+<ul class="space-y-3 text-xs text-on-surface list-disc pl-4">
+<li>Supports TLS 1.2 minimum</li>
+<li>Response time &lt; 250ms</li>
+<li class="bg-green-500/10 text-green-700 px-1 rounded">Maximum 3 retries per session</li>
+<li>Logging required for all errors</li>
+<li class="bg-green-500/10 text-green-700 px-1 rounded">Audit trail must be immutable</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Panel: Discussion/Context -->
+<aside class="w-72 bg-surface-container-low flex flex-col border-l border-surface-container-high">
+<div class="p-6 border-b border-surface-container-high">
+<h4 class="font-headline font-bold text-sm mb-4">Comparison Insight</h4>
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm space-y-3">
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="auto_awesome">auto_awesome</span>
+<p class="text-xs font-medium leading-relaxed">Most changes are centered around <span class="text-primary font-bold">Security Compliance</span> standards.</p>
+</div>
+<div class="h-1 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-4/5"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant uppercase font-bold">80% Security Impact</p>
+</div>
+</div>
+<div class="p-6 flex-1">
+<h4 class="label-sm font-bold text-[10px] text-on-surface-variant uppercase tracking-widest mb-4">Change Log Comments</h4>
+<div class="space-y-6">
+<div class="flex gap-3">
+<div class="w-6 h-6 rounded-full bg-secondary-fixed-dim shrink-0"></div>
+<div>
+<p class="text-xs font-bold mb-1">Sarah Jenkins <span class="font-normal opacity-50 ml-2">2h ago</span></p>
+<p class="text-xs text-on-surface-variant">Aligned the retry logic with the updated infrastructure limits.</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-6 h-6 rounded-full bg-tertiary-fixed-dim shrink-0"></div>
+<div>
+<p class="text-xs font-bold mb-1">Marcus Kim <span class="font-normal opacity-50 ml-2">12h ago</span></p>
+<p class="text-xs text-on-surface-variant">The 403 vs 401 change is crucial for our front-end router logic.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="p-4 mt-auto">
+<div class="bg-primary/5 p-4 rounded-xl border border-primary/10">
+<p class="text-[11px] font-semibold text-primary mb-2">Need context?</p>
+<p class="text-[10px] text-on-surface-variant leading-relaxed">Viewing the diff between the stable baseline and the latest proposed revision.</p>
+</div>
+</div>
+</aside>
+</section>
+</main>
+</body></html>

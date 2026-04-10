@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#f8f9fa",
+                        "inverse-surface": "#0c0f10",
+                        "on-tertiary": "#faf8ff",
+                        "secondary": "#56606e",
+                        "on-secondary-fixed": "#36404d",
+                        "on-background": "#2b3437",
+                        "tertiary-dim": "#4e516c",
+                        "surface-container": "#eaeff1",
+                        "secondary-container": "#d9e3f4",
+                        "tertiary": "#5a5d78",
+                        "primary-dim": "#0047c5",
+                        "on-primary": "#f8f7ff",
+                        "on-secondary-fixed-variant": "#525c6a",
+                        "surface-bright": "#f8f9fa",
+                        "error-container": "#fe8983",
+                        "on-primary-fixed-variant": "#0b50d5",
+                        "surface": "#f8f9fa",
+                        "on-surface-variant": "#586064",
+                        "surface-tint": "#1353d8",
+                        "primary": "#1353d8",
+                        "primary-fixed-dim": "#c8d3ff",
+                        "inverse-on-surface": "#9b9d9e",
+                        "on-surface": "#2b3437",
+                        "on-primary-fixed": "#00369b",
+                        "on-primary-container": "#0046c3",
+                        "on-tertiary-container": "#4b4e69",
+                        "tertiary-fixed": "#dbddfe",
+                        "on-tertiary-fixed-variant": "#555873",
+                        "secondary-fixed-dim": "#cbd5e6",
+                        "on-error-container": "#752121",
+                        "surface-container-high": "#e2e9ec",
+                        "on-tertiary-fixed": "#383c55",
+                        "surface-container-low": "#f1f4f6",
+                        "surface-dim": "#d1dce0",
+                        "secondary-dim": "#4a5462",
+                        "surface-variant": "#dbe4e7",
+                        "tertiary-container": "#dbddfe",
+                        "surface-container-highest": "#dbe4e7",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#abb3b7",
+                        "on-secondary": "#f7f9ff",
+                        "on-error": "#fff7f6",
+                        "tertiary-fixed-dim": "#cdcfef",
+                        "outline": "#737c7f",
+                        "on-secondary-container": "#485260",
+                        "primary-container": "#dbe1ff",
+                        "error-dim": "#4e0309",
+                        "inverse-primary": "#638aff",
+                        "primary-fixed": "#dbe1ff",
+                        "error": "#9f403d",
+                        "secondary-fixed": "#d9e3f4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .editorial-shadow {
+            box-shadow: 0px 12px 32px rgba(43, 52, 55, 0.06);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(24px);
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #1353d8 0%, #0047c5 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased">
+<!-- TopNavBar -->
+<nav class="bg-white dark:bg-slate-900 shadow-sm w-full top-0 sticky z-50 flex justify-between items-center px-6 h-16 w-full border-b border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-blue-800 dark:text-blue-300 font-headline">ReqFlow</span>
+<div class="hidden md:flex items-center gap-6 font-headline text-sm font-semibold tracking-tight">
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">Dashboard</a>
+<a class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 dark:border-blue-400 pb-1" href="#">Projects</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">Analytics</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex gap-2">
+<button class="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-700 transition-colors">Support</button>
+<button class="primary-gradient px-4 py-2 text-sm font-semibold text-on-primary rounded-lg shadow-sm">Create New</button>
+</div>
+<div class="flex items-center gap-2 border-l border-slate-100 pl-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer p-2 hover:bg-surface-container rounded-full transition-all" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer p-2 hover:bg-surface-container rounded-full transition-all" data-icon="settings">settings</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden ml-2">
+<img alt="User avatar" data-alt="professional portrait of a woman in business attire with a neutral background and soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGW-OCeIiuMyGQJaV51UMI7U5d-oWeSI0hS2EJRUvJY83AihiO5okHA7RncEOagMjfECwkrxvqQLPA5Rny2gqRHM4jUbwNas0OMdnK4K69p4MVmcegFUkCntAqeofI-GD5KVDl0hzNww7W51nmEAagGkNny0XFVaErjCyl-DVbkInEZg0_JAjtYUfoCpqrn0i8DKzPld9XuxgEYEmM0Mbm8WXbOinTVOzQuXGA4rjaZEIZvhbAV_h-gWTa6v64PCAJicT8Yoa-QLY"/>
+</div>
+</div>
+</div>
+</nav>
+<div class="flex min-h-[calc(100vh-4rem)]">
+<!-- SideNavBar -->
+<aside class="hidden lg:flex flex-col h-[calc(100vh-4rem)] w-64 sticky top-16 bg-slate-50 dark:bg-slate-950 p-4 space-y-2 border-r border-slate-100 dark:border-slate-900">
+<div class="px-4 py-6 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl primary-gradient flex items-center justify-center text-white">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+</div>
+<div>
+<p class="text-lg font-bold text-slate-900 dark:text-slate-100 font-headline leading-none">Project Alpha</p>
+<p class="text-xs text-on-surface-variant mt-1">Enterprise Requirements</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-medium">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 bg-white dark:bg-slate-800 text-blue-700 dark:text-blue-300 font-bold shadow-sm rounded-lg transition-all translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="list_alt">list_alt</span>
+<span class="font-medium">Requirements</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span class="font-medium">Traceability</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-medium">Team</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-medium">Archive</span>
+</a>
+</nav>
+<div class="pt-4 mt-4 border-t border-slate-200 dark:border-slate-800">
+<button class="w-full mb-4 px-4 py-2 text-sm font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">Export Report</button>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+<span class="text-sm">Help Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="text-sm">Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 bg-surface p-8 lg:p-12 overflow-y-auto">
+<div class="max-w-4xl mx-auto space-y-12">
+<!-- Success Toast (Simulated via UI State) -->
+<div class="flex items-center gap-4 bg-white border-l-4 border-primary p-4 rounded-xl editorial-shadow animate-fade-in">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg" data-icon="check_circle" data-weight="fill">check_circle</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold text-on-surface">Requirement Updated</p>
+<p class="text-xs text-on-surface-variant">Your changes have been saved and version 2.4 is now live in draft.</p>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface p-1">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+</div>
+<!-- Page Header -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-2">
+<div class="flex items-center gap-3">
+<span class="text-[0.6875rem] font-bold tracking-[0.05em] uppercase text-on-surface-variant">REQ-402 • V2.4</span>
+<span class="bg-primary-container text-on-primary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Draft</span>
+</div>
+<h1 class="text-4xl font-extrabold tracking-tighter font-headline text-on-surface">Edit Requirement</h1>
+<p class="text-on-surface-variant max-w-lg">Refine the core logic and functional scope before submitting for architectural review.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-2.5 rounded-lg font-semibold text-secondary hover:bg-surface-container-high transition-colors">Discard Changes</button>
+<button class="primary-gradient px-8 py-2.5 rounded-lg font-bold text-on-primary shadow-lg editorial-shadow">Save Draft</button>
+</div>
+</header>
+<!-- Bento Style Form Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Main Input Card -->
+<div class="md:col-span-8 bg-surface-container-lowest rounded-xl editorial-shadow p-8 space-y-8">
+<div class="space-y-3">
+<label class="block text-[10px] font-bold tracking-widest text-on-surface-variant uppercase">Requirement Title</label>
+<input class="w-full text-xl font-bold font-headline bg-transparent border-0 border-b-2 border-outline-variant focus:ring-0 focus:border-primary px-0 py-2 transition-all" placeholder="Enter a descriptive title..." type="text" value="Automated Failover Protocol for Data Ingestion Clusters"/>
+</div>
+<div class="space-y-3">
+<label class="block text-[10px] font-bold tracking-widest text-on-surface-variant uppercase">Full Description</label>
+<textarea class="w-full bg-surface-container-low border-0 outline-variant/15 rounded-xl focus:ring-2 focus:ring-primary/20 p-4 text-on-surface leading-relaxed placeholder:text-on-surface-variant/50" placeholder="Describe the requirement in detail..." rows="10">The system must implement an automated failover mechanism that detects node heartbeat failure within 500ms. Upon detection, the traffic controller must reroute 100% of the active ingestion stream to the secondary standby cluster in Region-B without data loss or message duplication.
+
+Key Parameters:
+- Max latency during transition: 1.2s
+- Data Integrity: Zero-loss guarantee (checksum validated)
+- Notification: Trigger Level 2 Alert to DevOps dashboard immediately</textarea>
+</div>
+<div class="flex items-center gap-2 pt-4">
+<span class="material-symbols-outlined text-primary" data-icon="attachment">attachment</span>
+<span class="text-sm font-semibold text-primary cursor-pointer hover:underline">Add technical attachment</span>
+<span class="text-on-surface-variant text-sm ml-2">(PDF, PNG, SVG)</span>
+</div>
+</div>
+<!-- Metadata & Sidebar -->
+<div class="md:col-span-4 space-y-6">
+<!-- Details Sidebar -->
+<div class="bg-surface-container-low rounded-xl p-6 space-y-6">
+<h3 class="text-sm font-bold font-headline text-on-surface mb-4">Metadata Details</h3>
+<div class="space-y-1">
+<span class="block text-[9px] font-bold text-on-surface-variant uppercase tracking-widest">Assigned Architect</span>
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-blue-200"></div>
+<span class="text-sm font-medium">Marcus Sterling</span>
+</div>
+</div>
+<div class="space-y-1">
+<span class="block text-[9px] font-bold text-on-surface-variant uppercase tracking-widest">Priority Level</span>
+<div class="bg-error-container/20 text-on-error-container px-3 py-1 rounded-full text-[10px] font-bold uppercase inline-block">High Priority</div>
+</div>
+<div class="space-y-1">
+<span class="block text-[9px] font-bold text-on-surface-variant uppercase tracking-widest">Target Version</span>
+<p class="text-sm font-medium">Q4 Enterprise Release</p>
+</div>
+<div class="pt-4 border-t border-outline-variant/20">
+<button class="flex items-center justify-between w-full text-on-surface-variant hover:text-primary transition-colors">
+<span class="text-sm font-semibold">View Version History</span>
+<span class="material-symbols-outlined text-sm" data-icon="history">history</span>
+</button>
+</div>
+</div>
+<!-- Tip Box -->
+<div class="bg-tertiary-container/30 rounded-xl p-6 border border-tertiary-container">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-tertiary mt-0.5" data-icon="lightbulb">lightbulb</span>
+<div class="space-y-1">
+<p class="text-xs font-bold text-on-tertiary-container uppercase tracking-wider">Pro-Tip</p>
+<p class="text-xs text-on-tertiary-container leading-relaxed">Be sure to link this to the 'Disaster Recovery' parent epic in the traceability map for better tracking.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Read-Only Variation Notice -->
+<div class="relative group mt-20">
+<div class="absolute -top-4 left-6 bg-inverse-surface text-white px-3 py-1 rounded text-[10px] font-bold uppercase tracking-widest z-10">Locked State Preview</div>
+<div class="bg-surface-container opacity-60 pointer-events-none rounded-xl p-8 border-2 border-dashed border-outline-variant">
+<div class="flex items-center gap-3 mb-6">
+<span class="text-[0.6875rem] font-bold tracking-[0.05em] uppercase text-on-surface-variant">REQ-398 • V3.1</span>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Under Review</span>
+</div>
+<h2 class="text-2xl font-bold font-headline text-on-surface mb-4">Core API Rate Limiting Policy</h2>
+<div class="h-24 bg-surface-container-high rounded-lg mb-4"></div>
+<div class="h-12 bg-surface-container-high rounded-lg w-1/2"></div>
+</div>
+<!-- Locked Message Overlay -->
+<div class="absolute inset-0 flex items-center justify-center p-8">
+<div class="glass-panel max-w-sm w-full p-8 rounded-2xl editorial-shadow text-center space-y-4 border border-white/50">
+<div class="w-12 h-12 bg-surface-container-high rounded-full flex items-center justify-center mx-auto text-on-surface">
+<span class="material-symbols-outlined text-2xl" data-icon="lock" data-weight="fill">lock</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-on-surface">Requirement Locked</h4>
+<p class="text-sm text-on-surface-variant mt-2">This requirement is currently <span class="font-bold text-primary">Under Review</span> and cannot be edited by clients to preserve architectural integrity. Contact your project lead to request changes.</p>
+</div>
+<button class="w-full py-2.5 border-2 border-outline-variant rounded-lg font-bold text-on-surface-variant hover:bg-white hover:text-on-surface transition-all">Request Unlock</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Mobile Bottom Navigation -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white dark:bg-slate-900 flex justify-around items-center px-4 z-50 editorial-shadow">
+<div class="flex flex-col items-center gap-1 text-blue-700">
+<span class="material-symbols-outlined" data-icon="list_alt">list_alt</span>
+<span class="text-[10px] font-bold">Requirements</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] font-medium">Dashboard</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span class="text-[10px] font-medium">Trace</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</div>
+</div>
+</body></html>

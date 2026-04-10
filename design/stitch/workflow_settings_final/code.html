@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Workflow Settings - ReqFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#fff7f6",
+                    "on-background": "#2b3437",
+                    "on-tertiary": "#faf8ff",
+                    "outline-variant": "#abb3b7",
+                    "inverse-surface": "#0c0f10",
+                    "inverse-on-surface": "#9b9d9e",
+                    "primary-container": "#dbe1ff",
+                    "secondary": "#56606e",
+                    "on-tertiary-fixed-variant": "#555873",
+                    "on-secondary-fixed-variant": "#525c6a",
+                    "tertiary-fixed-dim": "#cdcfef",
+                    "error": "#9f403d",
+                    "outline": "#737c7f",
+                    "secondary-dim": "#4a5462",
+                    "surface-container": "#eaeff1",
+                    "secondary-fixed-dim": "#cbd5e6",
+                    "error-container": "#fe8983",
+                    "on-secondary-fixed": "#36404d",
+                    "on-secondary-container": "#485260",
+                    "surface-variant": "#dbe4e7",
+                    "on-primary-container": "#0046c3",
+                    "on-tertiary-container": "#4b4e69",
+                    "error-dim": "#4e0309",
+                    "surface-dim": "#d1dce0",
+                    "surface-container-high": "#e2e9ec",
+                    "on-primary-fixed-variant": "#0b50d5",
+                    "on-surface-variant": "#586064",
+                    "on-secondary": "#f7f9ff",
+                    "tertiary": "#5a5d78",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#f8f9fa",
+                    "surface": "#f8f9fa",
+                    "tertiary-fixed": "#dbddfe",
+                    "tertiary-container": "#dbddfe",
+                    "secondary-fixed": "#d9e3f4",
+                    "tertiary-dim": "#4e516c",
+                    "on-primary": "#f8f7ff",
+                    "background": "#f8f9fa",
+                    "secondary-container": "#d9e3f4",
+                    "on-error-container": "#752121",
+                    "primary-dim": "#0047c5",
+                    "inverse-primary": "#638aff",
+                    "surface-container-highest": "#dbe4e7",
+                    "primary-fixed": "#dbe1ff",
+                    "surface-container-low": "#f1f4f6",
+                    "on-primary-fixed": "#00369b",
+                    "on-tertiary-fixed": "#383c55",
+                    "on-surface": "#2b3437",
+                    "primary": "#1353d8",
+                    "surface-tint": "#1353d8",
+                    "primary-fixed-dim": "#c8d3ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(24px);
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #1353d8 0%, #0047c5 100%);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopNavBar Implementation -->
+<header class="w-full top-0 sticky z-50 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800">
+<div class="flex justify-between items-center px-6 py-3 w-full">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tight text-blue-700 dark:text-blue-400">ReqFlow</span>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-500 dark:text-slate-400 font-['Manrope'] font-bold hover:text-blue-600 transition-colors" href="#">Dashboard</a>
+<a class="text-slate-500 dark:text-slate-400 font-['Manrope'] font-bold hover:text-blue-600 transition-colors" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-slate-500 cursor-pointer">notifications</span>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer">help_outline</span>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="Manager Profile" data-alt="professional portrait of a project manager in a minimalist modern office setting with soft bokeh background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_vE37Yj2SP3dObc-OKv2OuyH5IDSxMUCrkPcOfDlNWL_GMAOKwBZrBs4Y8jst_MigUIF6DZ7IKH_W19OaY6SR6z206ldEkqP14GnWdZJcqyHZL8ilqmqI2G2fRBQKJQKXNZMsi6oR_HQjYD_aGQsYFEieLCIAwGBxgd9cD23Rax-zQxqzvNnh_37mhFwclpeZhMlZZZhvawnAL3iWLr4UiSsngP-S0xNHnSyhHpidSQpP3A3Tf-YWeOy-l1eTKDr0uxtm6zQ5oRo"/>
+</div>
+</div>
+</div>
+</header>
+<div class="flex min-h-[calc(100vh-64px)]">
+<!-- SideNavBar Implementation -->
+<aside class="hidden md:flex flex-col h-screen w-64 sticky top-[64px] p-4 bg-slate-50 dark:bg-slate-950 border-r border-slate-100 dark:border-slate-800">
+<div class="mb-8 px-2">
+<h2 class="font-['Inter'] text-sm font-semibold text-blue-700">Project Alpha</h2>
+<p class="text-xs text-slate-500">Enterprise Tier</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-['Inter'] text-sm font-medium transition-all" href="#">
+<span class="material-symbols-outlined">assignment</span>
+                    Requirements
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-['Inter'] text-sm font-medium transition-all" href="#">
+<span class="material-symbols-outlined">group</span>
+                    Team
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-semibold rounded-lg font-['Inter'] text-sm transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+                    Settings
+                </a>
+</nav>
+<div class="mt-auto pt-4 border-t border-slate-200 dark:border-slate-800">
+<button class="w-full mb-4 px-4 py-2 text-sm font-medium text-white primary-gradient rounded-lg shadow-sm hover:opacity-90 transition-opacity">
+                    Invite Member
+                </button>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-['Inter'] text-sm font-medium transition-all" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+                    Support
+                </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 bg-surface p-8 md:p-12 overflow-y-auto">
+<!-- Toast Notification (Success State) -->
+<div class="fixed top-20 right-8 z-[60] flex items-center gap-3 px-4 py-3 bg-inverse-surface text-inverse-on-surface rounded-xl shadow-2xl transition-all border border-white/10">
+<span class="material-symbols-outlined text-green-400" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm font-medium">Configuration Saved Successfully</span>
+<button class="ml-2 opacity-50 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+<div class="max-w-4xl mx-auto">
+<div class="mb-10">
+<span class="label-sm text-on-surface-variant font-medium tracking-widest uppercase text-[10px] mb-2 block">Governance &amp; Control</span>
+<h1 class="text-3xl font-extrabold tracking-tight text-on-surface mb-2">Workflow Settings</h1>
+<p class="text-on-surface-variant max-w-2xl leading-relaxed">Define the lifecycle of your requirements. Stages and transition rules ensure consistent quality across Project Alpha.</p>
+</div>
+<div class="grid grid-cols-1 gap-8">
+<!-- Workflow Stages Section -->
+<section class="bg-surface-container-lowest rounded-xl p-8 shadow-[0px_12px_32px_rgba(43,52,55,0.04)]">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h3 class="text-lg font-bold text-on-surface">Lifecycle Stages</h3>
+<p class="text-sm text-on-surface-variant">Reorder or add stages to your workflow.</p>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary border border-primary/20 rounded-lg hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined text-sm">add</span>
+                                Add Stage
+                            </button>
+</div>
+<div class="space-y-3">
+<!-- System Required Stage (Draft) -->
+<div class="group flex items-center justify-between p-4 bg-surface-container-low rounded-lg border border-transparent">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-outline-variant cursor-not-allowed">drag_indicator</span>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-semibold text-on-surface">Draft</span>
+<span class="px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase bg-surface-variant text-on-surface-variant rounded-full">System Required</span>
+</div>
+<p class="text-xs text-on-surface-variant">Initial creation phase</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline-variant text-xl">lock</span>
+</div>
+</div>
+<!-- Editable Stage -->
+<div class="group flex items-center justify-between p-4 bg-surface-container-lowest rounded-lg border border-outline-variant/20 hover:border-primary/30 transition-all cursor-grab active:cursor-grabbing">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">drag_indicator</span>
+<div class="flex-1">
+<input class="bg-transparent border-none p-0 focus:ring-0 font-semibold text-on-surface focus:text-primary transition-colors w-full" type="text" value="Under Review"/>
+<p class="text-xs text-on-surface-variant">Internal peer assessment</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 text-outline-variant hover:text-error transition-colors rounded-full hover:bg-error-container/10">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<!-- Editable Stage -->
+<div class="group flex items-center justify-between p-4 bg-surface-container-lowest rounded-lg border border-outline-variant/20 hover:border-primary/30 transition-all cursor-grab active:cursor-grabbing">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">drag_indicator</span>
+<div class="flex-1">
+<input class="bg-transparent border-none p-0 focus:ring-0 font-semibold text-on-surface focus:text-primary transition-colors w-full" type="text" value="Revision Required"/>
+<p class="text-xs text-on-surface-variant">Corrections pending from author</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 text-outline-variant hover:text-error transition-colors rounded-full hover:bg-error-container/10">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<!-- System Required Stage (Approved) -->
+<div class="group flex items-center justify-between p-4 bg-surface-container-low rounded-lg border border-transparent">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-outline-variant cursor-not-allowed">drag_indicator</span>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-semibold text-on-surface">Approved</span>
+<span class="px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase bg-surface-variant text-on-surface-variant rounded-full">System Required</span>
+</div>
+<p class="text-xs text-on-surface-variant">Finalized and baseline-ready</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline-variant text-xl">lock</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Transition Rules & Automation -->
+<section class="bg-surface-container-low rounded-xl p-1 overflow-hidden">
+<div class="bg-surface-container-lowest p-8 rounded-lg">
+<h3 class="text-lg font-bold text-on-surface mb-6">Transition Rules</h3>
+<div class="space-y-6">
+<!-- Rule Toggle 1 -->
+<div class="flex items-start justify-between">
+<div class="flex-1 pr-8">
+<h4 class="font-semibold text-on-surface text-sm">Require signature for Approval</h4>
+<p class="text-sm text-on-surface-variant mt-1 leading-snug">Requires a high-level digital signature from a designated manager before a requirement can transition to the 'Approved' state.</p>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</div>
+<div class="h-px bg-slate-100"></div>
+<!-- Rule Toggle 2 -->
+<div class="flex items-start justify-between">
+<div class="flex-1 pr-8">
+<h4 class="font-semibold text-on-surface text-sm">Auto-archive on Approved</h4>
+<p class="text-sm text-on-surface-variant mt-1 leading-snug">Automatically move historical versions of this requirement to the archive once the current version is finalized.</p>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</div>
+<div class="h-px bg-slate-100"></div>
+<!-- Rule Toggle 3 -->
+<div class="flex items-start justify-between">
+<div class="flex-1 pr-8">
+<h4 class="font-semibold text-on-surface text-sm">Mandatory Peer Review</h4>
+<p class="text-sm text-on-surface-variant mt-1 leading-snug">Enforces at least two unique peer signatures during the 'Under Review' stage.</p>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer Actions -->
+<div class="flex items-center justify-end gap-4 pt-4 border-t border-slate-200">
+<button class="px-6 py-2.5 text-sm font-semibold text-on-surface-variant hover:text-on-surface transition-colors">Discard Changes</button>
+<button class="px-8 py-2.5 text-sm font-bold text-white primary-gradient rounded-lg shadow-lg hover:shadow-primary/20 transition-all active:scale-95">
+                            Save Workflow Configuration
+                        </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Bottom Nav for Mobile -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 px-6 py-3 flex justify-around items-center z-50">
+<div class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Dash</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined">assignment</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Reqs</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-blue-700">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Config</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined">group</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Team</span>
+</div>
+</nav>
+</body></html>

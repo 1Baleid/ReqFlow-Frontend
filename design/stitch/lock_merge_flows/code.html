@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ReqFlow | Requirements Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#fff7f6",
+                    "on-background": "#2b3437",
+                    "on-tertiary": "#faf8ff",
+                    "outline-variant": "#abb3b7",
+                    "inverse-surface": "#0c0f10",
+                    "inverse-on-surface": "#9b9d9e",
+                    "primary-container": "#dbe1ff",
+                    "secondary": "#56606e",
+                    "on-tertiary-fixed-variant": "#555873",
+                    "on-secondary-fixed-variant": "#525c6a",
+                    "tertiary-fixed-dim": "#cdcfef",
+                    "error": "#9f403d",
+                    "outline": "#737c7f",
+                    "secondary-dim": "#4a5462",
+                    "surface-container": "#eaeff1",
+                    "secondary-fixed-dim": "#cbd5e6",
+                    "error-container": "#fe8983",
+                    "on-secondary-fixed": "#36404d",
+                    "on-secondary-container": "#485260",
+                    "surface-variant": "#dbe4e7",
+                    "on-primary-container": "#0046c3",
+                    "on-tertiary-container": "#4b4e69",
+                    "error-dim": "#4e0309",
+                    "surface-dim": "#d1dce0",
+                    "surface-container-high": "#e2e9ec",
+                    "on-primary-fixed-variant": "#0b50d5",
+                    "on-surface-variant": "#586064",
+                    "on-secondary": "#f7f9ff",
+                    "tertiary": "#5a5d78",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#f8f9fa",
+                    "surface": "#f8f9fa",
+                    "tertiary-fixed": "#dbddfe",
+                    "tertiary-container": "#dbddfe",
+                    "secondary-fixed": "#d9e3f4",
+                    "tertiary-dim": "#4e516c",
+                    "on-primary": "#f8f7ff",
+                    "background": "#f8f9fa",
+                    "secondary-container": "#d9e3f4",
+                    "on-error-container": "#752121",
+                    "primary-dim": "#0047c5",
+                    "inverse-primary": "#638aff",
+                    "surface-container-highest": "#dbe4e7",
+                    "primary-fixed": "#dbe1ff",
+                    "surface-container-low": "#f1f4f6",
+                    "on-primary-fixed": "#00369b",
+                    "on-tertiary-fixed": "#383c55",
+                    "on-surface": "#2b3437",
+                    "primary": "#1353d8",
+                    "surface-tint": "#1353d8",
+                    "primary-fixed-dim": "#c8d3ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopNavBar -->
+<header class="w-full top-0 sticky z-50 bg-white dark:bg-slate-900 flex justify-between items-center px-6 py-3 border-b border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tight text-blue-700 dark:text-blue-400">ReqFlow</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 dark:border-blue-400 pb-1 font-['Manrope'] font-bold hover:text-blue-600 transition-colors cursor-pointer" href="#">Dashboard</a>
+<a class="text-slate-500 dark:text-slate-400 font-['Manrope'] font-bold hover:text-blue-600 transition-colors cursor-pointer" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="pl-10 pr-4 py-1.5 rounded-lg bg-surface-container-low border-none text-sm w-64 focus:ring-2 focus:ring-primary" placeholder="Search requirements..." type="text"/>
+</div>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-blue-600 transition-all">notifications</span>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-blue-600 transition-all">help_outline</span>
+<img alt="Manager Profile" class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container border-2 border-surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8FkB01oRSmxpsyOnJHAdHQQzWGOQv0dJES1VIfGpmrDUmGUxBYopZPbCdyNhvgzHlhpOL0aCaVXH6MaVll9EaWxjs92g7jIFNnvSxnU1_asWZDieQJQTtTCjl7hL4_t5Bxu_ucnHuueGSFaalnsrH9gwd4lkLTlFl_0nHCy715SITdyvwIbL5IHDgdYqoRAhMK5wah2dFpTwI4JdiH3Ss4vgkMstoETwGnegzZ9Y_0ogRa6wngQ0j7EfPzrykq56wC7kMr0HN46Q"/>
+</div>
+</header>
+<div class="flex h-[calc(100vh-60px)]">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-full w-64 p-4 border-r border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
+<div class="mb-8 px-2">
+<h2 class="text-sm font-bold text-on-surface">Project Alpha</h2>
+<p class="text-xs text-on-surface-variant">Enterprise Tier</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-semibold rounded-lg scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-medium text-sm">Requirements</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-medium text-sm">Team</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium text-sm">Settings</span>
+</a>
+</nav>
+<button class="mt-4 w-full bg-gradient-to-br from-primary to-primary-dim text-white py-2 rounded-lg text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity">
+                Invite Member
+            </button>
+<div class="mt-auto border-t border-slate-200 pt-4">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 transition-all scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span class="font-medium text-sm">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto bg-surface p-8">
+<div class="max-w-6xl mx-auto space-y-12">
+<!-- SECTION 1: LOCKED REQUIREMENT FLOW -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<div>
+<span class="label-sm text-[0.6875rem] font-bold tracking-wider text-on-surface-variant uppercase">Requirement Management</span>
+<h2 class="text-2xl font-extrabold text-on-surface mt-1">Lock Approved Entity</h2>
+</div>
+<div class="flex gap-3">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">check_circle</span> Approved
+                            </span>
+</div>
+</div>
+<!-- The Requirement Canvas (Locked State) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_12px_32px_rgba(43,52,55,0.04)] overflow-hidden">
+<!-- Locked Header -->
+<div class="p-6 bg-surface-container-high/30 flex items-center justify-between border-b border-outline-variant/10">
+<div class="flex items-center gap-4">
+<div class="bg-inverse-surface text-on-tertiary p-2 rounded-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+<div>
+<h3 class="text-xl font-bold text-on-surface">REQ-042: Cloud Synchronization Engine</h3>
+<p class="text-sm text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">history</span> Last modified by Alex Chen • 2h ago
+                                    </p>
+</div>
+</div>
+<div class="flex items-center gap-2 px-3 py-1.5 bg-error-container/20 text-on-error-container border border-error-container/30 rounded-lg">
+<span class="material-symbols-outlined text-sm">lock</span>
+<span class="text-xs font-bold uppercase tracking-tight">Locked</span>
+</div>
+</div>
+<!-- Read Only Content -->
+<div class="p-8 grid grid-cols-3 gap-8 opacity-75 grayscale-[20%]">
+<div class="col-span-2 space-y-6">
+<div>
+<label class="text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest block mb-2">Description</label>
+<div class="p-4 bg-surface-container rounded-lg text-on-surface leading-relaxed text-sm">
+                                        The system must provide real-time background synchronization between local cached state and the primary AWS database instance with sub-200ms latency.
+                                    </div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest block mb-2">Technical Constraints</label>
+<ul class="space-y-2">
+<li class="flex items-center gap-2 text-sm text-on-surface">
+<span class="material-symbols-outlined text-sm text-outline">check_small</span> WebSocket over HTTPS
+                                            </li>
+<li class="flex items-center gap-2 text-sm text-on-surface">
+<span class="material-symbols-outlined text-sm text-outline">check_small</span> AES-256 Encryption
+                                            </li>
+</ul>
+</div>
+<div>
+<label class="text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest block mb-2">Success Metrics</label>
+<ul class="space-y-2">
+<li class="flex items-center gap-2 text-sm text-on-surface">
+<span class="material-symbols-outlined text-sm text-outline">check_small</span> 99.99% Sync Consistency
+                                            </li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-span-1 space-y-6 border-l border-outline-variant/10 pl-8">
+<div>
+<label class="text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest block mb-2">MetaData</label>
+<div class="space-y-3">
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Priority</span>
+<span class="font-semibold">High</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Version</span>
+<span class="font-semibold">v3.4 (Baseline)</span>
+</div>
+</div>
+</div>
+<div class="p-4 bg-surface-container-high rounded-lg text-center">
+<span class="material-symbols-outlined text-outline mb-2 block">edit_off</span>
+<p class="text-xs font-medium text-on-surface-variant">This requirement is currently under baseline lock. No further edits permitted.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- LOCK MODAL OVERLAY (DEMO) -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-on-surface/20 backdrop-blur-md">
+<div class="bg-surface-container-lowest w-full max-w-md rounded-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+<div class="p-6 border-b border-outline-variant/10">
+<div class="flex items-center gap-3 text-primary mb-2">
+<span class="material-symbols-outlined">lock_open</span>
+<h4 class="text-lg font-bold">Lock Requirement?</h4>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                                    Locking REQ-042 will freeze all current fields and prevent further modifications by team members. This action is usually performed after final approval.
+                                </p>
+</div>
+<div class="p-6 bg-surface-container-low flex flex-col gap-3">
+<div class="flex items-center gap-3 p-3 bg-surface-container-lowest rounded-lg border border-outline-variant/20">
+<input checked="" class="rounded border-outline-variant text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+<span class="text-xs font-medium text-on-surface">Notify stakeholders of baseline freeze</span>
+</div>
+<div class="flex items-center gap-3 p-3 bg-surface-container-lowest rounded-lg border border-outline-variant/20">
+<input class="rounded border-outline-variant text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+<span class="text-xs font-medium text-on-surface">Generate a version snapshot (v3.4)</span>
+</div>
+</div>
+<div class="p-4 flex gap-3 justify-end bg-surface-container-lowest">
+<button class="px-4 py-2 text-sm font-semibold text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors">Cancel</button>
+<button class="px-6 py-2 text-sm font-bold bg-gradient-to-br from-primary to-primary-dim text-white rounded-lg shadow-md hover:opacity-90 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">lock</span> Lock &amp; Baseline
+                                </button>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 2: DUPLICATE & MERGE FLOW -->
+<section>
+<div class="mb-6">
+<span class="label-sm text-[0.6875rem] font-bold tracking-wider text-on-surface-variant uppercase">Resolution Center</span>
+<h2 class="text-2xl font-extrabold text-on-surface mt-1">Duplicate Merge Workbench</h2>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Comparison Split View -->
+<div class="lg:col-span-9 space-y-6">
+<div class="flex gap-6">
+<!-- Option A -->
+<div class="flex-1 bg-surface-container-lowest rounded-xl shadow-sm border-2 border-primary overflow-hidden relative">
+<div class="absolute top-4 right-4">
+<div class="flex items-center gap-2 px-2 py-1 bg-primary/10 text-primary rounded-full">
+<input checked="" class="w-4 h-4 text-primary focus:ring-primary" name="primary_req" type="radio"/>
+<span class="text-[10px] font-bold uppercase">Primary</span>
+</div>
+</div>
+<div class="p-5 border-b border-outline-variant/10">
+<div class="text-[10px] font-bold text-on-surface-variant uppercase mb-1">REQ-088</div>
+<h4 class="font-bold text-on-surface">Offline Data Persistence</h4>
+<p class="text-[10px] text-on-surface-variant">Created: Oct 12 by Jane Doe</p>
+</div>
+<div class="p-5 space-y-4">
+<div>
+<label class="text-[10px] font-bold text-on-surface-variant uppercase block mb-1">Description</label>
+<p class="text-sm leading-snug">Enable local storage using IndexedDB to allow users to continue working without an internet connection. Data should sync once connection is restored.</p>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg">
+<label class="text-[10px] font-bold text-on-surface-variant uppercase block mb-1">Technical Stack</label>
+<span class="bg-secondary-container text-on-secondary-container text-[10px] px-2 py-0.5 rounded-full">IndexedDB</span>
+<span class="bg-secondary-container text-on-secondary-container text-[10px] px-2 py-0.5 rounded-full">Service Workers</span>
+</div>
+</div>
+</div>
+<!-- Center Connector Icon -->
+<div class="flex items-center justify-center">
+<span class="material-symbols-outlined text-outline-variant scale-125">compare_arrows</span>
+</div>
+<!-- Option B -->
+<div class="flex-1 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 overflow-hidden relative">
+<div class="absolute top-4 right-4">
+<div class="flex items-center gap-2 px-2 py-1 bg-surface-container-high text-on-surface-variant rounded-full">
+<input class="w-4 h-4 text-primary focus:ring-primary" name="primary_req" type="radio"/>
+<span class="text-[10px] font-bold uppercase">Duplicate</span>
+</div>
+</div>
+<div class="p-5 border-b border-outline-variant/10">
+<div class="text-[10px] font-bold text-on-surface-variant uppercase mb-1">REQ-094</div>
+<h4 class="font-bold text-on-surface">Local-First Storage Support</h4>
+<p class="text-[10px] text-on-surface-variant">Created: Oct 14 by Mike Ross</p>
+</div>
+<div class="p-5 space-y-4">
+<div>
+<label class="text-[10px] font-bold text-on-surface-variant uppercase block mb-1">Description</label>
+<p class="text-sm leading-snug">System must support local-first data entry. Use browser storage for pending changes. Sync logic required for AWS reconciliation.</p>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg opacity-60">
+<label class="text-[10px] font-bold text-on-surface-variant uppercase block mb-1">Technical Stack</label>
+<span class="bg-surface-variant text-on-surface-variant text-[10px] px-2 py-0.5 rounded-full">Browser Cache</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Merge Result Preview Card -->
+<div class="bg-surface-container-low border-2 border-dashed border-outline-variant/40 rounded-xl p-6">
+<div class="flex items-center gap-4 mb-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">merge</span>
+<h5 class="text-sm font-bold">Merge Resolution Preview</h5>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div>
+<p class="text-xs text-on-surface-variant mb-1">Retained Identifiers</p>
+<p class="text-sm font-semibold">REQ-088 (Primary)</p>
+<p class="text-xs text-on-surface-variant mt-3 mb-1">Consolidated Tags</p>
+<div class="flex gap-1">
+<span class="text-[10px] px-2 py-0.5 bg-surface-container-highest rounded-full">IndexedDB</span>
+<span class="text-[10px] px-2 py-0.5 bg-surface-container-highest rounded-full">Service Workers</span>
+<span class="text-[10px] px-2 py-0.5 bg-primary-container text-on-primary-container rounded-full">+ Browser Cache</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded-lg border border-outline-variant/10">
+<p class="text-[10px] font-bold text-on-surface-variant uppercase mb-2">Merge Notes (Internal)</p>
+<textarea class="w-full bg-transparent border-none text-xs focus:ring-0 resize-none h-16" placeholder="Document the reason for this merge...">Merging REQ-094 into REQ-088 as they describe the same offline persistence logic. REQ-088 has more detail on the service worker implementation.</textarea>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar Actions -->
+<div class="lg:col-span-3 space-y-4">
+<div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm">
+<h5 class="text-sm font-bold mb-4">Conflict Analysis</h5>
+<div class="space-y-4">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-error text-lg">warning</span>
+<div>
+<p class="text-xs font-bold">Overlap Detected</p>
+<p class="text-[11px] text-on-surface-variant">85% similarity in functional description found by AI.</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-lg">info</span>
+<div>
+<p class="text-xs font-bold">Historical Trace</p>
+<p class="text-[11px] text-on-surface-variant">REQ-094 was linked to the 'UI Revamp' epic.</p>
+</div>
+</div>
+</div>
+<div class="mt-6 pt-4 border-t border-outline-variant/10">
+<button class="w-full bg-gradient-to-br from-primary to-primary-dim text-white py-3 rounded-lg text-sm font-bold flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">call_merge</span> Complete Merge
+                                    </button>
+<button class="w-full mt-2 text-on-surface-variant py-2 text-xs font-medium hover:bg-surface-container transition-colors rounded-lg">
+                                        Dismiss Conflict
+                                    </button>
+</div>
+</div>
+<div class="p-4 bg-tertiary-container/20 rounded-xl border border-tertiary-container/30">
+<p class="text-[11px] leading-relaxed text-on-tertiary-container italic">
+                                    "Merging requirements helps maintain a clean single source of truth and prevents redundant developer effort."
+                                </p>
+</div>
+</div>
+</div>
+</section>
+<!-- FOOTER / BOTTOM NAV FOR MOBILE -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-white dark:bg-slate-900 flex justify-around items-center py-3 border-t border-slate-100 dark:border-slate-800 px-4">
+<button class="flex flex-col items-center gap-1 text-blue-700">
+<span class="material-symbols-outlined">assignment</span>
+<span class="text-[10px] font-bold">Reqs</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined">group</span>
+<span class="text-[10px] font-bold">Team</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-[10px] font-bold">Reports</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-bold">Settings</span>
+</button>
+</nav>
+</div>
+</main>
+</div>
+</body></html>

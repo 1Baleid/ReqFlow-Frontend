@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ReqFlow | Team Workflow</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#525c6a",
+                        "on-tertiary-container": "#4b4e69",
+                        "surface-container-low": "#f1f4f6",
+                        "surface-variant": "#dbe4e7",
+                        "secondary-fixed-dim": "#cbd5e6",
+                        "surface-container": "#eaeff1",
+                        "primary-dim": "#0047c5",
+                        "secondary": "#56606e",
+                        "on-surface": "#2b3437",
+                        "surface-container-highest": "#dbe4e7",
+                        "on-secondary": "#f7f9ff",
+                        "surface": "#f8f9fa",
+                        "tertiary-container": "#dbddfe",
+                        "inverse-surface": "#0c0f10",
+                        "primary-fixed-dim": "#c8d3ff",
+                        "on-primary": "#f8f7ff",
+                        "secondary-dim": "#4a5462",
+                        "on-tertiary-fixed-variant": "#555873",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#faf8ff",
+                        "primary": "#1353d8",
+                        "on-surface-variant": "#586064",
+                        "on-secondary-fixed": "#36404d",
+                        "on-background": "#2b3437",
+                        "inverse-primary": "#638aff",
+                        "on-secondary-container": "#485260",
+                        "outline-variant": "#abb3b7",
+                        "tertiary": "#5a5d78",
+                        "surface-tint": "#1353d8",
+                        "on-error": "#fff7f6",
+                        "on-primary-fixed": "#00369b",
+                        "on-tertiary-fixed": "#383c55",
+                        "tertiary-fixed": "#dbddfe",
+                        "secondary-fixed": "#d9e3f4",
+                        "inverse-on-surface": "#9b9d9e",
+                        "surface-container-high": "#e2e9ec",
+                        "error-container": "#fe8983",
+                        "tertiary-dim": "#4e516c",
+                        "primary-fixed": "#dbe1ff",
+                        "on-error-container": "#752121",
+                        "surface-bright": "#f8f9fa",
+                        "error-dim": "#4e0309",
+                        "background": "#f8f9fa",
+                        "error": "#9f403d",
+                        "outline": "#737c7f",
+                        "on-primary-container": "#0046c3",
+                        "secondary-container": "#d9e3f4",
+                        "primary-container": "#dbe1ff",
+                        "on-primary-fixed-variant": "#0b50d5",
+                        "surface-dim": "#d1dce0",
+                        "tertiary-fixed-dim": "#cdcfef"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4 { font-family: 'Manrope', sans-serif; }
+        .glass-modal {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- Shared SideNavBar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col p-4 h-screen w-64 border-r border-transparent bg-slate-50 dark:bg-slate-900 z-50">
+<div class="flex items-center gap-3 px-2 mb-8">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_tree</span>
+</div>
+<div>
+<div class="text-xl font-bold text-slate-900 dark:text-white leading-tight">ReqFlow</div>
+<div class="text-[10px] font-medium Inter uppercase tracking-widest text-slate-500">Enterprise Suite</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors duration-200 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium Inter">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors duration-200 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-semibold" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="text-sm font-medium Inter">Requirements</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors duration-200 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined">account_tree</span>
+<span class="text-sm font-medium Inter">Traceability</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors duration-200 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-medium Inter">Team</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors duration-200 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium Inter">Project Settings</span>
+</a>
+</nav>
+<button class="mt-auto w-full py-3 px-4 bg-gradient-to-br from-primary to-primary-dim text-white rounded-xl font-bold text-sm shadow-lg shadow-primary/20 flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm">add</span>
+            New Requirement
+        </button>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen">
+<!-- Shared TopNavBar -->
+<header class="sticky top-0 z-40 flex justify-between items-center px-8 w-full h-16 border-b border-transparent bg-white/85 dark:bg-slate-950/85 backdrop-blur-md shadow-sm dark:shadow-none">
+<div class="flex items-center gap-8">
+<div class="relative">
+<span class="absolute inset-y-0 left-3 flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">search</span>
+</span>
+<input class="bg-surface-container-lowest border-none ring-1 ring-outline-variant/15 focus:ring-2 focus:ring-primary rounded-full pl-10 pr-4 py-1.5 text-sm w-64" placeholder="Search requirements..." type="text"/>
+</div>
+<div class="flex gap-6">
+<a class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 text-xs tracking-wider uppercase Inter font-bold py-5" href="#">Project Alpha</a>
+<a class="text-slate-500 dark:text-slate-400 text-xs tracking-wider uppercase Inter font-bold py-5 hover:text-blue-600" href="#">Beta Phase</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<img alt="User Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-surface-container-high" data-alt="close-up portrait of a professional male software engineer with a friendly expression in a brightly lit office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBp5aVWDhQQpAP93mW31PIhZjyk6GDexetIfLM0LBkMFmnTrxrMLsTABfujds5hoyViPCnpVccwZCzQE6V0eNuj9FZ4_qoql5r-85Z5jcqPihGK4GW-V0AA7n6U-sDDImvvOI0DHcwsIGxBmvYNixOJ-hwKInsk59hmTJlBbnDDh_enUxtPOgihTVoHIYrDXnmDqrPkREhQxs2bePy6XhiGiDT7lJrHN9lutYwhfGkW46WhivNsKOVkjnV__BS0IW720HVhGoewWoY"/>
+</div>
+</header>
+<!-- Page Canvas -->
+<div class="p-8 max-w-7xl mx-auto space-y-12">
+<!-- Success Toasts & Errors (Floating layer visualization) -->
+<div class="fixed top-20 right-8 z-[60] flex flex-col gap-4">
+<!-- Success Toast -->
+<div class="flex items-center gap-3 bg-white shadow-2xl shadow-on-surface/5 border-l-4 border-primary p-4 rounded-xl max-w-xs animate-in slide-in-from-right duration-300">
+<div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Requirement Refined</p>
+<p class="text-xs text-on-surface-variant">System updated successfully.</p>
+</div>
+</div>
+<!-- Criteria Saved Toast -->
+<div class="flex items-center gap-3 bg-white shadow-2xl shadow-on-surface/5 border-l-4 border-tertiary p-4 rounded-xl max-w-xs">
+<div class="w-8 h-8 bg-tertiary/10 rounded-full flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">save</span>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Criteria Saved</p>
+<p class="text-xs text-on-surface-variant">Linked to 3 sub-tasks.</p>
+</div>
+</div>
+</div>
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Main Form with Validation Error State -->
+<div class="lg:col-span-7 space-y-6">
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h2 class="text-2xl font-extrabold tracking-tight mb-1">Refine RF-802: Authentication Flow</h2>
+<p class="text-sm text-on-surface-variant">Update the technical specifications for the OAuth2 integration.</p>
+</div>
+<span class="label-sm bg-error-container/20 text-on-error-container px-3 py-1 rounded-full font-bold text-[10px] tracking-widest uppercase">High Priority</span>
+</div>
+<div class="space-y-6">
+<div>
+<label class="block text-xs font-bold tracking-wider text-on-surface-variant uppercase mb-2">Technical Description</label>
+<textarea class="w-full bg-surface-container-lowest border-none ring-1 ring-outline-variant/15 focus:ring-2 focus:ring-primary rounded-xl p-4 text-sm resize-none" rows="4">The system must support JWT-based authentication for all API endpoints, utilizing the Auth0 provider as the primary identity source.</textarea>
+</div>
+<!-- Error State: Missing Justification -->
+<div>
+<label class="block text-xs font-bold tracking-wider text-on-surface-variant uppercase mb-2">Change Justification</label>
+<div class="relative">
+<textarea class="w-full bg-surface-container-lowest border-none ring-2 ring-error/50 focus:ring-2 focus:ring-error rounded-xl p-4 text-sm resize-none" placeholder="Provide reason for this refinement..." rows="3"></textarea>
+<div class="absolute -bottom-6 left-0 flex items-center gap-1.5 text-error text-[11px] font-medium">
+<span class="material-symbols-outlined text-[14px]">error</span>
+                                        This field is required to audit system changes.
+                                    </div>
+</div>
+</div>
+<div class="flex justify-end gap-3 pt-6">
+<button class="px-6 py-2.5 rounded-lg text-sm font-bold text-on-surface-variant hover:bg-surface-container transition-colors">Discard</button>
+<button class="px-8 py-2.5 rounded-lg text-sm font-bold bg-gradient-to-br from-primary to-primary-dim text-white shadow-lg shadow-primary/20 hover:opacity-90 active:scale-95 transition-all">Submit Refinement</button>
+</div>
+</div>
+</div>
+<!-- Discussion Thread View -->
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">forum</span>
+<h3 class="text-lg font-bold">Clarification History</h3>
+</div>
+<div class="space-y-6">
+<!-- Posted Question -->
+<div class="flex gap-4">
+<img alt="Sarah Chen" class="w-10 h-10 rounded-full object-cover" data-alt="professional woman in glasses looking thoughtfully at a computer screen in a bright workspace" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC51GHwP0pEXQc8p9wlc7kdQ8FbOkEItOZOyO35FcsW2nDjOv8bR3VvT2HjfMoqdAiGtD1b58xg6ErL8_ITHhlyea75eeNX53UnhVJjgxfItxHbiM6Tlxz10Bd21hiySWxFiWV1KP9NnzW8osPo8n-weRr0LKeWo0o1F4putxrAMSxsc1Y5KVlZtsGjBsWr5LdZZdxSAF9VubhdMKv453Q2QHAjMaB282OqrVGeaTFso7kYHq7xL-EcGUxpTpz4wbSExXNrktOmhxE"/>
+<div class="flex-1">
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-bold text-sm">Sarah Chen</span>
+<span class="text-[10px] text-on-surface-variant font-medium">2 hours ago</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl rounded-tl-none border border-transparent">
+<p class="text-sm leading-relaxed text-on-surface">
+                                            Should the OAuth refresh token strategy include a rotating secret, or is a static secret sufficient for the initial MVP rollout?
+                                        </p>
+</div>
+<div class="mt-2 flex items-center gap-4">
+<button class="text-xs font-bold text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">edit</span> Edit
+                                        </button>
+<button class="text-xs font-bold text-on-surface-variant">Resolve</button>
+</div>
+</div>
+</div>
+<!-- Placeholder for Client Reply -->
+<div class="flex gap-4 justify-end">
+<div class="flex-1 max-w-[80%]">
+<div class="flex items-baseline gap-2 mb-1 justify-end">
+<span class="text-[10px] text-on-surface-variant font-medium italic">Pending client response...</span>
+<span class="font-bold text-sm text-on-surface-variant">Client Admin</span>
+</div>
+<div class="bg-surface p-4 rounded-xl rounded-tr-none border-2 border-dashed border-outline-variant/30 flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-sm mr-2 animate-pulse">hourglass_top</span>
+<span class="text-xs font-medium">Awaiting clarification from Project Lead</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-outline-variant">
+<span class="material-symbols-outlined">person</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive State Displays (Modals as inline examples for preview) -->
+<div class="lg:col-span-5 space-y-8">
+<!-- Modal Component: Request Clarification -->
+<div class="glass-modal rounded-xl shadow-2xl p-6 border border-white/40 ring-1 ring-on-surface/5">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold text-lg">Request Clarification</h3>
+<button class="text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="space-y-4">
+<p class="text-sm text-on-surface-variant">Direct this question to the client for the current requirement.</p>
+<!-- Error Input Example -->
+<div>
+<textarea class="w-full bg-surface/50 border-none ring-1 ring-error/50 rounded-xl p-3 text-sm focus:ring-2 focus:ring-error transition-all" placeholder="What would you like to ask?" rows="3"></textarea>
+<p class="text-[10px] text-error font-semibold mt-1.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">warning</span> Input cannot be empty.
+                                </p>
+</div>
+<div class="flex justify-between items-center pt-2">
+<div class="flex items-center gap-2">
+<input class="rounded text-primary focus:ring-primary border-outline-variant" id="urgent" type="checkbox"/>
+<label class="text-xs font-medium text-on-surface-variant" for="urgent">Mark as blocker</label>
+</div>
+<button class="px-6 py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-md shadow-primary/10 hover:opacity-90">Send</button>
+</div>
+</div>
+</div>
+<!-- Modal Component: Link Related Requirements -->
+<div class="glass-modal rounded-xl shadow-2xl p-0 border border-white/40 ring-1 ring-on-surface/5 overflow-hidden">
+<div class="p-6 border-b border-surface-container">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold text-lg">Link Requirements</h3>
+<button class="text-on-surface-variant">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="relative">
+<span class="absolute inset-y-0 left-3 flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">search</span>
+</span>
+<input class="w-full bg-surface/50 border-none ring-1 ring-outline-variant/30 rounded-lg pl-9 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary" type="text" value="RF-802"/>
+</div>
+<!-- Prevention Error Message -->
+<div class="mt-3 bg-error-container/10 border border-error/20 p-2.5 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-error text-[18px]">block</span>
+<p class="text-[11px] text-on-error-container leading-tight">
+<span class="font-bold">Error:</span> Self-linking is prohibited. Requirement <span class="font-mono">RF-802</span> cannot link to itself.
+                                </p>
+</div>
+</div>
+<div class="max-h-64 overflow-y-auto">
+<div class="p-2">
+<!-- List Item -->
+<label class="flex items-center gap-3 p-3 hover:bg-surface-container-low rounded-lg cursor-pointer group">
+<input class="w-4 h-4 rounded text-primary focus:ring-primary border-outline-variant" type="checkbox"/>
+<div class="flex-1">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold font-mono text-primary">RF-805</span>
+<span class="label-sm text-[9px] bg-surface-container-highest px-1.5 py-0.5 rounded uppercase tracking-tighter">Draft</span>
+</div>
+<p class="text-xs text-on-surface font-medium truncate">Session Timeout Configuration</p>
+</div>
+</label>
+<!-- List Item -->
+<label class="flex items-center gap-3 p-3 hover:bg-surface-container-low rounded-lg cursor-pointer group">
+<input checked="" class="w-4 h-4 rounded text-primary focus:ring-primary border-outline-variant" type="checkbox"/>
+<div class="flex-1">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold font-mono text-primary">RF-102</span>
+<span class="label-sm text-[9px] bg-tertiary-container text-on-tertiary-container px-1.5 py-0.5 rounded uppercase tracking-tighter">Approved</span>
+</div>
+<p class="text-xs text-on-surface font-medium truncate">User Permissions Matrix</p>
+</div>
+</label>
+<!-- List Item -->
+<label class="flex items-center gap-3 p-3 hover:bg-surface-container-low rounded-lg cursor-pointer group">
+<input class="w-4 h-4 rounded text-primary focus:ring-primary border-outline-variant" type="checkbox"/>
+<div class="flex-1">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold font-mono text-primary">RF-912</span>
+<span class="label-sm text-[9px] bg-surface-container-highest px-1.5 py-0.5 rounded uppercase tracking-tighter">Review</span>
+</div>
+<p class="text-xs text-on-surface font-medium truncate">Audit Log Service Integration</p>
+</div>
+</label>
+</div>
+</div>
+<div class="p-4 bg-surface-container/30 border-t border-surface-container flex justify-end gap-3">
+<button class="text-xs font-bold text-on-surface-variant px-4 py-2 hover:bg-surface-container rounded-lg">Cancel</button>
+<button class="text-xs font-bold bg-primary text-white px-5 py-2 rounded-lg shadow-sm">Link 1 Selection</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>

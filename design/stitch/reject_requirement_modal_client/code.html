@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Architectural Curator - Reject Requirement</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#fe8983",
+                        "on-tertiary-fixed": "#383c55",
+                        "primary-fixed-dim": "#c8d3ff",
+                        "surface-dim": "#d1dce0",
+                        "outline-variant": "#abb3b7",
+                        "primary": "#1353d8",
+                        "on-tertiary": "#faf8ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#00369b",
+                        "error-dim": "#4e0309",
+                        "surface-container-low": "#f1f4f6",
+                        "error": "#9f403d",
+                        "surface-container-high": "#e2e9ec",
+                        "primary-dim": "#0047c5",
+                        "tertiary-container": "#dbddfe",
+                        "primary-container": "#dbe1ff",
+                        "primary-fixed": "#dbe1ff",
+                        "surface-tint": "#1353d8",
+                        "secondary-container": "#d9e3f4",
+                        "inverse-on-surface": "#9b9d9e",
+                        "on-secondary-container": "#485260",
+                        "background": "#f8f9fa",
+                        "inverse-primary": "#638aff",
+                        "on-background": "#2b3437",
+                        "tertiary-dim": "#4e516c",
+                        "secondary": "#56606e",
+                        "secondary-fixed": "#d9e3f4",
+                        "on-secondary": "#f7f9ff",
+                        "surface-variant": "#dbe4e7",
+                        "on-error": "#fff7f6",
+                        "surface-container-highest": "#dbe4e7",
+                        "on-error-container": "#752121",
+                        "on-tertiary-fixed-variant": "#555873",
+                        "tertiary-fixed": "#dbddfe",
+                        "outline": "#737c7f",
+                        "surface-bright": "#f8f9fa",
+                        "secondary-fixed-dim": "#cbd5e6",
+                        "on-primary-fixed-variant": "#0b50d5",
+                        "on-secondary-fixed-variant": "#525c6a",
+                        "on-secondary-fixed": "#36404d",
+                        "on-primary": "#f8f7ff",
+                        "on-surface": "#2b3437",
+                        "tertiary-fixed-dim": "#cdcfef",
+                        "on-primary-container": "#0046c3",
+                        "surface": "#f8f9fa",
+                        "surface-container": "#eaeff1",
+                        "secondary-dim": "#4a5462",
+                        "tertiary": "#5a5d78",
+                        "on-tertiary-container": "#4b4e69",
+                        "on-surface-variant": "#586064",
+                        "inverse-surface": "#0c0f10"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .editorial-header {
+            letter-spacing: -0.02em;
+        }
+        .ghost-border {
+            outline: 1px solid rgba(171, 179, 183, 0.15);
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #1353d8 0%, #0047c5 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body antialiased">
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-100 flex justify-between items-center px-8 w-full">
+<div class="flex items-center gap-6">
+<span class="font-headline font-bold text-lg text-slate-900 editorial-header">Architectural Curator</span>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 w-64 transition-all" placeholder="Search requirements..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-500 hover:text-blue-600 transition-all font-label text-sm font-semibold">Feedback</button>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer" data-icon="help_outline">help_outline</span>
+<div class="h-8 w-8 rounded-full overflow-hidden bg-surface-container-high">
+<img alt="User Profile" data-alt="professional male architect headshot with soft studio lighting and neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaEeGdXQ0Xgn2eBaAVndmzZD7l7pS3Z5vUa0A3LxKfU311aR1VCKtUR8Krnl0KjpD-zPIz_Siww2CK-3wikHsU5_0AxmwACOWYs6e0FYWryBYld_Aoo6lYz6nnSccI-FJO4_q8H7W4tJ9ntr12ccny0v9mw3AwDaHIqU0mCdBV8XWlRvG5-8z_LswWdNMRbTDAh3fXWiyk9XuHS2FdtwKCpzajURhuKBRGupCbDQCF6vMIwVFkp4eY2PyJosKHCgC_pHnnswvVR3I"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-slate-50 flex flex-col p-4 z-50">
+<div class="mb-8 px-4 py-2">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 primary-gradient rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-sm" data-icon="architecture">architecture</span>
+</div>
+<div>
+<h1 class="text-xl font-bold text-slate-900 font-headline leading-tight">Curator Pro</h1>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-label">Startup Workspace</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-200/50 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-headline font-semibold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-blue-700 bg-white rounded-lg shadow-sm font-headline font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="font-headline font-semibold">Requirements</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-200/50 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined" data-icon="folder_managed">folder_managed</span>
+<span class="font-headline font-semibold">Projects</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-200/50 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-headline font-semibold">Users</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-200/50 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-headline font-semibold">Settings</span>
+</a>
+</nav>
+<div class="mt-auto">
+<button class="w-full primary-gradient text-white py-3 px-4 rounded-xl font-headline font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[0.98] transition-transform">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                New Project
+            </button>
+</div>
+</aside>
+<!-- Main Content (Blurred Background) -->
+<main class="ml-64 mt-16 p-12 blur-sm pointer-events-none select-none">
+<div class="max-w-4xl mx-auto">
+<div class="flex items-center gap-4 mb-8">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-[10px] font-label font-bold tracking-widest uppercase">Draft v2.1</span>
+<h2 class="text-3xl font-headline font-bold editorial-header">R-104: HVAC Automated Load Balancing</h2>
+</div>
+<div class="grid grid-cols-1 gap-8">
+<!-- Requirement Details Card -->
+<div class="bg-surface-container-lowest rounded-xl p-8 ghost-border">
+<div class="flex justify-between items-start mb-6">
+<div class="space-y-1">
+<p class="text-[10px] font-label text-on-surface-variant font-bold tracking-widest uppercase">Description</p>
+<p class="text-on-surface leading-relaxed max-w-2xl">
+                                The system must automatically adjust the thermal load distribution across the North and South wings of the structure based on real-time occupancy sensors. The latency for adjustment must not exceed 45 seconds.
+                            </p>
+</div>
+<div class="bg-error-container/20 px-3 py-1 rounded-full">
+<span class="text-on-error-container text-[10px] font-label font-bold uppercase tracking-wider">High Priority</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-12 mt-12">
+<div>
+<p class="text-[10px] font-label text-on-surface-variant font-bold tracking-widest uppercase mb-2">Author</p>
+<div class="flex items-center gap-2">
+<img alt="Author" class="w-6 h-6 rounded-full" data-alt="close-up of male architect in black glasses looking thoughtfully into the camera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUuzlrRzSXeDdE3hZxLeH1kNV6po4dRT9UgcWJH1VUem87ys08NsTJaCuHh9gRWNC_1glS1QJrx6VjCTMJZKGcuKtHe6n_p1TD_trKrfC3X1iSH-7nwGB_EAen8h58q-xVdtmG2-WFcLHg-bH9eRpNYshNd54XLkIbB4CSHxy_OBn_zfKeO0k9kbMdRQZD3_nmeGg_f-VSJY2H4ysv2UHqPUz8XSSw5L7YSjEsyrc4PnDTmG9MVgPKob1En00Lx8eJqzuVO7DStN0"/>
+<span class="text-sm font-semibold">David Chen</span>
+</div>
+</div>
+<div>
+<p class="text-[10px] font-label text-on-surface-variant font-bold tracking-widest uppercase mb-2">Traceability</p>
+<div class="flex gap-2">
+<span class="bg-surface-container px-2 py-0.5 rounded text-[11px] font-semibold text-secondary">ARCH-502</span>
+<span class="bg-surface-container px-2 py-0.5 rounded text-[11px] font-semibold text-secondary">ENV-11</span>
+</div>
+</div>
+<div>
+<p class="text-[10px] font-label text-on-surface-variant font-bold tracking-widest uppercase mb-2">Stakeholders</p>
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full border-2 border-white bg-slate-200"></div>
+<div class="w-7 h-7 rounded-full border-2 border-white bg-slate-300"></div>
+<div class="w-7 h-7 rounded-full border-2 border-white bg-slate-400"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-on-surface/10 backdrop-blur-sm">
+<!-- Reject Requirement Modal -->
+<div class="bg-surface-container-lowest w-full max-w-lg rounded-xl shadow-[0px_12px_32px_rgba(43,52,55,0.12)] overflow-hidden">
+<div class="p-8">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 bg-error-container/20 rounded-full flex items-center justify-center text-error">
+<span class="material-symbols-outlined" data-icon="block">block</span>
+</div>
+<div>
+<h3 class="text-xl font-headline font-bold editorial-header text-on-surface">Reject Requirement</h3>
+<p class="text-sm text-on-surface-variant">Requirement: R-104 HVAC Load Balancing</p>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<label class="block text-[10px] font-label text-on-surface-variant font-bold tracking-widest uppercase mb-2">Justification for Rejection</label>
+<textarea class="w-full bg-surface-container-low border-b-2 border-error text-on-surface rounded-lg p-4 text-sm focus:ring-0 focus:outline-none placeholder:text-on-surface-variant/40 resize-none transition-all" placeholder="Please provide detailed reasoning for rejecting this requirement..." rows="4"></textarea>
+<!-- Validation Message -->
+<div class="flex items-center gap-2 mt-2 text-error">
+<span class="material-symbols-outlined text-xs" data-icon="error">error</span>
+<span class="text-xs font-semibold">Justification is required to reject a requirement</span>
+</div>
+</div>
+</div>
+</div>
+<div class="px-8 py-6 bg-surface-container-low flex justify-end gap-4">
+<button class="px-6 py-2.5 text-secondary font-headline font-bold text-sm hover:text-on-surface transition-colors">
+                    Cancel
+                </button>
+<button class="px-6 py-2.5 bg-error text-white rounded-lg font-headline font-bold text-sm hover:bg-error-dim transition-all shadow-md shadow-error/10">
+                    Confirm Rejection
+                </button>
+</div>
+</div>
+</div>
+<!-- Success Toast (Step State) -->
+<div class="fixed bottom-12 left-1/2 -translate-x-1/2 z-[60] transform scale-0 invisible">
+<!-- Success State Placeholder (Would be toggled via JS in a real app) -->
+<div class="flex items-center gap-4 px-6 py-4 bg-on-surface text-surface-container-lowest rounded-full shadow-2xl">
+<span class="material-symbols-outlined text-primary-fixed" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-headline font-bold text-sm">Requirement successfully rejected</span>
+<div class="w-px h-4 bg-outline-variant/30 ml-2"></div>
+<button class="text-xs font-label font-bold uppercase tracking-widest text-primary-fixed hover:text-white transition-colors">Undo</button>
+</div>
+</div>
+<!-- Corner Decorative Element -->
+<div class="fixed bottom-0 right-0 p-8 pointer-events-none opacity-20">
+<span class="text-8xl font-headline font-extrabold text-on-surface-variant select-none tracking-tighter">ARCH</span>
+</div>
+</body></html>

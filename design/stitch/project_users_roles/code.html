@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Project Users &amp; Roles | ReqFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#dbe4e7",
+                    "on-tertiary-container": "#4b4e69",
+                    "on-secondary-fixed": "#36404d",
+                    "on-secondary": "#f7f9ff",
+                    "tertiary": "#5a5d78",
+                    "surface-tint": "#1353d8",
+                    "surface-container-high": "#e2e9ec",
+                    "on-background": "#2b3437",
+                    "background": "#f8f9fa",
+                    "surface-container-highest": "#dbe4e7",
+                    "error": "#9f403d",
+                    "surface-dim": "#d1dce0",
+                    "secondary-container": "#d9e3f4",
+                    "outline": "#737c7f",
+                    "surface": "#f8f9fa",
+                    "tertiary-dim": "#4e516c",
+                    "outline-variant": "#abb3b7",
+                    "error-container": "#fe8983",
+                    "tertiary-fixed": "#dbddfe",
+                    "surface-bright": "#f8f9fa",
+                    "on-primary": "#f8f7ff",
+                    "inverse-primary": "#638aff",
+                    "primary-container": "#dbe1ff",
+                    "on-error-container": "#752121",
+                    "error-dim": "#4e0309",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed": "#dbe1ff",
+                    "on-primary-fixed-variant": "#0b50d5",
+                    "primary-fixed-dim": "#c8d3ff",
+                    "on-primary-fixed": "#00369b",
+                    "secondary-fixed-dim": "#cbd5e6",
+                    "on-primary-container": "#0046c3",
+                    "tertiary-container": "#dbddfe",
+                    "inverse-on-surface": "#9b9d9e",
+                    "on-secondary-fixed-variant": "#525c6a",
+                    "tertiary-fixed-dim": "#cdcfef",
+                    "surface-container": "#eaeff1",
+                    "surface-container-low": "#f1f4f6",
+                    "on-secondary-container": "#485260",
+                    "on-tertiary": "#faf8ff",
+                    "on-surface-variant": "#586064",
+                    "on-surface": "#2b3437",
+                    "on-tertiary-fixed": "#383c55",
+                    "inverse-surface": "#0c0f10",
+                    "on-tertiary-fixed-variant": "#555873",
+                    "secondary-dim": "#4a5462",
+                    "on-error": "#fff7f6",
+                    "secondary": "#56606e",
+                    "primary": "#1353d8",
+                    "secondary-fixed": "#d9e3f4",
+                    "primary-dim": "#0047c5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-slate-50 dark:bg-slate-900 border-b-0">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold text-slate-900 dark:text-slate-100 font-headline tracking-tight">ReqFlow</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-inter text-sm font-medium" href="#">Projects</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-inter text-sm font-medium" href="#">Requirements</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-inter text-sm font-medium" href="#">Traceability</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-inter text-sm font-medium" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="bg-slate-100 dark:bg-slate-800 border-none rounded-lg pl-10 pr-4 py-1.5 text-sm w-64 focus:ring-2 ring-primary/20 outline-none" placeholder="Search..." type="text"/>
+</div>
+<button class="text-slate-500 hover:text-blue-700 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 dark:border-blue-400 pb-1 font-medium text-sm">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-surface-variant" data-alt="professional male portrait with clean lighting and neutral background for user profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDn6rc1mkCj-4krxR6UD1W8ITKqcwXxRzlX598uHTHYGGDKZxwUbBW1p3MumZyOalUqYN0uAWbuTvcByGHGnr3a-4MjcyGB4McZdyoiLYUk9ADmYhJbFOx52ZT6g2HP29-Y2KdWS_yrjmfAo0PdanyEEd-2ppuPAefgBIhrL_KC_TIxAOdE_bvjEcdsH9gj8nFYfTiPpszB6RgIvmvB1qN8o_w6ZtVO_XXe6eUEuQ6waARn16nTEJpIhyQ83ovdEga-vjNzjdRdYsw"/>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-64px)] w-64 flex flex-col p-4 gap-2 bg-slate-100 dark:bg-slate-950 border-r-0">
+<div class="px-3 py-4 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-bold">A</div>
+<div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 font-headline leading-tight">Project Alpha</h3>
+<p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Enterprise Core</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:translate-x-1 duration-200 rounded-lg transition-all font-inter text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:translate-x-1 duration-200 rounded-lg transition-all font-inter text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="list_alt">list_alt</span>
+                All Requirements
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:translate-x-1 duration-200 rounded-lg transition-all font-inter text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                Team Activity
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 bg-white dark:bg-slate-800 text-blue-700 dark:text-blue-400 shadow-sm rounded-lg font-inter text-sm font-medium scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+                Project Settings
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:translate-x-1 duration-200 rounded-lg transition-all font-inter text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                Archived
+            </a>
+</nav>
+<button class="mt-auto flex items-center justify-center gap-2 bg-primary text-on-primary py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+            Create New
+        </button>
+<div class="mt-4 pt-4 border-t border-slate-200/50">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-all font-inter text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+                Help Center
+            </a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-64 mt-16 p-8 min-h-[calc(100vh-64px)]">
+<div class="max-w-6xl mx-auto space-y-8">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div class="space-y-1">
+<span class="text-xs font-bold text-on-surface-variant tracking-[0.1em] uppercase">Project Management</span>
+<h1 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight">Users &amp; Roles</h1>
+</div>
+<div class="flex gap-3">
+<button class="px-5 py-2.5 rounded-xl text-primary font-semibold text-sm bg-primary-container/30 hover:bg-primary-container/50 transition-colors">
+                        Export List
+                    </button>
+<button class="px-5 py-2.5 rounded-xl bg-gradient-to-br from-primary to-primary-dim text-on-primary font-semibold text-sm shadow-md shadow-primary/10 hover:shadow-lg transition-all">
+                        Invite New User
+                    </button>
+</div>
+</div>
+<!-- Warning Banner (Alert Interaction Mockup) -->
+<div class="bg-error-container/10 border-l-4 border-error p-4 rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-3 text-on-error-container">
+<span class="material-symbols-outlined text-error">warning</span>
+<p class="text-sm font-medium">At least one Manager must remain in the project.</p>
+</div>
+<button class="text-on-error-container/60 hover:text-on-error-container">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Tab Navigation -->
+<div class="flex items-center gap-8 border-b border-surface-container-high overflow-x-auto no-scrollbar">
+<button class="pb-4 px-1 text-sm font-bold text-primary border-b-2 border-primary whitespace-nowrap">All Users</button>
+<button class="pb-4 px-1 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap">Pending Invites <span class="ml-1.5 px-2 py-0.5 rounded-full bg-surface-container-high text-xs">12</span></button>
+<button class="pb-4 px-1 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap">Permissions</button>
+<button class="pb-4 px-1 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap">Audit Logs</button>
+</div>
+<!-- Table Container (Editorial Style) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_12px_32px_rgba(43,52,55,0.04)] overflow-hidden">
+<div class="px-6 py-4 flex items-center justify-between border-b border-surface-container-low">
+<div class="relative w-full max-w-xs">
+<span class="material-symbols-outlined absolute left-0 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+<input class="w-full bg-transparent border-none pl-8 pr-4 py-2 text-sm focus:ring-0 placeholder:text-on-surface-variant/60" placeholder="Filter by name or email..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-surface-container rounded-lg text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+</div>
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Name &amp; Details</th>
+<th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Email Address</th>
+<th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Role</th>
+<th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Last Active</th>
+<th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low">
+<!-- User Row 1: Manager -->
+<tr class="group hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<img alt="Sarah Chen" class="w-10 h-10 rounded-xl object-cover" data-alt="close-up portrait of a woman with a friendly expression in a modern office environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqhWmu4IfEe8dDYfV_B_QTd5CIArHmactHW2NwtpCBb3-H9CUDIxlRxx2SAvNorBehEmqkkRuYDxM9NoXWyMvJgOozQu-ACO7YRw_QWTNNpC0ieMd_G3WaHm_kcTIL65tUK-klL9o4ACJOo9m_Al8C3G5xZWwKHChLU-VtQqi9AGmTiQQd4JFvswEWSCUos2t6aYHXGJuduoepAVYbxuK5qcyzRHYhzVZ2FET9QSe60FW0PhsXWwy9O5tPnz5UVt3x_kDjXJ_x_QM"/>
+<div>
+<div class="text-sm font-bold text-on-surface font-headline">Sarah Chen</div>
+<div class="text-xs text-on-surface-variant">Project Lead</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant font-medium">s.chen@reqflow.io</td>
+<td class="px-6 py-5">
+<div class="relative group/tooltip">
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container text-on-primary-container text-xs font-bold w-fit cursor-pointer">
+                                        Manager
+                                        <span class="material-symbols-outlined text-[14px]">expand_more</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-xs font-medium text-on-surface">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+                                    Active now
+                                </div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors rounded-lg hover:bg-error-container/10">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</td>
+</tr>
+<!-- User Row 2: Client with Tooltip Mockup -->
+<tr class="group hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-xl bg-tertiary-container flex items-center justify-center text-on-tertiary-container font-bold text-sm">MB</div>
+<div>
+<div class="text-sm font-bold text-on-surface font-headline">Marcus Bennett</div>
+<div class="text-xs text-on-surface-variant">External Stakeholder</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant font-medium">m.bennett@partner.com</td>
+<td class="px-6 py-5">
+<div class="relative inline-block">
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-bold w-fit cursor-not-allowed opacity-80">
+                                        Client
+                                        <span class="material-symbols-outlined text-[14px]">lock</span>
+</div>
+<!-- Tooltip Interaction Visual -->
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-inverse-surface text-surface text-[11px] rounded-lg shadow-xl w-max opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none font-medium">
+                                        Client role cannot be modified.
+                                        <div class="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-inverse-surface"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-xs text-on-surface-variant font-medium">2 hours ago</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- User Row 3: Editor -->
+<tr class="group hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<img alt="Julian Vo" class="w-10 h-10 rounded-xl object-cover" data-alt="studio headshot of a smiling young man wearing glasses with neutral expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWVxB00baFzPyU1eUWWpBoABu8988mMoGoFjmYAtFzjCqIH9WQ0VMKSLkG9fZnLAaajRK-lBeC_lGBf0iMwQ_Z5WeYYnJCwtuvBzPBR-Qv_gvgNjYy9kHSJQOBH7d5zyqXiWBdnXeyK-GgMdY2w99c2-qTRGXMbRBFcG0OJNjz-7AEx9d9PB3l0vYixWwghUNOBz-kyrIWYSkq2Y_7wI15JKta7MyVCwCJenO6f2DUkW-FP646pqRBqY0dskIdB48ZGbUlD1H7dtY"/>
+<div>
+<div class="text-sm font-bold text-on-surface font-headline">Julian Vo</div>
+<div class="text-xs text-on-surface-variant">Systems Analyst</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant font-medium">j.vo@reqflow.io</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-secondary-container text-xs font-bold w-fit cursor-pointer hover:bg-surface-variant transition-colors">
+                                    Editor
+                                    <span class="material-symbols-outlined text-[14px]">expand_more</span>
+</div>
+</td>
+<td class="px-6 py-5 text-xs text-on-surface-variant font-medium">Yesterday</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- User Row 4: Viewer -->
+<tr class="group hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<img alt="Elena Rodriguez" class="w-10 h-10 rounded-xl object-cover" data-alt="professional female portrait in soft natural light against a blurred architectural background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi2i0vofGG2SV8HSUDDWJ8HNu2mUBRsLfV4zplgV1KimyantZaIG6-HTSgvyXfHg85yrbVikd4f05m0HvW3x53Vk-SXXlVpkguQydYytlIe87Sp5v_EuYguwe_I3ZarOF9x_lX5uQyxnPXN95DUoY55rrTQhf5rs7QJtawf5YHju2qvTmYRNKeoRUC7wSmvTeyTNF6NlRDx6jAk0aKiclGmDKQtlX6H5l4hRQEg52oUwMojNFYeRhDEi1IRpS-TC-j6DzDXeZxHYg"/>
+<div>
+<div class="text-sm font-bold text-on-surface font-headline">Elena Rodriguez</div>
+<div class="text-xs text-on-surface-variant">Quality Assurance</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant font-medium">e.rodriguez@reqflow.io</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-secondary-container text-xs font-bold w-fit cursor-pointer hover:bg-surface-variant transition-colors">
+                                    Viewer
+                                    <span class="material-symbols-outlined text-[14px]">expand_more</span>
+</div>
+</td>
+<td class="px-6 py-5 text-xs text-on-surface-variant font-medium">Jan 12, 2024</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="px-6 py-4 flex items-center justify-between bg-surface-container-low/20">
+<div class="text-xs text-on-surface-variant font-medium">Showing 1-4 of 38 users</div>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs font-bold text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-50" disabled="">Previous</button>
+<button class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs font-bold text-on-surface hover:bg-surface-container transition-colors">Next</button>
+</div>
+</div>
+</div>
+<!-- Role Definitions / Bento Info Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface-container-low p-6 rounded-xl space-y-3">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shield</span>
+<h4 class="font-headline font-bold text-sm tracking-tight">Security Note</h4>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">Roles control global project permissions. Only Managers can invite new members or change role assignments.</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl space-y-3">
+<div class="flex items-center gap-2 text-tertiary">
+<span class="material-symbols-outlined">group_add</span>
+<h4 class="font-headline font-bold text-sm tracking-tight">Bulk Invites</h4>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">Manage large teams by uploading a CSV of emails. Invited users will default to the 'Viewer' role until approved.</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl space-y-3">
+<div class="flex items-center gap-2 text-secondary">
+<span class="material-symbols-outlined">history</span>
+<h4 class="font-headline font-bold text-sm tracking-tight">Recent Changes</h4>
+</div>
+<ul class="text-[11px] text-on-surface-variant space-y-2">
+<li class="flex justify-between"><span>Julian Vo invited</span> <span class="font-bold">2m ago</span></li>
+<li class="flex justify-between"><span>Role 'Editor' updated</span> <span class="font-bold">1h ago</span></li>
+</ul>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB (Hidden on management screens per instructions, but kept as a suppressed element logic check) -->
+<!-- Suppression logic: Screen is 'Project Users & Roles' which is a sub-settings view. FAB suppressed. -->
+</body></html>

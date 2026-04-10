@@ -1,0 +1,64 @@
+/* PriorityBadge Component Styles */
+
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--font-label);
+  font-weight: var(--font-medium);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+/* ============================================
+   SIZES
+   ============================================ */
+
+.priority-badge--sm {
+  padding: 2px var(--space-2);
+  font-size: var(--text-label-sm);
+}
+
+.priority-badge--md {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-label-md);
+}
+
+.priority-badge--lg {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-label-lg);
+}
+
+/* ============================================
+   PRIORITY VARIANTS
+   ============================================ */
+
+.priority-badge--low {
+  background: rgba(34, 139, 34, 0.1);
+  color: #228b22;
+}
+
+.priority-badge--medium {
+  background: rgba(19, 83, 216, 0.1);
+  color: var(--color-primary);
+}
+
+.priority-badge--high {
+  background: rgba(255, 152, 0, 0.15);
+  color: #f57c00;
+}
+
+.priority-badge--critical {
+  background: rgba(159, 64, 61, 0.15);
+  color: var(--color-error);
+}
+
+/* ============================================
+   ICON
+   ============================================ */
+
+.priority-badge__icon {
+  font-size: 1em;
+  line-height: 1;
+  font-variation-settings: 'wght' 600;
+}

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ReqFlow | Requirement Access States</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#0c0f10",
+                        "surface-container-highest": "#dbe4e7",
+                        "surface-container-high": "#e2e9ec",
+                        "tertiary-container": "#dbddfe",
+                        "on-tertiary-fixed": "#383c55",
+                        "surface-tint": "#1353d8",
+                        "on-tertiary": "#faf8ff",
+                        "on-error": "#fff7f6",
+                        "background": "#f8f9fa",
+                        "on-primary-fixed-variant": "#0b50d5",
+                        "outline": "#737c7f",
+                        "surface": "#f8f9fa",
+                        "error-container": "#fe8983",
+                        "primary-fixed-dim": "#c8d3ff",
+                        "on-background": "#2b3437",
+                        "tertiary-dim": "#4e516c",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-dim": "#4a5462",
+                        "outline-variant": "#abb3b7",
+                        "on-secondary": "#f7f9ff",
+                        "on-secondary-container": "#485260",
+                        "secondary-fixed": "#d9e3f4",
+                        "tertiary-fixed": "#dbddfe",
+                        "tertiary-fixed-dim": "#cdcfef",
+                        "inverse-primary": "#638aff",
+                        "error-dim": "#4e0309",
+                        "on-surface-variant": "#586064",
+                        "primary-fixed": "#dbe1ff",
+                        "primary-container": "#dbe1ff",
+                        "on-secondary-fixed": "#36404d",
+                        "on-error-container": "#752121",
+                        "primary": "#1353d8",
+                        "on-surface": "#2b3437",
+                        "error": "#9f403d",
+                        "on-tertiary-container": "#4b4e69",
+                        "tertiary": "#5a5d78",
+                        "secondary-fixed-dim": "#cbd5e6",
+                        "secondary-container": "#d9e3f4",
+                        "on-primary": "#f8f7ff",
+                        "surface-dim": "#d1dce0",
+                        "surface-container-low": "#f1f4f6",
+                        "on-primary-container": "#0046c3",
+                        "inverse-on-surface": "#9b9d9e",
+                        "surface-variant": "#dbe4e7",
+                        "surface-bright": "#f8f9fa",
+                        "on-tertiary-fixed-variant": "#555873",
+                        "surface-container": "#eaeff1",
+                        "secondary": "#56606e",
+                        "on-primary-fixed": "#00369b",
+                        "on-secondary-fixed-variant": "#525c6a",
+                        "primary-dim": "#0047c5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .locked-overlay {
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(171, 179, 183, 0.03),
+                rgba(171, 179, 183, 0.03) 10px,
+                transparent 10px,
+                transparent 20px
+            );
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col p-4 gap-2 h-screen sticky left-0 w-64 bg-[#eaeff1] dark:bg-slate-900 z-40">
+<div class="px-2 py-6">
+<h1 class="text-lg font-bold text-[#2b3437] dark:text-slate-100 font-headline">Project Alpha</h1>
+<p class="text-xs text-on-surface-variant font-medium">V2.1 Stable</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-[#586064] dark:text-slate-400 font-['Inter'] text-sm font-medium hover:bg-[#d9e3f4] dark:hover:bg-slate-800 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                    Overview
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#0F4C81] dark:text-blue-400 font-bold bg-[#ffffff] dark:bg-slate-800 rounded-lg shadow-sm" href="#">
+<span class="material-symbols-outlined" data-icon="list_alt">list_alt</span>
+                    Requirements
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#586064] dark:text-slate-400 font-['Inter'] text-sm font-medium hover:bg-[#d9e3f4] dark:hover:bg-slate-800 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+                    Links
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#586064] dark:text-slate-400 font-['Inter'] text-sm font-medium hover:bg-[#d9e3f4] dark:hover:bg-slate-800 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+                    History
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#586064] dark:text-slate-400 font-['Inter'] text-sm font-medium hover:bg-[#d9e3f4] dark:hover:bg-slate-800 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+                    Analytics
+                </a>
+</nav>
+<div class="pt-4 mt-4 border-t border-outline-variant/10">
+<a class="flex items-center gap-3 px-3 py-2 text-[#586064] dark:text-slate-400 font-['Inter'] text-sm font-medium hover:bg-[#d9e3f4] rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+                    Help
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#586064] dark:text-slate-400 font-['Inter'] text-sm font-medium hover:bg-[#d9e3f4] rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="cloud_off">cloud_off</span>
+                    Offline Mode
+                </a>
+</div>
+</aside>
+<div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 z-50 bg-[#f8f9fa] dark:bg-slate-950 flex justify-between items-center px-8 py-4 max-w-[1440px] mx-auto">
+<div class="flex items-center gap-8">
+<div class="text-xl font-bold text-[#0F4C81] dark:text-blue-400 font-headline tracking-tight">ReqFlow</div>
+<nav class="hidden lg:flex gap-6">
+<a class="text-[#586064] dark:text-slate-400 hover:text-[#0F4C81] transition-colors font-headline font-bold text-sm" href="#">Dashboard</a>
+<a class="text-[#0F4C81] dark:text-blue-400 border-b-2 border-[#0F4C81] pb-1 font-headline font-bold text-sm" href="#">Requirements</a>
+<a class="text-[#586064] dark:text-slate-400 hover:text-[#0F4C81] transition-colors font-headline font-bold text-sm" href="#">Traceability</a>
+<a class="text-[#586064] dark:text-slate-400 hover:text-[#0F4C81] transition-colors font-headline font-bold text-sm" href="#">Team</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer" data-icon="settings">settings</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant/20">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="professional headshot of a male software engineer with glasses in a minimalist bright office environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVbho6BqnpLjrhswPrbXxcI0cBmH7loNYBc0Z9X-kNY2qG1SgSqeZdU8frEsjNQq5Tju-Sf41EI5hz7jaA5_oM_6koX-phqzzLNHlkbBHOLmj2ZE9kXrK60sBUhjl667T0ZazPn_xvvZ2d_m1OtXZVgWsHf4Bkmqq4THbqgzSBSE_iR5HI02SasW1U8JWz-lfJxw8x64cSTv8XlAegkiIJHjfS28TGEQc8z9aMCLLooP4m7V5xb4MBYA7d-rPccv4NVjV-cPGVEww"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 p-8 overflow-y-auto max-w-[1440px] mx-auto w-full">
+<!-- State Header: Requirement Locked Banner -->
+<div class="mb-8 flex items-center justify-between bg-error-container/10 border border-error-container/20 rounded-xl p-4 gap-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-error-container/20 flex items-center justify-center text-error">
+<span class="material-symbols-outlined" data-icon="lock_person">lock_person</span>
+</div>
+<div>
+<h2 class="font-headline font-bold text-on-surface">Requirement Locked</h2>
+<p class="text-sm text-on-surface-variant">This item is currently under final executive review. Manual edits are restricted.</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="px-4 py-2 text-sm font-medium text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">Request Access</button>
+<button class="px-4 py-2 text-sm font-bold text-primary bg-surface-container-lowest rounded-lg shadow-sm border border-outline-variant/10">View History</button>
+</div>
+</div>
+<!-- Bento Content Grid -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Main Requirement Detail (Read-Only) -->
+<div class="col-span-12 lg:col-span-8 space-y-6">
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0px_12px_32px_rgba(43,52,55,0.03)] relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4">
+<span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="visibility">visibility</span>
+                                    Read Only
+                                </span>
+</div>
+<div class="space-y-2 mb-8">
+<p class="text-[0.6875rem] font-label font-bold text-on-surface-variant tracking-[0.05em] uppercase">R-104 • SYSTEM CORE</p>
+<h1 class="text-3xl font-headline font-bold tracking-tight text-on-surface">Asynchronous Thread Management</h1>
+<div class="flex gap-2 mt-4">
+<span class="bg-secondary-container/50 text-on-secondary-container px-3 py-1 rounded-full text-xs font-medium">Architecture</span>
+<span class="bg-tertiary-container/50 text-on-tertiary-container px-3 py-1 rounded-full text-xs font-medium">P1 High</span>
+</div>
+</div>
+<div class="prose prose-slate max-w-none text-on-surface-variant space-y-4">
+<p>The system shall implement a non-blocking I/O model for all external database transactions to ensure UI responsiveness during high-load periods. Each request must be encapsulated in a localized state container.</p>
+<div class="mt-8 p-6 bg-surface-container-low rounded-lg border-l-4 border-outline-variant/30 italic text-sm">
+                                    "Locked for review by Architecture Board. Please refer to document 2024-ARCH-01 for the underlying rationale."
+                                </div>
+<div class="grid grid-cols-2 gap-8 mt-12">
+<div>
+<h4 class="text-xs font-label font-bold text-on-surface tracking-widest uppercase mb-4">Acceptance Criteria</h4>
+<ul class="space-y-3 text-sm opacity-60">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-base" data-icon="check_circle">check_circle</span>
+                                                Latencies under 200ms
+                                            </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-base" data-icon="check_circle">check_circle</span>
+                                                Zero-loss retry mechanism
+                                            </li>
+</ul>
+</div>
+<div>
+<h4 class="text-xs font-label font-bold text-on-surface tracking-widest uppercase mb-4">Implementation Status</h4>
+<div class="flex items-center gap-2 text-sm text-on-surface font-semibold">
+<div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                                            Awaiting Deployment
+                                        </div>
+</div>
+</div>
+</div>
+<!-- Visual Lock Overlay -->
+<div class="absolute inset-0 pointer-events-none locked-overlay opacity-30"></div>
+</div>
+<!-- Sub-sections with Restricted Edit Indicators -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/15 flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<h3 class="font-headline font-bold text-on-surface">Sub-Tasks</h3>
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="lock">lock</span>
+</div>
+<div class="space-y-3">
+<div class="h-4 bg-surface-container w-3/4 rounded-full"></div>
+<div class="h-4 bg-surface-container w-1/2 rounded-full"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/15 flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<h3 class="font-headline font-bold text-on-surface">Dependencies</h3>
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="lock">lock</span>
+</div>
+<div class="space-y-3">
+<div class="h-4 bg-surface-container w-2/3 rounded-full"></div>
+<div class="h-4 bg-surface-container w-4/5 rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Sidebar: Audit & Approval State -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<!-- Approved/Frozen State -->
+<div class="bg-[#1353d8] rounded-xl p-6 text-[#f8f7ff] shadow-lg shadow-primary/20">
+<div class="flex items-center justify-between mb-6">
+<div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-widest bg-white/10 px-2 py-1 rounded">Frozen v3.0</span>
+</div>
+<h3 class="text-xl font-headline font-bold mb-2">Approved Requirement</h3>
+<p class="text-sm text-white/70 mb-6">This requirement has been signed off by all stakeholders. No further modifications permitted in current sprint.</p>
+<div class="space-y-4 pt-4 border-t border-white/10">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" data-icon="person">person</span>
+</div>
+<div class="text-xs">
+<p class="font-bold">Sarah Chen</p>
+<p class="opacity-70">Project Manager</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" data-icon="person">person</span>
+</div>
+<div class="text-xs">
+<p class="font-bold">Marco Rossi</p>
+<p class="opacity-70">Lead Architect</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Mini Traceability Graph (Restricted View) -->
+<div class="bg-surface-container rounded-xl p-6 relative overflow-hidden">
+<h4 class="text-xs font-label font-bold text-on-surface-variant tracking-widest uppercase mb-4">Traceability Matrix</h4>
+<div class="flex flex-col gap-4 opacity-40">
+<div class="flex items-center gap-3">
+<div class="w-12 h-1 bg-primary/20 rounded"></div>
+<div class="flex-1 h-8 bg-surface-container-lowest rounded-lg"></div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-1 bg-primary/20 rounded"></div>
+<div class="flex-1 h-8 bg-surface-container-lowest rounded-lg"></div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-16 h-1 bg-primary/20 rounded"></div>
+<div class="flex-1 h-8 bg-surface-container-lowest rounded-lg"></div>
+</div>
+</div>
+<div class="absolute inset-0 flex flex-col items-center justify-center bg-surface-container/60 backdrop-blur-[2px]">
+<span class="material-symbols-outlined text-on-surface-variant/40 text-4xl mb-2" data-icon="visibility_off">visibility_off</span>
+<p class="text-xs font-bold text-on-surface-variant">Restricted Context</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 md:hidden bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl z-50 rounded-t-xl border-t border-[#abb3b7]/15 shadow-[0_-4px_24px_rgba(0,0,0,0.04)]">
+<button class="flex flex-col items-center justify-center text-[#586064]">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest mt-1">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-[#0F4C81] bg-[#d9e3f4]/50 rounded-xl px-4 py-2">
+<span class="material-symbols-outlined" data-icon="format_list_bulleted">format_list_bulleted</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest mt-1">Reqs</span>
+</button>
+<button class="flex flex-col items-center justify-center text-[#586064]">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest mt-1">Alerts</span>
+</button>
+<button class="flex flex-col items-center justify-center text-[#586064]">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest mt-1">Profile</span>
+</button>
+</nav>
+<!-- Overlay: Offline / Service Unavailable State -->
+<!-- Set opacity to 0 or hidden normally. For demo purposes, we show it as a high-z-index fixed element that can be toggled -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-surface-container/95 backdrop-blur-md hidden" id="offline-overlay">
+<div class="max-w-md w-full bg-surface-container-lowest rounded-2xl p-10 shadow-2xl text-center space-y-6">
+<div class="relative inline-block">
+<div class="w-24 h-24 rounded-3xl bg-secondary-container/30 flex items-center justify-center mx-auto">
+<span class="material-symbols-outlined text-5xl text-secondary" data-icon="cloud_off">cloud_off</span>
+</div>
+<div class="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-error border-4 border-surface-container-lowest flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-xs" data-icon="close">close</span>
+</div>
+</div>
+<div class="space-y-2">
+<h2 class="text-2xl font-headline font-extrabold text-on-surface">Connection Severed</h2>
+<p class="text-on-surface-variant">We've lost touch with the ReqFlow core servers. Your local changes are cached, but live sync is paused.</p>
+</div>
+<div class="pt-4 space-y-3">
+<button class="w-full py-4 bg-gradient-to-br from-primary to-primary-dim text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="refresh">refresh</span>
+                    Attempt Reconnection
+                </button>
+<button class="w-full py-3 text-sm font-medium text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">
+                    Continue Working Offline
+                </button>
+</div>
+<p class="text-[10px] font-label font-bold text-on-surface-variant/60 tracking-widest uppercase">System Status: Error 503 • Node-West-12</p>
+</div>
+</div>
+<!-- Toggle Helper for Demo (Hidden visually) -->
+<button class="fixed bottom-24 right-8 z-[60] bg-on-surface text-white p-3 rounded-full shadow-lg flex items-center gap-2 text-xs font-bold opacity-30 hover:opacity-100 transition-opacity" onclick="document.getElementById('offline-overlay').classList.toggle('hidden')">
+<span class="material-symbols-outlined text-sm" data-icon="emergency_home">emergency_home</span>
+        Toggle Offline State
+    </button>
+</body></html>

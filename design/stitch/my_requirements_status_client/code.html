@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Requirements | Curator Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "error-container": "#fe8983",
+            "on-tertiary-fixed": "#383c55",
+            "primary-fixed-dim": "#c8d3ff",
+            "surface-dim": "#d1dce0",
+            "outline-variant": "#abb3b7",
+            "primary": "#1353d8",
+            "on-tertiary": "#faf8ff",
+            "surface-container-lowest": "#ffffff",
+            "on-primary-fixed": "#00369b",
+            "error-dim": "#4e0309",
+            "surface-container-low": "#f1f4f6",
+            "error": "#9f403d",
+            "surface-container-high": "#e2e9ec",
+            "primary-dim": "#0047c5",
+            "tertiary-container": "#dbddfe",
+            "primary-container": "#dbe1ff",
+            "primary-fixed": "#dbe1ff",
+            "surface-tint": "#1353d8",
+            "secondary-container": "#d9e3f4",
+            "inverse-on-surface": "#9b9d9e",
+            "on-secondary-container": "#485260",
+            "background": "#f8f9fa",
+            "inverse-primary": "#638aff",
+            "on-background": "#2b3437",
+            "tertiary-dim": "#4e516c",
+            "secondary": "#56606e",
+            "secondary-fixed": "#d9e3f4",
+            "on-secondary": "#f7f9ff",
+            "surface-variant": "#dbe4e7",
+            "on-error": "#fff7f6",
+            "surface-container-highest": "#dbe4e7",
+            "on-error-container": "#752121",
+            "on-tertiary-fixed-variant": "#555873",
+            "tertiary-fixed": "#dbddfe",
+            "outline": "#737c7f",
+            "surface-bright": "#f8f9fa",
+            "secondary-fixed-dim": "#cbd5e6",
+            "on-primary-fixed-variant": "#0b50d5",
+            "on-secondary-fixed-variant": "#525c6a",
+            "on-secondary-fixed": "#36404d",
+            "on-primary": "#f8f7ff",
+            "on-surface": "#2b3437",
+            "tertiary-fixed-dim": "#cdcfef",
+            "on-primary-container": "#0046c3",
+            "surface": "#f8f9fa",
+            "surface-container": "#eaeff1",
+            "secondary-dim": "#4a5462",
+            "tertiary": "#5a5d78",
+            "on-tertiary-container": "#4b4e69",
+            "on-surface-variant": "#586064",
+            "inverse-surface": "#0c0f10"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-headline { font-family: 'Manrope', sans-serif; }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .ghost-border { outline: 1px solid rgba(171, 179, 183, 0.15); }
+    .primary-gradient { background: linear-gradient(135deg, #1353d8 0%, #0047c5 100%); }
+  </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r-0 bg-slate-50 dark:bg-slate-900 z-50">
+<div class="flex flex-col h-full p-4">
+<div class="flex items-center gap-3 mb-8 px-2">
+<div class="w-10 h-10 rounded-lg primary-gradient flex items-center justify-center text-white">
+<span class="material-symbols-outlined" data-icon="architecture">architecture</span>
+</div>
+<div>
+<h1 class="text-xl font-bold text-slate-900 dark:text-slate-100 font-headline leading-tight">Curator Pro</h1>
+<p class="text-xs text-on-surface-variant font-medium">Startup Workspace</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors rounded-lg font-['Manrope'] font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+          Dashboard
+        </a>
+<a class="flex items-center gap-3 px-4 py-3 text-blue-700 dark:text-blue-400 bg-white dark:bg-slate-800 rounded-lg shadow-sm font-['Manrope'] font-semibold scale-[0.98] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+          Requirements
+        </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors rounded-lg font-['Manrope'] font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="folder_managed">folder_managed</span>
+          Projects
+        </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors rounded-lg font-['Manrope'] font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+          Users
+        </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors rounded-lg font-['Manrope'] font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+          Settings
+        </a>
+</nav>
+<div class="mt-auto pt-4">
+<button class="w-full py-3 px-4 primary-gradient text-white rounded-lg font-headline font-bold shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+          New Project
+        </button>
+</div>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-100 dark:border-slate-800">
+<div class="flex justify-between items-center px-8 w-full h-full">
+<div class="flex items-center gap-6 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest ghost-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" placeholder="Search my requirements..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-500 hover:text-blue-600 transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-slate-500 hover:text-blue-600 transition-all">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<div class="h-4 w-[1px] bg-outline-variant/30 mx-2"></div>
+<button class="text-sm font-semibold text-slate-700 hover:text-blue-700 transition-colors">Feedback</button>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high border-2 border-white shadow-sm">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="close-up portrait of a professional man with a friendly smile in a bright office environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByOYMElSfQtbQ1pldN4MI0X_V3-KPRuRhJL82mSjdCtEisQylq7qz9aK9muO64M-W5lT_OrGTM4Dj2TP8Lwaz-DnSvoqoNjMTwk0FfkjusvV77-iWUvYoBsAZt3aeiks_qXegGSg8bMP38xwZqOD_GxsUY3Z55_cOw_JdfZzZfR53uprs28DIWZ2HSZy2X39NWET2kS0043xh0mj8XNAaQt_ZUviX8oz-QfumSLCgsKCNeZjGpR1lTcxFh-8OrcWJqbD3JqV3Km1Y"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 pt-16 min-h-screen">
+<div class="p-10 max-w-7xl mx-auto">
+<!-- Header Section -->
+<div class="flex flex-col gap-8 mb-12">
+<div class="flex justify-between items-end">
+<div>
+<nav class="flex items-center gap-2 mb-2">
+<span class="text-[10px] font-bold text-on-surface-variant tracking-[0.05em] uppercase font-label">WORKSPACE</span>
+<span class="material-symbols-outlined text-[10px] text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+<span class="text-[10px] font-bold text-primary tracking-[0.05em] uppercase font-label">MY REQUIREMENTS</span>
+</nav>
+<h2 class="text-4xl font-headline font-bold text-on-surface -tracking-[0.02em]">Requirements Tracking</h2>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-container-lowest ghost-border text-sm font-semibold text-on-surface hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+               Export CSV
+             </button>
+<button class="primary-gradient text-white px-5 py-2 rounded-lg text-sm font-bold shadow-md shadow-primary/10 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+               New Requirement
+             </button>
+</div>
+</div>
+<!-- Filter Section -->
+<div class="flex flex-wrap items-center gap-3">
+<button class="px-5 py-2 rounded-full bg-primary text-white text-xs font-semibold shadow-sm">All Requirements</button>
+<button class="px-5 py-2 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold hover:opacity-80 transition-opacity">Draft</button>
+<button class="px-5 py-2 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold hover:opacity-80 transition-opacity">Under Review</button>
+<button class="px-5 py-2 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold hover:opacity-80 transition-opacity">Approved</button>
+<button class="px-5 py-2 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold hover:opacity-80 transition-opacity">Rejected</button>
+<div class="ml-auto flex items-center gap-2 text-on-surface-variant text-xs">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+            Sort by: <span class="font-bold text-on-surface">Recently Updated</span>
+</div>
+</div>
+</div>
+<!-- Requirements Container (Asymmetric breathability) -->
+<div class="flex flex-col gap-4">
+<!-- Requirement Header Row (Internal label style) -->
+<div class="grid grid-cols-12 gap-6 px-6 py-3">
+<div class="col-span-1 text-[10px] font-bold text-on-surface-variant tracking-widest uppercase font-label">ID</div>
+<div class="col-span-5 text-[10px] font-bold text-on-surface-variant tracking-widest uppercase font-label">TITLE &amp; DESCRIPTION</div>
+<div class="col-span-2 text-[10px] font-bold text-on-surface-variant tracking-widest uppercase font-label">STATUS</div>
+<div class="col-span-2 text-[10px] font-bold text-on-surface-variant tracking-widest uppercase font-label">LAST UPDATED</div>
+<div class="col-span-2"></div>
+</div>
+<!-- Requirement Card 1: Approved -->
+<div class="group grid grid-cols-12 items-center gap-6 p-6 bg-surface-container-lowest rounded-xl ghost-border hover:shadow-xl hover:shadow-slate-200/30 transition-all duration-300 border-l-4 border-l-primary">
+<div class="col-span-1 text-sm font-semibold text-on-surface-variant font-body">REQ-042</div>
+<div class="col-span-5">
+<h3 class="text-lg font-headline font-bold text-on-surface group-hover:text-primary transition-colors mb-1">Global Payment Gateway API</h3>
+<p class="text-sm text-on-surface-variant line-clamp-1 font-body">Integration of Stripe and PayPal for multi-currency settlement.</p>
+</div>
+<div class="col-span-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-700 text-[10px] font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-green-600"></span>
+              Approved
+            </span>
+</div>
+<div class="col-span-2">
+<p class="text-sm font-medium text-on-surface">Oct 24, 2023</p>
+<p class="text-[10px] text-on-surface-variant font-label uppercase">14:20 PM</p>
+</div>
+<div class="col-span-2 flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl" data-icon="visibility">visibility</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl" data-icon="edit">edit</span></button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors"><span class="material-symbols-outlined text-xl" data-icon="delete">delete</span></button>
+</div>
+</div>
+<!-- Requirement Card 2: Under Review -->
+<div class="group grid grid-cols-12 items-center gap-6 p-6 bg-surface-container-lowest rounded-xl ghost-border hover:shadow-xl hover:shadow-slate-200/30 transition-all duration-300">
+<div class="col-span-1 text-sm font-semibold text-on-surface-variant font-body">REQ-051</div>
+<div class="col-span-5">
+<h3 class="text-lg font-headline font-bold text-on-surface group-hover:text-primary transition-colors mb-1">Dark Mode Architecture</h3>
+<p class="text-sm text-on-surface-variant line-clamp-1 font-body">System-wide implementation of Tailwind-based dark/light theme switching.</p>
+</div>
+<div class="col-span-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+              Under Review
+            </span>
+</div>
+<div class="col-span-2">
+<p class="text-sm font-medium text-on-surface">Oct 26, 2023</p>
+<p class="text-[10px] text-on-surface-variant font-label uppercase">09:15 AM</p>
+</div>
+<div class="col-span-2 flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl" data-icon="visibility">visibility</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl" data-icon="edit">edit</span></button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors"><span class="material-symbols-outlined text-xl" data-icon="delete">delete</span></button>
+</div>
+</div>
+<!-- Requirement Card 3: Rejected -->
+<div class="group grid grid-cols-12 items-center gap-6 p-6 bg-surface-container-lowest rounded-xl ghost-border hover:shadow-xl hover:shadow-slate-200/30 transition-all duration-300">
+<div class="col-span-1 text-sm font-semibold text-on-surface-variant font-body">REQ-038</div>
+<div class="col-span-5">
+<h3 class="text-lg font-headline font-bold text-on-surface group-hover:text-primary transition-colors mb-1">Blockchain Audit Trail</h3>
+<p class="text-sm text-on-surface-variant line-clamp-1 font-body">Storing history hashes on a public ledger for immutable compliance logs.</p>
+</div>
+<div class="col-span-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-red-700 text-[10px] font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-red-600"></span>
+              Rejected
+            </span>
+</div>
+<div class="col-span-2">
+<p class="text-sm font-medium text-on-surface">Oct 20, 2023</p>
+<p class="text-[10px] text-on-surface-variant font-label uppercase">16:45 PM</p>
+</div>
+<div class="col-span-2 flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl" data-icon="visibility">visibility</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl" data-icon="edit">edit</span></button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors"><span class="material-symbols-outlined text-xl" data-icon="delete">delete</span></button>
+</div>
+</div>
+<!-- Requirement Card 4: Draft -->
+<div class="group grid grid-cols-12 items-center gap-6 p-6 bg-surface-container-lowest rounded-xl ghost-border hover:shadow-xl hover:shadow-slate-200/30 transition-all duration-300">
+<div class="col-span-1 text-sm font-semibold text-on-surface-variant font-body">REQ-055</div>
+<div class="col-span-5">
+<h3 class="text-lg font-headline font-bold text-on-surface group-hover:text-primary transition-colors mb-1">Automated PDF Report Generator</h3>
+<p class="text-sm text-on-surface-variant line-clamp-1 font-body">Daily summaries of requirement status changes emailed to stakeholders.</p>
+</div>
+<div class="col-span-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+              Draft
+            </span>
+</div>
+<div class="col-span-2">
+<p class="text-sm font-medium text-on-surface">Today</p>
+<p class="text-[10px] text-on-surface-variant font-label uppercase">Just now</p>
+</div>
+<div class="col-span-2 flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl" data-icon="visibility">visibility</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl" data-icon="edit">edit</span></button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors"><span class="material-symbols-outlined text-xl" data-icon="delete">delete</span></button>
+</div>
+</div>
+</div>
+<!-- Pagination/Footer -->
+<div class="mt-12 flex justify-between items-center px-6">
+<p class="text-xs text-on-surface-variant font-medium">Showing <span class="text-on-surface font-bold">4</span> of <span class="text-on-surface font-bold">128</span> requirements</p>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg ghost-border text-on-surface-variant hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-xs font-bold">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg ghost-border text-on-surface-variant hover:bg-surface-container-low transition-colors text-xs font-bold">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg ghost-border text-on-surface-variant hover:bg-surface-container-low transition-colors text-xs font-bold">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg ghost-border text-on-surface-variant hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB (Hidden as per suppression logic for Detail/Settings, but shown here for Requirements Home) -->
+<button class="fixed bottom-8 right-8 w-14 h-14 primary-gradient text-white rounded-full shadow-2xl flex items-center justify-center group hover:scale-110 transition-transform z-50">
+<span class="material-symbols-outlined text-2xl" data-icon="bolt">bolt</span>
+<span class="absolute right-full mr-4 px-3 py-1 bg-on-surface text-white text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Quick Analyze</span>
+</button>
+</body></html>

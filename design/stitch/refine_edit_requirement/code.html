@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Refine Requirement | ReqFlow</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#525c6a",
+                        "on-tertiary-container": "#4b4e69",
+                        "surface-container-low": "#f1f4f6",
+                        "surface-variant": "#dbe4e7",
+                        "secondary-fixed-dim": "#cbd5e6",
+                        "surface-container": "#eaeff1",
+                        "primary-dim": "#0047c5",
+                        "secondary": "#56606e",
+                        "on-surface": "#2b3437",
+                        "surface-container-highest": "#dbe4e7",
+                        "on-secondary": "#f7f9ff",
+                        "surface": "#f8f9fa",
+                        "tertiary-container": "#dbddfe",
+                        "inverse-surface": "#0c0f10",
+                        "primary-fixed-dim": "#c8d3ff",
+                        "on-primary": "#f8f7ff",
+                        "secondary-dim": "#4a5462",
+                        "on-tertiary-fixed-variant": "#555873",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#faf8ff",
+                        "primary": "#1353d8",
+                        "on-surface-variant": "#586064",
+                        "on-secondary-fixed": "#36404d",
+                        "on-background": "#2b3437",
+                        "inverse-primary": "#638aff",
+                        "on-secondary-container": "#485260",
+                        "outline-variant": "#abb3b7",
+                        "tertiary": "#5a5d78",
+                        "surface-tint": "#1353d8",
+                        "on-error": "#fff7f6",
+                        "on-primary-fixed": "#00369b",
+                        "on-tertiary-fixed": "#383c55",
+                        "tertiary-fixed": "#dbddfe",
+                        "secondary-fixed": "#d9e3f4",
+                        "inverse-on-surface": "#9b9d9e",
+                        "surface-container-high": "#e2e9ec",
+                        "error-container": "#fe8983",
+                        "tertiary-dim": "#4e516c",
+                        "primary-fixed": "#dbe1ff",
+                        "on-error-container": "#752121",
+                        "surface-bright": "#f8f9fa",
+                        "error-dim": "#4e0309",
+                        "background": "#f8f9fa",
+                        "error": "#9f403d",
+                        "outline": "#737c7f",
+                        "on-primary-container": "#0046c3",
+                        "secondary-container": "#d9e3f4",
+                        "primary-container": "#dbe1ff",
+                        "on-primary-fixed-variant": "#0b50d5",
+                        "surface-dim": "#d1dce0",
+                        "tertiary-fixed-dim": "#cdcfef"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Manrope', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full flex flex-col p-4 bg-slate-50 dark:bg-slate-900 h-screen w-64 border-r border-transparent z-50">
+<div class="mb-8 px-4">
+<div class="text-xl font-bold text-slate-900 dark:text-white font-headline">ReqFlow</div>
+<div class="text-[10px] uppercase tracking-[0.1em] text-on-surface-variant font-medium Inter">Enterprise Suite</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-sm font-medium Inter">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-semibold transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="text-sm font-medium Inter">Requirements</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span class="text-sm font-medium Inter">Traceability</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-sm font-medium Inter">Team</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-sm font-medium Inter">Project Settings</span>
+</a>
+</nav>
+<div class="mt-auto">
+<button class="w-full py-3 px-4 bg-primary text-white rounded-xl font-bold text-sm shadow-sm hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                New Requirement
+            </button>
+</div>
+</aside>
+<!-- TopNavBar Shell -->
+<header class="sticky top-0 z-40 flex justify-between items-center px-8 w-full ml-64 h-16 bg-white/85 dark:bg-slate-950/85 backdrop-blur-md shadow-sm border-b border-transparent">
+<div class="flex items-center gap-6">
+<div class="flex items-center bg-surface-container rounded-full px-4 py-1.5 border border-outline-variant/10 focus-within:ring-1 ring-primary/20 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-sm mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-64 placeholder:text-on-surface-variant/60" placeholder="Search requirements..." type="text"/>
+</div>
+<nav class="flex gap-8 items-center h-full">
+<a class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 h-16 flex items-center text-xs tracking-wider uppercase font-bold Inter" href="#">Project Alpha</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-all h-16 flex items-center text-xs tracking-wider uppercase font-bold Inter" href="#">Beta Phase</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<img class="w-8 h-8 rounded-full border border-surface-container-highest shadow-sm" data-alt="close-up portrait of professional woman in business attire with neutral background and soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1JuNVqzMSdWdTMuq-0b3n8f_t2Je7vJh4-H-erUfuDRInHkhF7q6FrpZ9ODVETgVSMx7HSzHSBjx3uDh_lpGpbO6uPfZ1YFuuhp7OPeMFV44yiAmwaNczLLA9NWX9zy6BwI0Oh1MXPnb7lj0tGAbIO52m-7vdijutfRPddLL3JTT1B2xzfXjIJJr3PmwJuHO5sFPteT0B1wbJzBKIAoe9KJ6EyA4G1vlH1kNFC0951ujdcM9NZYbXTUobfjiRfGHDoPBUReqNq8Q"/>
+</div>
+</header>
+<main class="ml-64 p-8 min-h-screen">
+<!-- Page Header -->
+<div class="flex justify-between items-end mb-8">
+<div class="space-y-1">
+<div class="flex items-center gap-2 text-on-surface-variant mb-2">
+<span class="material-symbols-outlined text-base" data-icon="arrow_back">arrow_back</span>
+<span class="text-xs font-bold uppercase tracking-widest Inter">Back to Workspace</span>
+</div>
+<h1 class="text-3xl font-extrabold tracking-tight text-on-surface">Refine Requirement <span class="text-on-surface-variant font-light tracking-normal">REQ-204</span></h1>
+<p class="text-on-surface-variant Inter text-sm">Reviewing client brief for High-Frequency Trading Core Module</p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-2.5 rounded-lg border border-outline-variant/30 text-on-surface font-semibold text-sm hover:bg-surface-container-low transition-colors">Discard Draft</button>
+<button class="px-8 py-2.5 rounded-lg bg-gradient-to-br from-primary to-primary-dim text-on-primary font-bold text-sm shadow-lg shadow-primary/20 hover:opacity-95 transition-all active:scale-[0.98]">Save as New Version</button>
+</div>
+</div>
+<!-- Locked Banner (Conditional Visibility) -->
+<div class="mb-8 p-4 bg-error-container/20 border-l-4 border-error flex items-center gap-4 rounded-r-xl">
+<span class="material-symbols-outlined text-on-error-container" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+<div>
+<p class="text-on-error-container font-bold text-sm font-headline">Requirement Locked for Baseline</p>
+<p class="text-on-error-container/80 text-xs Inter">This requirement was approved by Architecture Review Board on Oct 12. New versions will require re-approval.</p>
+</div>
+</div>
+<!-- Two Column Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+<!-- Left Side: Original Read-Only -->
+<div class="space-y-6">
+<div class="bg-surface-container-low rounded-xl p-8 border border-outline-variant/10">
+<div class="flex justify-between items-center mb-6">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant Inter">Original Requirement</span>
+<div class="px-2.5 py-0.5 bg-surface-container-high text-on-surface-variant text-[10px] font-bold uppercase rounded-full">v1.0 • Client Brief</div>
+</div>
+<div class="prose prose-slate max-w-none">
+<p class="text-on-surface leading-relaxed font-medium text-base mb-4 italic">
+                            "The system should be able to process trade executions very quickly without causing any delays for other users. We need it to be secure so that only authorized personnel can see the trade history and the latency shouldn't be high during peak market hours."
+                        </p>
+<div class="h-px bg-outline-variant/10 my-6"></div>
+<div class="flex gap-4 items-center">
+<img class="w-8 h-8 rounded-full" data-alt="professional male avatar in studio lighting with soft focused background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCC6Mpv-pozoXpD-Nk-Zn9F7TnRJSJPQJnU7tGGjs8AUtLXIHIsEt4QnfAPJx8Cmhp4uVttbprl99oyIH2txODgbzhciCGOrOabLhnMXhTQb4e3u-ByZkTriubiMA74Jvr1ffLrgEcQ24D67LtFDSSokh0RwuvBaVtozqaypIaPQDb6MZ2CWODH0fY7N18A-THdZKluuOAfkZ0jGaJTc_OcFRH7TwejoPkB1dqW2S9P6SMru1kWqGpkCAcTjgs-kMVyOQ07Pn8z8os"/>
+<div>
+<p class="text-xs font-bold text-on-surface">James Aristha</p>
+<p class="text-[10px] text-on-surface-variant">Lead Product Manager, Alpha Corp</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Related Requirements -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-outline-variant/10">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-sm font-bold font-headline">Traceability Links</h3>
+<button class="text-primary text-[11px] font-bold uppercase tracking-wider flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-sm" data-icon="add_link">add_link</span>
+                            Add Link
+                        </button>
+</div>
+<div class="space-y-2">
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/50 border border-transparent hover:border-outline-variant/20 transition-all group">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-primary/40"></span>
+<span class="text-xs font-bold text-on-surface-variant">REQ-102</span>
+<span class="text-xs font-medium text-on-surface truncate max-w-[200px]">Auth-Gateway Protocol</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 cursor-pointer text-sm" data-icon="close">close</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/50 border border-transparent hover:border-outline-variant/20 transition-all group">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-primary/40"></span>
+<span class="text-xs font-bold text-on-surface-variant">REQ-089</span>
+<span class="text-xs font-medium text-on-surface truncate max-w-[200px]">Data Encryption Standard</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 cursor-pointer text-sm" data-icon="close">close</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side: Editable Refined -->
+<div class="space-y-6">
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm border border-outline-variant/10">
+<div class="flex justify-between items-center mb-6">
+<span class="text-[10px] font-bold uppercase tracking-widest text-primary Inter">Refined Specification</span>
+<div class="flex gap-2">
+<select class="text-[10px] font-bold uppercase py-1 px-3 rounded-full border-outline-variant/20 bg-surface-container-low text-on-surface focus:ring-primary focus:border-primary">
+<option>Functional</option>
+<option>Non-Functional</option>
+</select>
+<select class="text-[10px] font-bold uppercase py-1 px-3 rounded-full border-outline-variant/20 bg-surface-container-low text-on-surface focus:ring-primary focus:border-primary">
+<option>High Priority</option>
+<option>Medium Priority</option>
+<option>Low Priority</option>
+</select>
+</div>
+</div>
+<div class="space-y-6">
+<!-- Requirement Body -->
+<div>
+<label class="block text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant mb-2 Inter">Refined Description</label>
+<textarea class="w-full bg-surface rounded-lg border-outline-variant/20 focus:border-primary focus:ring-primary/10 text-sm leading-relaxed p-4" placeholder="Rewrite the requirement with technical precision..." rows="4">The Trade Execution Engine shall process transactions with sub-5ms latency for 99.9% of requests under a peak load of 10,000 TPS. Audit logs for trade history must be encrypted at rest and accessible only via Identity-Based Access Control (IBAC).</textarea>
+</div>
+<!-- Acceptance Criteria -->
+<div>
+<div class="flex justify-between items-center mb-3">
+<label class="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant Inter">Acceptance Criteria</label>
+<button class="text-primary text-[10px] font-bold uppercase">+ Add</button>
+</div>
+<div class="space-y-3">
+<div class="flex gap-3 group">
+<div class="flex-shrink-0 mt-1">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span>
+</div>
+<div class="flex-1 p-3 rounded-lg border border-outline-variant/20 bg-surface text-sm text-on-surface relative">
+                                        End-to-end latency measured from gateway ingress to storage commit is &lt; 5ms.
+                                        <span class="absolute right-3 top-3 material-symbols-outlined text-on-surface-variant text-sm opacity-0 group-hover:opacity-100 cursor-pointer" data-icon="edit">edit</span>
+</div>
+</div>
+<div class="flex gap-3 group">
+<div class="flex-shrink-0 mt-1">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span>
+</div>
+<div class="flex-1 p-3 rounded-lg border border-outline-variant/20 bg-surface text-sm text-on-surface relative">
+                                        Data encryption validated against AES-256 standard with key rotation every 30 days.
+                                        <span class="absolute right-3 top-3 material-symbols-outlined text-on-surface-variant text-sm opacity-0 group-hover:opacity-100 cursor-pointer" data-icon="edit">edit</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Justification -->
+<div class="pt-4 border-t border-outline-variant/10">
+<label class="block text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant mb-2 Inter">Justification for Changes <span class="text-error">*</span></label>
+<textarea class="w-full bg-surface rounded-lg border-outline-variant/20 focus:border-primary focus:ring-primary/10 text-sm p-3 border-dashed" placeholder="Explain why these refinements were necessary..." rows="2"></textarea>
+</div>
+</div>
+</div>
+<!-- Bottom Action Hints -->
+<div class="flex items-center gap-3 px-2">
+<span class="material-symbols-outlined text-on-surface-variant text-lg" data-icon="info">info</span>
+<p class="text-[11px] text-on-surface-variant/80 Inter italic">Saving this will notify 4 stakeholders including Architecture and Compliance teams for review.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Visual Artifacts (Background elements for 'Editorial' feel) -->
+<div class="fixed top-0 right-0 -z-10 w-1/3 h-full bg-gradient-to-l from-surface-container-low/40 to-transparent pointer-events-none"></div>
+</body></html>

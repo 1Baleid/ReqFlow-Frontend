@@ -1,0 +1,122 @@
+/* Dashboard Page */
+
+/* Filter Bar spacing - matches Stitch mb-8 */
+.dashboard .filter-chips {
+  margin-bottom: 32px;
+}
+
+.dashboard__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+@media (min-width: 1024px) {
+  .dashboard__grid {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+}
+
+/* Main Column */
+.dashboard__main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Toolbar */
+.dashboard__toolbar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.dashboard__sort-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background: var(--color-surface-container-lowest);
+  border: 1px solid rgba(171, 179, 183, 0.1);
+  border-radius: 8px;
+  color: var(--color-on-surface-variant);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.dashboard__sort-btn:hover {
+  background: white;
+}
+
+/* Requirements List */
+.dashboard__list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Sidebar */
+.dashboard__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Help Card */
+.dashboard__help-card {
+  position: relative;
+  padding: 24px;
+  background: #0f172a;
+  border-radius: 16px;
+  overflow: hidden;
+  color: white;
+}
+
+.dashboard__help-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(19, 83, 216, 0.3) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.dashboard__help-content {
+  position: relative;
+  z-index: 1;
+}
+
+.dashboard__help-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+
+.dashboard__help-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+
+.dashboard__help-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #60a5fa;
+  text-decoration: none;
+}
+
+.dashboard__help-link .material-symbols-outlined {
+  font-size: 14px;
+}
+
+.dashboard__help-link:hover {
+  color: #93c5fd;
+}

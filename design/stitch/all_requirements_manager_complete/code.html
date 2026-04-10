@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ReqFlow - All Requirements</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#fff7f6",
+                        "on-background": "#2b3437",
+                        "on-tertiary": "#faf8ff",
+                        "outline-variant": "#abb3b7",
+                        "inverse-surface": "#0c0f10",
+                        "inverse-on-surface": "#9b9d9e",
+                        "primary-container": "#dbe1ff",
+                        "secondary": "#56606e",
+                        "on-tertiary-fixed-variant": "#555873",
+                        "on-secondary-fixed-variant": "#525c6a",
+                        "tertiary-fixed-dim": "#cdcfef",
+                        "error": "#9f403d",
+                        "outline": "#737c7f",
+                        "secondary-dim": "#4a5462",
+                        "surface-container": "#eaeff1",
+                        "secondary-fixed-dim": "#cbd5e6",
+                        "error-container": "#fe8983",
+                        "on-secondary-fixed": "#36404d",
+                        "on-secondary-container": "#485260",
+                        "surface-variant": "#dbe4e7",
+                        "on-primary-container": "#0046c3",
+                        "on-tertiary-container": "#4b4e69",
+                        "error-dim": "#4e0309",
+                        "surface-dim": "#d1dce0",
+                        "surface-container-high": "#e2e9ec",
+                        "on-primary-fixed-variant": "#0b50d5",
+                        "on-surface-variant": "#586064",
+                        "on-secondary": "#f7f9ff",
+                        "tertiary": "#5a5d78",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f8f9fa",
+                        "surface": "#f8f9fa",
+                        "tertiary-fixed": "#dbddfe",
+                        "tertiary-container": "#dbddfe",
+                        "secondary-fixed": "#d9e3f4",
+                        "tertiary-dim": "#4e516c",
+                        "on-primary": "#f8f7ff",
+                        "background": "#f8f9fa",
+                        "secondary-container": "#d9e3f4",
+                        "on-error-container": "#752121",
+                        "primary-dim": "#0047c5",
+                        "inverse-primary": "#638aff",
+                        "surface-container-highest": "#dbe4e7",
+                        "primary-fixed": "#dbe1ff",
+                        "surface-container-low": "#f1f4f6",
+                        "on-primary-fixed": "#00369b",
+                        "on-tertiary-fixed": "#383c55",
+                        "on-surface": "#2b3437",
+                        "primary": "#1353d8",
+                        "surface-tint": "#1353d8",
+                        "primary-fixed-dim": "#c8d3ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-headline { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface flex min-h-screen">
+<!-- SideNavBar (Shared Component) -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-slate-50 dark:bg-slate-950 flex flex-col h-full p-4 border-r border-slate-100 dark:border-slate-800 z-50">
+<div class="mb-8 px-2">
+<h2 class="font-headline font-bold text-lg text-slate-900">Project Alpha</h2>
+<p class="text-xs text-slate-500 font-medium">Enterprise Tier</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-semibold rounded-lg transition-all scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="font-medium text-sm">Requirements</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-medium text-sm">Team</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-medium text-sm">Settings</span>
+</a>
+</nav>
+<div class="pt-4 border-t border-slate-200 mt-auto">
+<button class="w-full flex items-center justify-center gap-2 bg-primary text-on-primary py-2.5 rounded-lg text-sm font-semibold transition-all hover:opacity-90 active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="person_add">person_add</span>
+                Invite Member
+            </button>
+<a class="flex items-center gap-3 px-3 py-2 mt-4 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="font-medium text-sm">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-64 flex-1 flex flex-col min-h-screen">
+<!-- TopNavBar (Shared Component) -->
+<header class="w-full top-0 sticky bg-white dark:bg-slate-900 flex justify-between items-center px-6 py-3 w-full border-b border-slate-100 dark:border-slate-800 z-40">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tight text-blue-700 dark:text-blue-400 font-headline">ReqFlow</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-headline font-bold" href="#">Dashboard</a>
+<a class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 dark:border-blue-400 pb-1 font-headline font-bold" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400" data-icon="search">search</span>
+<input class="bg-surface-container-low border-none rounded-full py-1.5 pl-10 pr-4 text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="Search requirements..." type="text"/>
+</div>
+<button class="p-2 text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-slate-200">
+<img alt="Manager Profile" data-alt="professional portrait of a project manager with a friendly expression in a clean modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVJ_kM07ucuvLXVQj0wWorSPqHF-AbxABvC64UNxEVrapJtpKCKU5YhhhAK-VZPIFzViOqHq7VNdQp2jXDyK0_HaEI-S6fa3Y1a1WrX-kbAjorfyNbzz5HY4-7ZvxpcgZbSux-VvSz2CPhZ2eQM8kdJ8NK8hfXNyF2K_0yglxqlIBfBRhbf5AXxQJQQZ6OYeDpej0h1lGpFkRTcezkkeHd8F5aJOndB78ZXDyxHnFkrAu6nMTScQ22hr_hH7lIwLjMLFu19AQ2Cek"/>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<section class="p-8 space-y-6">
+<!-- Header Section -->
+<div class="flex justify-between items-end">
+<div>
+<span class="label-sm text-[0.6875rem] font-bold tracking-[0.05em] text-on-surface-variant uppercase">Management Console</span>
+<h1 class="text-3xl font-headline font-bold text-on-surface mt-1 tracking-tight">All Requirements</h1>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-high rounded-lg text-sm font-semibold text-secondary hover:bg-slate-200 transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="filter_list">filter_list</span>
+                        Filters
+                    </button>
+<button class="flex items-center gap-2 px-6 py-2 bg-gradient-to-br from-primary to-primary-dim text-white rounded-lg text-sm font-semibold shadow-sm hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+                        New Requirement
+                    </button>
+</div>
+</div>
+<!-- Table Container -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_12px_32px_rgba(43,52,55,0.04)] overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant/10">
+<th class="py-4 px-6 w-12">
+<input class="rounded text-primary focus:ring-primary/20 border-outline-variant/30" type="checkbox"/>
+</th>
+<th class="py-4 px-4 label-sm text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-wider">ID</th>
+<th class="py-4 px-4 label-sm text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-wider">Title</th>
+<th class="py-4 px-4 label-sm text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="py-4 px-4 label-sm text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-wider">Assignee</th>
+<th class="py-4 px-4 label-sm text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-wider">Priority</th>
+<th class="py-4 px-4 label-sm text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-wider">Type</th>
+<th class="py-4 px-4 label-sm text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-wider">Deadline</th>
+<th class="py-4 px-6 text-right"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<!-- Row 1: Duplicate Indicator Example -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="py-4 px-6">
+<input checked="" class="rounded text-primary focus:ring-primary/20 border-outline-variant/30" type="checkbox"/>
+</td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-2">
+<span class="font-medium text-primary text-sm">REQ-101</span>
+<span class="material-symbols-outlined text-amber-500 text-[16px] cursor-help" data-icon="content_copy" title="Duplicate detected">content_copy</span>
+</div>
+</td>
+<td class="py-4 px-4">
+<p class="text-sm font-semibold text-on-surface truncate max-w-xs">Global Authentication Middleware</p>
+<span class="text-[10px] text-on-surface-variant font-medium">VERSION 2.4</span>
+</td>
+<td class="py-4 px-4">
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-100/50 text-blue-700">UNDER REVIEW</span>
+</td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full overflow-hidden border border-slate-100">
+<img alt="Sarah Chen" data-alt="close up of a software engineer smiling, soft studio lighting with a neutral gray background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_de-1XkdUCiSfbGKwBl16jfgMuVxQoijtDMFiwT-PsbR5TtUYR829JeANuALDiz8NYAmbMlBfrx5M2WMv5PbZRvR64hZXn-RT78FV4qrWjad6sVtWnIQJFJBrk68cQ2raX4Za-2ccpUGPHKlDjUFrtfZn6Md0rjUYp-GsVpndaDWCF0pDLrm3vtpBSJXJ6H6xAws1L6-YyWsRiuiJrMJZhqZVCl-PpDaOXBwF_hTDWR04hy5cVyOki9GbcUrxvI8LNRn-E2YFdwQ"/>
+</div>
+<span class="text-xs font-medium text-secondary">Sarah Chen</span>
+</div>
+</td>
+<td class="py-4 px-4">
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-error-container/20 text-on-error-container uppercase">High</span>
+</td>
+<td class="py-4 px-4">
+<span class="text-xs text-secondary-dim bg-secondary-container/30 px-2 py-0.5 rounded-md">Functional</span>
+</td>
+<td class="py-4 px-4">
+<span class="text-xs text-on-surface-variant">Oct 24, 2023</span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="p-1 hover:bg-surface-container-high rounded transition-colors text-slate-400 group-hover:text-slate-600">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="py-4 px-6">
+<input checked="" class="rounded text-primary focus:ring-primary/20 border-outline-variant/30" type="checkbox"/>
+</td>
+<td class="py-4 px-4">
+<span class="font-medium text-primary text-sm">REQ-102</span>
+</td>
+<td class="py-4 px-4">
+<p class="text-sm font-semibold text-on-surface truncate max-w-xs">Batch Database Migration Schema</p>
+<span class="text-[10px] text-on-surface-variant font-medium">VERSION 1.1</span>
+</td>
+<td class="py-4 px-4">
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100/50 text-emerald-700">APPROVED</span>
+</td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full overflow-hidden border border-slate-100">
+<img alt="Marcus Wright" data-alt="headshot of a focused professional with short hair in a modern workspace environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXP6DV59Ns3iDQ2cNe99wDKn_zEoHMMhPx2c7_NIeRL1CABZAvn_nZY4zvmzlliAfUDhVD_os8atI6_MacIyiDaLvYk26sKiWveYEU4AfxiXNE7thkDrGUMIE6yObejgSU8qPO0LZODlIX4vEG23jDNrLdcJOwOMzvU086SYJl9X2ofuxOKG64aX5-heDfQJtdNLfIcHhociMU8UoxfqmrdhlJNXZV5SfyoUK6H14gtp45iuKhCpb4gKK997KaKzqDr9pvNACyAdE"/>
+</div>
+<span class="text-xs font-medium text-secondary">Marcus Wright</span>
+</div>
+</td>
+<td class="py-4 px-4">
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100/50 text-amber-700 uppercase">Medium</span>
+</td>
+<td class="py-4 px-4">
+<span class="text-xs text-secondary-dim bg-secondary-container/30 px-2 py-0.5 rounded-md">Non-Functional</span>
+</td>
+<td class="py-4 px-4">
+<span class="text-xs text-on-surface-variant font-semibold text-error">Oct 21, 2023</span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="p-1 hover:bg-surface-container-high rounded transition-colors text-slate-400 group-hover:text-slate-600">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Locked Example -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="py-4 px-6">
+<input class="rounded text-primary focus:ring-primary/20 border-outline-variant/30" type="checkbox"/>
+</td>
+<td class="py-4 px-4">
+<span class="font-medium text-primary text-sm">REQ-103</span>
+</td>
+<td class="py-4 px-4">
+<p class="text-sm font-semibold text-on-surface truncate max-w-xs">Data Privacy Compliance Header</p>
+<span class="text-[10px] text-on-surface-variant font-medium">VERSION 3.0</span>
+</td>
+<td class="py-4 px-4">
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-200 text-slate-600 flex items-center gap-1 w-fit">
+<span class="material-symbols-outlined text-[12px]" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+                                    LOCKED
+                                </span>
+</td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full overflow-hidden border border-slate-100">
+<img alt="Elena Rodriguez" data-alt="portrait of a confident female executive in business casual attire with soft daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBg3NPOdzIwh7AglstDQFdbzbwaOC2r5WQGNGBKmdFBREKf198mYak-HZCsQCyfbzwWp38dADDoule0UVrKezMVhdk6DkBHACxWlj_YhplRNfsaGLCXoxUfss7f2fzSDFsPDe_VDXnf1fWeq8qslc3WW5HE1ei8Z4zjf_za06Pi9ZpgzYbTdAKsRuRpL8bZZ0b-BbGMj5ZJqDt2ocKCiDwCRzCOAZ3DjW9ws5eZJtFtUFT3zHNUoltyG8jjOoLSA-LBVXphRbV1Ax4"/>
+</div>
+<span class="text-xs font-medium text-secondary">Elena R.</span>
+</div>
+</td>
+<td class="py-4 px-4">
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-500 uppercase">Low</span>
+</td>
+<td class="py-4 px-4">
+<span class="text-xs text-secondary-dim bg-secondary-container/30 px-2 py-0.5 rounded-md">Functional</span>
+</td>
+<td class="py-4 px-4">
+<span class="text-xs text-on-surface-variant">Nov 02, 2023</span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="p-1 hover:bg-surface-container-high rounded transition-colors text-slate-400 group-hover:text-slate-600">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: Draft -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="py-4 px-6">
+<input class="rounded text-primary focus:ring-primary/20 border-outline-variant/30" type="checkbox"/>
+</td>
+<td class="py-4 px-4">
+<span class="font-medium text-primary text-sm">REQ-104</span>
+</td>
+<td class="py-4 px-4">
+<p class="text-sm font-semibold text-on-surface truncate max-w-xs">Audit Log API Implementation</p>
+<span class="text-[10px] text-on-surface-variant font-medium">VERSION 0.8</span>
+</td>
+<td class="py-4 px-4">
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-500">DRAFT</span>
+</td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-tertiary-fixed flex items-center justify-center text-[10px] font-bold text-on-tertiary-fixed">
+                                        JS
+                                    </div>
+<span class="text-xs font-medium text-secondary">James S.</span>
+</div>
+</td>
+<td class="py-4 px-4">
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100/50 text-amber-700 uppercase">Medium</span>
+</td>
+<td class="py-4 px-4">
+<span class="text-xs text-secondary-dim bg-secondary-container/30 px-2 py-0.5 rounded-md">Functional</span>
+</td>
+<td class="py-4 px-4">
+<span class="text-xs text-on-surface-variant">Nov 15, 2023</span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="p-1 hover:bg-surface-container-high rounded transition-colors text-slate-400 group-hover:text-slate-600">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 5: Rejected -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="py-4 px-6">
+<input class="rounded text-primary focus:ring-primary/20 border-outline-variant/30" type="checkbox"/>
+</td>
+<td class="py-4 px-4">
+<span class="font-medium text-primary text-sm">REQ-105</span>
+</td>
+<td class="py-4 px-4">
+<p class="text-sm font-semibold text-on-surface truncate max-w-xs">Legacy Support for IE11</p>
+<span class="text-[10px] text-on-surface-variant font-medium">VERSION 1.0</span>
+</td>
+<td class="py-4 px-4">
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-red-100/50 text-red-700">REJECTED</span>
+</td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full overflow-hidden border border-slate-100">
+<img alt="David Miller" data-alt="headshot of a middle-aged male professional in a smart casual outfit, soft focus office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEGFs85SNEDYK_GG0nsDSP9x9T5FeZze1OHPsQVDBWCpdQj3EYb2hCcFRUZW4o88T-MEeOGiQ6pz9ejoHHHukwBkuBp2EmefWf2L3g-59P_opi_gVi0nGDP9PZvazbQgGZoc4fGDfglXkU-izfRIwkziCpuyKW-wSJxqyxMW0B7jdJjTADe84IczAuexMg1Hw6swJ8xpcKeEKVV8zjnYHglbUDjo1ufkeLBz9ucFMU7dQG0hN863tT9finYawx9JviVJEC31hbL28"/>
+</div>
+<span class="text-xs font-medium text-secondary">David Miller</span>
+</div>
+</td>
+<td class="py-4 px-4">
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-500 uppercase">Low</span>
+</td>
+<td class="py-4 px-4">
+<span class="text-xs text-secondary-dim bg-secondary-container/30 px-2 py-0.5 rounded-md">Non-Functional</span>
+</td>
+<td class="py-4 px-4">
+<span class="text-xs text-on-surface-variant">Archived</span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="p-1 hover:bg-surface-container-high rounded transition-colors text-slate-400 group-hover:text-slate-600">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Bulk Actions Bar (Appears when selection > 0) -->
+<div class="fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-2xl px-4 z-50">
+<div class="bg-inverse-surface/90 backdrop-blur-md text-white py-3 px-6 rounded-2xl shadow-2xl flex items-center justify-between border border-white/10">
+<div class="flex items-center gap-4">
+<span class="bg-primary px-3 py-1 rounded-full text-xs font-bold">2 Selected</span>
+<div class="h-4 w-[1px] bg-white/20"></div>
+<p class="text-xs font-medium text-inverse-on-surface">Apply actions to selected requirements</p>
+</div>
+<div class="flex gap-4">
+<button class="flex items-center gap-1.5 text-xs font-bold hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="person_outline">person_outline</span>
+                            Reassign
+                        </button>
+<button class="flex items-center gap-1.5 text-xs font-bold hover:text-amber-400 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="content_copy">content_copy</span>
+                            Mark as Duplicate
+                        </button>
+<button class="flex items-center gap-1.5 text-xs font-bold text-red-400 hover:text-red-300 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="delete">delete</span>
+                            Delete
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Pagination (Asymmetric Breadth) -->
+<footer class="mt-auto px-8 py-6 flex justify-between items-center text-sm text-on-surface-variant font-medium">
+<p>Showing 1-12 of 148 Requirements</p>
+<div class="flex items-center gap-1">
+<button class="p-2 hover:bg-surface-container rounded-lg transition-colors"><span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span></button>
+<button class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-lg font-bold">1</button>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-container rounded-lg">2</button>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-container rounded-lg">3</button>
+<span class="px-2">...</span>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-container rounded-lg">12</button>
+<button class="p-2 hover:bg-surface-container rounded-lg transition-colors"><span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span></button>
+</div>
+</footer>
+</main>
+</body></html>

@@ -1,0 +1,141 @@
+.toast {
+  position: fixed;
+  top: 5rem;
+  right: 2rem;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 12px 32px rgba(43, 52, 55, 0.06);
+  border-left: 4px solid;
+  animation: toastSlideIn 0.3s ease-out;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Variants */
+.toast--success {
+  border-left-color: #1353d8;
+}
+
+.toast--success .toast__icon {
+  color: #1353d8;
+}
+
+.toast--error {
+  border-left-color: #9f403d;
+}
+
+.toast--error .toast__icon {
+  color: #9f403d;
+}
+
+.toast--warning {
+  border-left-color: #d97706;
+}
+
+.toast--warning .toast__icon {
+  color: #d97706;
+}
+
+.toast--info {
+  border-left-color: #56606e;
+}
+
+.toast--info .toast__icon {
+  color: #56606e;
+}
+
+/* Icon */
+.toast__icon {
+  font-size: 24px;
+}
+
+/* Content */
+.toast__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.toast__title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #2b3437;
+  margin: 0;
+}
+
+.toast__message {
+  font-size: 0.75rem;
+  color: #586064;
+  margin: 0;
+}
+
+/* Divider */
+.toast__divider {
+  width: 1px;
+  height: 16px;
+  background: rgba(171, 179, 183, 0.3);
+  margin-left: 0.5rem;
+}
+
+/* Undo Button */
+.toast__undo {
+  background: none;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #1353d8;
+  transition: color 0.15s ease;
+}
+
+.toast__undo:hover {
+  color: #0047c5;
+}
+
+/* Close Button */
+.toast__close {
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  color: #586064;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.toast__close:hover {
+  color: #2b3437;
+}
+
+.toast__close .material-symbols-outlined {
+  font-size: 18px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .toast {
+    right: 1rem;
+    left: 1rem;
+    top: 4rem;
+  }
+}

@@ -1,0 +1,45 @@
+/* MainLayout Component Styles */
+
+.main-layout {
+  min-height: 100vh;
+  background: #f8f9fa;
+  width: 100%;
+}
+
+.main-layout__content {
+  margin-left: 256px;
+  padding-top: 64px;
+  min-height: 100vh;
+  width: calc(100% - 256px);
+  transition: margin-left 0.2s ease, width 0.2s ease;
+}
+
+/* Collapsed Sidebar State */
+.main-layout--sidebar-collapsed .main-layout__content {
+  margin-left: 72px;
+  width: calc(100% - 72px);
+}
+
+.main-layout__container {
+  padding: 40px;
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 1024px) {
+  .main-layout__content {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .main-layout--sidebar-collapsed .main-layout__content {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .main-layout__container {
+    padding: 24px;
+  }
+}

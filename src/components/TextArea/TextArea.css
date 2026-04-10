@@ -1,0 +1,116 @@
+/* TextArea Component */
+
+.textarea {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.textarea__label {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-on-surface-variant);
+}
+
+.textarea__required {
+  color: var(--color-error);
+  margin-left: 2px;
+}
+
+/* Toolbar */
+.textarea__toolbar {
+  display: flex;
+  gap: 4px;
+  padding: 8px;
+  background: var(--color-surface-container-lowest);
+  border: 1px solid rgba(171, 179, 183, 0.2);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+}
+
+.textarea__tool {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--color-on-surface-variant);
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.textarea__tool:hover {
+  background: var(--color-surface-container-low);
+  color: var(--color-on-surface);
+}
+
+.textarea__tool .material-symbols-outlined {
+  font-size: 18px;
+}
+
+/* Field */
+.textarea__field {
+  width: 100%;
+  padding: 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-on-surface);
+  background: var(--color-surface-container-lowest);
+  border: 1px solid rgba(171, 179, 183, 0.2);
+  border-radius: 0 0 8px 8px;
+  resize: vertical;
+  min-height: 120px;
+  transition: all 0.15s ease;
+}
+
+.textarea:not(:has(.textarea__toolbar)) .textarea__field {
+  border-radius: 8px;
+}
+
+.textarea__field::placeholder {
+  color: var(--color-outline);
+  opacity: 0.6;
+}
+
+.textarea__field:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+/* Error */
+.textarea--error .textarea__field {
+  border-color: var(--color-error);
+}
+
+.textarea--error .textarea__field:focus {
+  box-shadow: 0 0 0 1px var(--color-error);
+}
+
+.textarea__error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-error);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+}
+
+.textarea__error .material-symbols-outlined {
+  font-size: 16px;
+}
+
+/* Disabled */
+.textarea--disabled .textarea__field {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

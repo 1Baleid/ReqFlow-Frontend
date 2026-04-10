@@ -1,0 +1,265 @@
+/* ReqFlow Design Tokens - "Architectural Curator" Design System */
+
+:root {
+  /* ============================================
+     COLOR TOKENS - Tonal Architecture
+     ============================================ */
+
+  /* Primary - "Laser Pointer" accent */
+  --color-primary: #1353d8;
+  --color-primary-dim: #0047c5;
+  --color-primary-container: #dbe1ff;
+  --color-primary-fixed: #dbe1ff;
+  --color-primary-fixed-dim: #c8d3ff;
+  --color-on-primary: #f8f7ff;
+  --color-on-primary-container: #0046c3;
+  --color-on-primary-fixed: #00369b;
+  --color-on-primary-fixed-variant: #0b50d5;
+  --color-inverse-primary: #638aff;
+
+  /* Secondary */
+  --color-secondary: #56606e;
+  --color-secondary-dim: #4a5462;
+  --color-secondary-container: #d9e3f4;
+  --color-secondary-fixed: #d9e3f4;
+  --color-secondary-fixed-dim: #cbd5e6;
+  --color-on-secondary: #f7f9ff;
+  --color-on-secondary-container: #485260;
+  --color-on-secondary-fixed: #36404d;
+  --color-on-secondary-fixed-variant: #525c6a;
+
+  /* Tertiary */
+  --color-tertiary: #5a5d78;
+  --color-tertiary-dim: #4e516c;
+  --color-tertiary-container: #dbddfe;
+  --color-tertiary-fixed: #dbddfe;
+  --color-tertiary-fixed-dim: #cdcfef;
+  --color-on-tertiary: #faf8ff;
+  --color-on-tertiary-container: #4b4e69;
+  --color-on-tertiary-fixed: #383c55;
+  --color-on-tertiary-fixed-variant: #555873;
+
+  /* Error */
+  --color-error: #9f403d;
+  --color-error-dim: #4e0309;
+  --color-error-container: #fe8983;
+  --color-on-error: #fff7f6;
+  --color-on-error-container: #752121;
+
+  /* Surface Hierarchy - "Premium Paper Stack" */
+  --color-background: #f8f9fa;
+  --color-surface: #f8f9fa;
+  --color-surface-dim: #d1dce0;
+  --color-surface-bright: #f8f9fa;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f1f4f6;
+  --color-surface-container: #eaeff1;
+  --color-surface-container-high: #e2e9ec;
+  --color-surface-container-highest: #dbe4e7;
+  --color-surface-variant: #dbe4e7;
+  --color-surface-tint: #1353d8;
+
+  /* Sidebar specific (Tailwind slate-100) */
+  --color-sidebar: #f1f5f9;
+
+  /* Tailwind Slate Colors for reference */
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-900: #0f172a;
+
+  /* Tailwind Blue Colors for reference */
+  --color-blue-600: #2563eb;
+  --color-blue-700: #1d4ed8;
+
+  /* On Surface */
+  --color-on-background: #2b3437;
+  --color-on-surface: #2b3437;
+  --color-on-surface-variant: #586064;
+
+  /* Inverse */
+  --color-inverse-surface: #0c0f10;
+  --color-inverse-on-surface: #9b9d9e;
+
+  /* Outline */
+  --color-outline: #737c7f;
+  --color-outline-variant: #abb3b7;
+
+  /* ============================================
+     TYPOGRAPHY - Editorial Scale
+     ============================================ */
+
+  /* Font Families */
+  --font-headline: 'Manrope', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-label: 'Inter', system-ui, sans-serif;
+
+  /* Font Sizes */
+  --text-display-lg: 3.5rem;    /* 56px */
+  --text-display-md: 2.75rem;   /* 44px */
+  --text-display-sm: 2.25rem;   /* 36px */
+  --text-headline-lg: 2rem;     /* 32px */
+  --text-headline-md: 1.75rem;  /* 28px */
+  --text-headline-sm: 1.5rem;   /* 24px */
+  --text-title-lg: 1.375rem;    /* 22px */
+  --text-title-md: 1rem;        /* 16px */
+  --text-title-sm: 0.875rem;    /* 14px */
+  --text-body-lg: 1rem;         /* 16px */
+  --text-body-md: 0.875rem;     /* 14px */
+  --text-body-sm: 0.75rem;      /* 12px */
+  --text-label-lg: 0.875rem;    /* 14px */
+  --text-label-md: 0.75rem;     /* 12px */
+  --text-label-sm: 0.6875rem;   /* 11px */
+
+  /* Line Heights */
+  --leading-tight: 1.1;
+  --leading-snug: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  /* Letter Spacing */
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.05em;
+  --tracking-wider: 0.1em;
+
+  /* Font Weights */
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+
+  /* ============================================
+     SPACING
+     ============================================ */
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+
+  /* ============================================
+     BORDER RADIUS
+     ============================================ */
+  --radius-none: 0;
+  --radius-sm: 0.25rem;   /* 4px - DEFAULT */
+  --radius-default: 0.5rem; /* 8px - buttons */
+  --radius-md: 0.75rem;   /* 12px - cards */
+  --radius-lg: 1rem;      /* 16px */
+  --radius-xl: 1.5rem;    /* 24px */
+  --radius-full: 9999px;  /* pills/chips */
+
+  /* ============================================
+     SHADOWS - Tonal Layering (Ambient)
+     ============================================ */
+  --shadow-sm: 0 1px 2px rgba(43, 52, 55, 0.04);
+  --shadow-md: 0 4px 12px rgba(43, 52, 55, 0.06);
+  --shadow-lg: 0 12px 32px rgba(43, 52, 55, 0.06);
+  --shadow-xl: 0 20px 48px rgba(43, 52, 55, 0.08);
+  --shadow-primary: 0 8px 24px rgba(19, 83, 216, 0.2);
+
+  /* ============================================
+     TRANSITIONS
+     ============================================ */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 350ms ease;
+
+  /* ============================================
+     Z-INDEX SCALE
+     ============================================ */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal-backdrop: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-tooltip: 600;
+
+  /* ============================================
+     LAYOUT
+     ============================================ */
+  --sidebar-width: 256px;
+  --sidebar-collapsed-width: 72px;
+  --topnav-height: 64px;
+  --content-max-width: 1280px;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Primary Gradient Button */
+.flow-gradient {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dim) 100%);
+}
+
+/* Glass Effect for Modals/Dropdowns */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* Ghost Border (15% opacity outline-variant) */
+.ghost-border {
+  outline: 1px solid rgba(171, 179, 183, 0.15);
+}
+
+/* Focus Ring */
+.focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-primary);
+}
+
+/* Status Colors */
+.status-draft {
+  background: var(--color-surface-container-high);
+  color: var(--color-on-surface-variant);
+}
+.status-under-review {
+  background: rgba(19, 83, 216, 0.1);
+  color: var(--color-primary);
+}
+.status-approved {
+  background: rgba(34, 139, 34, 0.1);
+  color: #228b22;
+}
+.status-rejected {
+  background: rgba(159, 64, 61, 0.1);
+  color: var(--color-error);
+}
+.status-locked {
+  background: rgba(90, 93, 120, 0.1);
+  color: var(--color-tertiary);
+}
+
+/* Priority Colors */
+.priority-low {
+  background: rgba(34, 139, 34, 0.1);
+  color: #228b22;
+}
+.priority-medium {
+  background: rgba(19, 83, 216, 0.1);
+  color: var(--color-primary);
+}
+.priority-high {
+  background: rgba(255, 152, 0, 0.1);
+  color: #f57c00;
+}
+.priority-critical {
+  background: rgba(159, 64, 61, 0.15);
+  color: var(--color-error);
+}

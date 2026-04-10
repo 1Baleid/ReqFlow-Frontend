@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ReqFlow | Requirement Detail REQ-101</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#56606e",
+                    "secondary-fixed-dim": "#cbd5e6",
+                    "tertiary-container": "#dbddfe",
+                    "inverse-on-surface": "#9b9d9e",
+                    "secondary-fixed": "#d9e3f4",
+                    "background": "#f8f9fa",
+                    "on-primary-fixed": "#00369b",
+                    "on-secondary": "#f7f9ff",
+                    "surface": "#f8f9fa",
+                    "inverse-surface": "#0c0f10",
+                    "tertiary-fixed": "#dbddfe",
+                    "on-error": "#fff7f6",
+                    "surface-variant": "#dbe4e7",
+                    "surface-bright": "#f8f9fa",
+                    "surface-container": "#eaeff1",
+                    "surface-dim": "#d1dce0",
+                    "on-background": "#2b3437",
+                    "surface-tint": "#1353d8",
+                    "outline": "#737c7f",
+                    "tertiary-fixed-dim": "#cdcfef",
+                    "error": "#9f403d",
+                    "on-surface-variant": "#586064",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-highest": "#dbe4e7",
+                    "on-tertiary-fixed": "#383c55",
+                    "on-tertiary-fixed-variant": "#555873",
+                    "surface-container-low": "#f1f4f6",
+                    "on-primary-container": "#0046c3",
+                    "on-surface": "#2b3437",
+                    "outline-variant": "#abb3b7",
+                    "error-dim": "#4e0309",
+                    "primary-dim": "#0047c5",
+                    "tertiary-dim": "#4e516c",
+                    "error-container": "#fe8983",
+                    "primary": "#1353d8",
+                    "primary-fixed": "#dbe1ff",
+                    "on-tertiary": "#faf8ff",
+                    "surface-container-high": "#e2e9ec",
+                    "on-secondary-fixed-variant": "#525c6a",
+                    "on-primary": "#f8f7ff",
+                    "on-secondary-fixed": "#36404d",
+                    "inverse-primary": "#638aff",
+                    "tertiary": "#5a5d78",
+                    "on-tertiary-container": "#4b4e69",
+                    "primary-fixed-dim": "#c8d3ff",
+                    "on-primary-fixed-variant": "#0b50d5",
+                    "on-secondary-container": "#485260",
+                    "secondary-container": "#d9e3f4",
+                    "on-error-container": "#752121",
+                    "secondary-dim": "#4a5462",
+                    "primary-container": "#dbe1ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-manrope { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        
+        /* Improved Diff Visualization */
+        .diff-tag { display: inline-flex; align-items: center; border-radius: 4px; padding: 0 4px; margin: 0 2px; }
+        .diff-added { background-color: #dcfce7; color: #166534; border-bottom: 2px solid #22c55e; }
+        .diff-removed { background-color: #fee2e2; color: #991b1b; text-decoration: line-through; border-bottom: 2px solid #ef4444; }
+        
+        /* Modal Animation - State Simulation */
+        #reject-modal.hidden { display: none; }
+        .modal-overlay { background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Reject Modal (State Simulation) -->
+<div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4" id="reject-modal">
+<div class="modal-overlay absolute inset-0" onclick="document.getElementById('reject-modal').classList.add('hidden')"></div>
+<div class="relative bg-surface-container-lowest w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+<div class="p-8">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-3xl">gavel</span>
+</div>
+<div>
+<h3 class="text-xl font-extrabold font-manrope">Reject Requirement</h3>
+<p class="text-sm text-on-surface-variant">REQ-101: Cloud Infrastructure...</p>
+</div>
+</div>
+<label class="block mb-2 text-xs font-bold font-inter tracking-widest text-on-surface-variant uppercase">Mandatory Justification</label>
+<textarea class="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl p-4 text-sm focus:ring-2 focus:ring-error/20 focus:border-error transition-all outline-none resize-none mb-6" placeholder="Explain why this requirement is being rejected..." required="" rows="5"></textarea>
+<div class="flex gap-3">
+<button class="flex-1 px-6 py-3 border border-outline-variant text-on-surface font-bold font-manrope rounded-xl hover:bg-surface-container transition-all active:scale-95" onclick="document.getElementById('reject-modal').classList.add('hidden')">
+                    Cancel
+                </button>
+<button class="flex-1 px-6 py-3 bg-error text-white font-bold font-manrope rounded-xl shadow-lg shadow-error/20 hover:opacity-95 transition-all active:scale-95">
+                    Confirm Rejection
+                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-slate-100 dark:bg-slate-900 flex flex-col border-none z-50">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-10">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">architecture</span>
+</div>
+<div>
+<h1 class="text-xl font-bold text-blue-700 dark:text-blue-400 font-manrope tracking-tight leading-none">ReqFlow</h1>
+<p class="text-[10px] uppercase tracking-[0.1em] text-on-surface-variant font-bold mt-1">Enterprise RMS</p>
+</div>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:text-blue-600" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-manrope font-bold tracking-tight text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-blue-700 dark:text-blue-400 font-bold border-r-4 border-blue-700 dark:border-blue-400 bg-white/50 dark:bg-white/5" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-manrope font-bold tracking-tight text-sm">Requirements</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:text-blue-600" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+<span class="font-manrope font-bold tracking-tight text-sm">Projects</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:text-blue-600" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-manrope font-bold tracking-tight text-sm">Users</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:text-blue-600" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-manrope font-bold tracking-tight text-sm">Settings</span>
+</a>
+</nav>
+</div>
+<div class="mt-auto p-6">
+<button class="w-full bg-primary hover:bg-primary-dim text-white font-manrope font-bold py-3 rounded-xl shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2 active:scale-95">
+<span class="material-symbols-outlined text-sm">add</span>
+            New Requirement
+        </button>
+</div>
+</aside>
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-white/85 dark:bg-slate-950/85 backdrop-blur-md flex justify-between items-center px-8 border-none">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant text-lg">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="Search requirements..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<button class="text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-all p-2 rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-all p-2 rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-outline-variant/20"></div>
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-outline-variant/20 hover:bg-surface-container transition-all">
+<span class="text-xs font-bold font-manrope text-on-surface-variant">Project Alpha</span>
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<img alt="User profile" class="w-8 h-8 rounded-full border border-surface-container-highest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTVt2DK92iOHcWSI877I1R3-_RNPC3V30C44dwicAfNbD0k6YX_BM2ciaEFUGGRSeYlSe_oUFNp4Sqa-jrVClCCYMRwkX4sBe40DidHNSxQF-Gz-dMMKYMXtztj_zIH_N2m4NQ1NrhpcM-qgo4RCdv973eRuhRFJH0FnhHSYo-V-1ev-1dIcj1H9WeJ2ZSX3vNAIxpiQcO8IpnbVhWxsxQwPi23XWuRgid1R0MvK032rT31ECamERnQ7MQX6knIuD1PWiZz38t73Q"/>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 pb-12 px-10 min-h-screen bg-surface">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="text-xs font-bold font-inter tracking-[0.15em] text-on-surface-variant bg-surface-container-high px-2 py-1 rounded">REQ-101</span>
+<div class="flex items-center gap-1.5 px-3 py-1 bg-tertiary-container/40 text-on-tertiary-container rounded-full text-xs font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                    Under Review
+                </div>
+</div>
+<h2 class="text-4xl font-extrabold font-manrope tracking-tight text-on-surface">Cloud Infrastructure Auto-Scaling Policy</h2>
+</div>
+<div class="flex items-center gap-3">
+<!-- Reject Button triggers modal -->
+<button class="px-6 py-3 border border-error/20 text-error font-bold font-manrope rounded-xl hover:bg-error/5 transition-all flex items-center gap-2 active:scale-95" onclick="document.getElementById('reject-modal').classList.remove('hidden')">
+<span class="material-symbols-outlined text-lg">close</span>
+                Reject
+            </button>
+<button class="px-8 py-3 bg-gradient-to-br from-primary to-primary-dim text-white font-bold font-manrope rounded-xl shadow-xl shadow-primary/20 hover:opacity-95 transition-all flex items-center gap-2 active:scale-95">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                Approve
+            </button>
+</div>
+</div>
+<!-- Bento Layout -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Main Content Area -->
+<div class="col-span-12 lg:col-span-8 space-y-8">
+<!-- Description Section -->
+<section class="bg-surface-container-lowest rounded-xl p-8 border-none shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-xs font-bold font-inter tracking-widest text-on-surface-variant uppercase">Original Description</h3>
+<button class="p-1 hover:bg-surface-container rounded transition-colors">
+<span class="material-symbols-outlined text-outline-variant text-sm">edit</span>
+</button>
+</div>
+<p class="text-on-surface leading-relaxed font-inter">
+                    The system needs a way to handle sudden spikes in traffic. It should automatically add more servers when load is high and remove them when load drops to save costs. This must work across all regions.
+                </p>
+</section>
+<!-- Refined Version (Enhanced Diff) -->
+<section class="bg-surface-container-lowest rounded-xl p-8 border-none shadow-sm relative overflow-hidden">
+<div class="absolute top-0 right-0 px-4 py-1 bg-primary/10 text-primary text-[10px] font-bold font-inter uppercase tracking-tighter">Current Iteration (v2.4)</div>
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-xs font-bold font-inter tracking-widest text-on-surface-variant uppercase">Refined Version</h3>
+<div class="flex items-center gap-2">
+<button class="p-1.5 hover:bg-primary/10 text-primary rounded-lg transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">history</span>
+<span class="text-[10px] font-bold uppercase">History</span>
+</button>
+<span class="material-symbols-outlined text-primary">auto_fix_high</span>
+</div>
+</div>
+<div class="p-6 bg-surface-container-low rounded-lg border-l-4 border-primary">
+<p class="text-on-surface leading-relaxed font-inter text-lg">
+                        The infrastructure 
+                        <span class="diff-tag diff-removed">needs a way to handle</span>
+<span class="diff-tag diff-added">must implement an automated horizontal scaling mechanism to accommodate</span> 
+                        sudden spikes in 
+                        <span class="diff-tag diff-added">production</span> 
+                        traffic. 
+                        <span class="diff-tag diff-removed">It should automatically add more servers</span>
+<span class="diff-tag diff-added">Scaling policies will trigger additional compute nodes</span> 
+                        when 
+                        <span class="diff-tag diff-removed">load is high</span>
+<span class="diff-tag diff-added">CPU utilization exceeds 75% for 3 consecutive minutes</span> 
+                        and 
+                        <span class="diff-tag diff-removed">remove them</span>
+<span class="diff-tag diff-added">terminate idle instances</span> 
+                        when load drops 
+                        <span class="diff-tag diff-added">below 30%</span> 
+                        to 
+                        <span class="diff-tag diff-removed">save costs</span>
+<span class="diff-tag diff-added">optimize resource expenditure</span>. This 
+                        <span class="diff-tag diff-removed">must work across all regions</span>
+<span class="diff-tag diff-added">deployment must maintain high-availability parity across all active AWS regions (us-east-1, eu-central-1)</span>.
+                    </p>
+</div>
+</section>
+<!-- Acceptance Criteria (Interactive) -->
+<section class="bg-surface-container-lowest rounded-xl p-8 border-none shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-xs font-bold font-inter tracking-widest text-on-surface-variant uppercase">Acceptance Criteria</h3>
+<button class="bg-primary/10 text-primary px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 hover:bg-primary/20 transition-all">
+<span class="material-symbols-outlined text-sm">add_task</span>
+                        Add Criterion
+                    </button>
+</div>
+<div class="space-y-3">
+<!-- Interactive Row 1 -->
+<div class="group flex items-center gap-4 p-4 rounded-xl border border-transparent hover:border-outline-variant/20 hover:bg-surface-container-low transition-all">
+<button class="w-6 h-6 rounded-md border-2 border-primary/40 flex items-center justify-center text-primary hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100">check</span>
+</button>
+<input class="flex-1 bg-transparent border-none p-0 text-sm font-inter text-on-surface focus:ring-0 cursor-pointer" type="text" value="Auto-scaling group (ASG) responds within 60 seconds of a metric threshold breach."/>
+<button class="opacity-0 group-hover:opacity-100 p-1 text-on-surface-variant hover:text-error transition-all">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+<!-- Interactive Row 2 -->
+<div class="group flex items-center gap-4 p-4 rounded-xl border border-transparent hover:border-outline-variant/20 hover:bg-surface-container-low transition-all">
+<button class="w-6 h-6 rounded-md border-2 border-primary/40 flex items-center justify-center text-primary hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100">check</span>
+</button>
+<input class="flex-1 bg-transparent border-none p-0 text-sm font-inter text-on-surface focus:ring-0 cursor-pointer" type="text" value='Scale-in actions must respect the "Minimum Healthy Instances" setting of 3.'/>
+<button class="opacity-0 group-hover:opacity-100 p-1 text-on-surface-variant hover:text-error transition-all">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+<!-- Interactive Row 3 -->
+<div class="group flex items-center gap-4 p-4 rounded-xl border border-transparent hover:border-outline-variant/20 hover:bg-surface-container-low transition-all">
+<button class="w-6 h-6 rounded-md border-2 border-primary/40 flex items-center justify-center text-primary hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100">check</span>
+</button>
+<input class="flex-1 bg-transparent border-none p-0 text-sm font-inter text-on-surface focus:ring-0 cursor-pointer" type="text" value="Metrics are aggregated via CloudWatch with a 1-minute resolution."/>
+<button class="opacity-0 group-hover:opacity-100 p-1 text-on-surface-variant hover:text-error transition-all">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Discussion/Clarification -->
+<section class="bg-surface-container-lowest rounded-xl p-8 border-none shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-xs font-bold font-inter tracking-widest text-on-surface-variant uppercase">Discussion &amp; Clarification</h3>
+<span class="material-symbols-outlined text-outline-variant">forum</span>
+</div>
+<div class="space-y-6">
+<div class="flex gap-4">
+<img alt="Marcus Chen" class="w-10 h-10 rounded-full shrink-0 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEdZfCFRS67PLu4ZX9qJwPa6tco3ke9LxABZZE8a4u-mUIDn8usSPE6oR-f9ZPX_OxEwIN94Ss0mYMDbF-Ts_vyQxPq9BK7odwCPATAQfmQ0XG43zu0TQoNrtpqMqAG6nZjJfBZB4Xt2UnfK6KLmjjcHvDWVge2TxB4af9fMijPvn0VgpDCDV_lWRQUZ_AqUmSz5uYR-GPx_xDdQhHsIm6RKfrYfuQLo9OJ45_dWgKOnKWTO_RzjFAV-Brb6PCMtHXbPMrqhbLy6k"/>
+<div class="bg-surface-container-low p-5 rounded-2xl rounded-tl-none flex-1">
+<div class="flex justify-between items-center mb-2">
+<span class="font-manrope font-bold text-sm text-on-surface">Marcus Chen <span class="text-xs font-medium text-on-surface-variant ml-2">Lead Architect</span></span>
+<span class="text-[10px] font-bold text-outline-variant uppercase">2 hours ago</span>
+</div>
+<p class="text-on-surface text-sm leading-relaxed">Could you confirm if the 30% scale-in threshold is too aggressive? During testing, we noticed some "flapping" behavior where instances were being added and removed too frequently. Should we consider a cooldown period?</p>
+</div>
+</div>
+<!-- Reply Field Component -->
+<div class="flex gap-4 mt-8">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center shrink-0 border border-primary/20">
+<span class="text-primary font-bold text-xs uppercase">CL</span>
+</div>
+<div class="flex-1">
+<textarea class="w-full bg-surface-container-low border border-outline-variant/20 rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20 transition-all outline-none resize-none" placeholder="Reply to Marcus..." rows="3"></textarea>
+<div class="flex justify-end mt-3">
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg text-xs font-bold font-manrope hover:bg-primary-dim shadow-sm transition-all active:scale-95">Send Reply</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Sidebar - Clearly Separated Panels -->
+<aside class="col-span-12 lg:col-span-4 flex flex-col gap-6">
+<!-- Impact Assessment Panel -->
+<section class="bg-surface-container-high rounded-2xl p-6 shadow-sm border border-outline-variant/10">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-secondary text-sm">analytics</span>
+<h4 class="text-[10px] font-bold font-manrope text-on-secondary-fixed uppercase tracking-wider">Impact Assessment</h4>
+</div>
+<div class="space-y-5">
+<div class="flex justify-between items-center">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase">Complexity</span>
+<span class="text-[10px] font-bold text-error px-2.5 py-1 bg-error/10 border border-error/20 rounded-full uppercase">High Impact</span>
+</div>
+<div class="flex justify-between items-end">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase">Risk Score</span>
+<span class="text-lg font-extrabold text-on-surface font-manrope">8.4<span class="text-xs font-normal text-on-surface-variant">/10</span></span>
+</div>
+<div class="w-full bg-surface-container-low h-2 rounded-full overflow-hidden">
+<div class="bg-error h-full w-[84%] rounded-full shadow-[0_0_8px_rgba(159,64,61,0.4)]"></div>
+</div>
+<p class="text-[11px] text-on-surface-variant italic leading-tight">Requires senior architect approval before final baseline.</p>
+</div>
+</section>
+<!-- Linked Requirements Panel -->
+<section class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/10">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-[10px] font-bold font-inter tracking-widest text-on-surface-variant uppercase">Linked Requirements</h3>
+<button class="text-primary hover:bg-primary/5 p-1 rounded transition-colors">
+<span class="material-symbols-outlined text-sm">settings_input_component</span>
+</button>
+</div>
+<div class="space-y-3">
+<a class="flex items-center justify-between p-3 bg-surface-container-low hover:bg-surface-container-high rounded-xl transition-all border border-transparent hover:border-primary/20 group" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-lg text-primary group-hover:scale-110 transition-transform">link</span>
+<span class="text-xs font-bold text-on-surface">REQ-085</span>
+</div>
+<span class="material-symbols-outlined text-xs text-outline-variant">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-3 bg-surface-container-low hover:bg-surface-container-high rounded-xl transition-all border border-transparent hover:border-primary/20 group" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-lg text-primary group-hover:scale-110 transition-transform">link</span>
+<span class="text-xs font-bold text-on-surface">REQ-112</span>
+</div>
+<span class="material-symbols-outlined text-xs text-outline-variant">chevron_right</span>
+</a>
+<button class="w-full py-2.5 border-2 border-dashed border-outline-variant/30 text-on-surface-variant text-[10px] font-bold uppercase rounded-xl hover:bg-surface-container-low transition-all">
+                        + Link Requirement
+                    </button>
+</div>
+</section>
+<!-- Activity Timeline Panel -->
+<section class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/10 flex-1">
+<h3 class="text-[10px] font-bold font-inter tracking-widest text-on-surface-variant uppercase mb-8">Activity History</h3>
+<div class="relative space-y-10 before:content-[''] before:absolute before:left-3.5 before:top-2 before:bottom-2 before:w-[1px] before:bg-outline-variant/20">
+<!-- Timeline Item 1 -->
+<div class="relative pl-10">
+<div class="absolute left-0 top-1 w-7 h-7 rounded-full bg-surface-container-high border-2 border-surface-container-lowest flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">add</span>
+</div>
+<div>
+<p class="text-xs font-bold font-manrope text-on-surface">Requirement Created</p>
+<p class="text-[10px] text-on-surface-variant font-medium mt-1">Oct 12, 2023 • <span class="text-primary/70">Sarah J.</span></p>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative pl-10">
+<div class="absolute left-0 top-1 w-7 h-7 rounded-full bg-primary-fixed border-2 border-surface-container-lowest flex items-center justify-center z-10 shadow-sm">
+<span class="material-symbols-outlined text-[14px] text-primary">auto_fix_high</span>
+</div>
+<div>
+<p class="text-xs font-bold font-manrope text-on-surface">Refined Version v2.0</p>
+<p class="text-[10px] text-on-surface-variant font-medium mt-1">Oct 14, 2023 • <span class="text-primary/70">Marcus C.</span></p>
+</div>
+</div>
+<!-- Timeline Item 3 (Current) -->
+<div class="relative pl-10">
+<div class="absolute left-[-2px] top-[0px] w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center z-10 ring-4 ring-surface shadow-md">
+<span class="material-symbols-outlined text-sm text-primary" style="font-variation-settings: 'FILL' 1;">pending</span>
+</div>
+<div>
+<p class="text-xs font-bold font-manrope text-primary uppercase tracking-wide">Awaiting Review</p>
+<p class="text-[10px] text-on-surface-variant font-medium mt-1">Now • <span class="italic text-on-surface">v2.4 active iteration</span></p>
+</div>
+</div>
+</div>
+</section>
+</aside>
+</div>
+</main>
+</body></html>

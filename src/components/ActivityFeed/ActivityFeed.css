@@ -1,0 +1,122 @@
+/* ActivityFeed Component */
+
+.activity-feed {
+  padding: 24px;
+  background: var(--color-surface-container-lowest);
+  border-radius: 16px;
+  box-shadow: 0px 12px 32px rgba(43, 52, 55, 0.06);
+}
+
+.activity-feed__title {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-on-surface-variant);
+  margin: 0 0 24px 0;
+}
+
+.activity-feed__list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.activity-feed__item {
+  display: flex;
+  gap: 16px;
+}
+
+/* Icon */
+.activity-feed__icon-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.activity-feed__icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.activity-feed__icon .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.activity-feed__icon--primary {
+  background: rgba(19, 83, 216, 0.1);
+  color: var(--color-primary);
+}
+
+.activity-feed__icon--secondary {
+  background: var(--color-secondary-container);
+  color: var(--color-secondary);
+}
+
+.activity-feed__icon--tertiary {
+  background: var(--color-tertiary-container);
+  color: var(--color-tertiary);
+}
+
+.activity-feed__icon--error {
+  background: rgba(254, 137, 131, 0.3);
+  color: var(--color-error);
+}
+
+.activity-feed__line {
+  position: absolute;
+  top: 32px;
+  width: 1px;
+  height: 24px;
+  background: var(--color-surface-container);
+}
+
+/* Content */
+.activity-feed__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.activity-feed__text {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--color-on-surface);
+  line-height: 1.4;
+  margin: 0 0 2px 0;
+}
+
+.activity-feed__actor {
+  font-weight: 700;
+}
+
+.activity-feed__time {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  color: var(--color-on-surface-variant);
+}
+
+/* View All Button */
+.activity-feed__view-all {
+  width: 100%;
+  margin-top: 24px;
+  padding: 8px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-primary);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.activity-feed__view-all:hover {
+  background: rgba(19, 83, 216, 0.05);
+}

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>System States &amp; Responsive Adaptation - ReqFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#dbe4e7",
+                        "on-tertiary-container": "#4b4e69",
+                        "on-secondary-fixed": "#36404d",
+                        "on-secondary": "#f7f9ff",
+                        "tertiary": "#5a5d78",
+                        "surface-tint": "#1353d8",
+                        "surface-container-high": "#e2e9ec",
+                        "on-background": "#2b3437",
+                        "background": "#f8f9fa",
+                        "surface-container-highest": "#dbe4e7",
+                        "error": "#9f403d",
+                        "surface-dim": "#d1dce0",
+                        "secondary-container": "#d9e3f4",
+                        "outline": "#737c7f",
+                        "surface": "#f8f9fa",
+                        "tertiary-dim": "#4e516c",
+                        "outline-variant": "#abb3b7",
+                        "error-container": "#fe8983",
+                        "tertiary-fixed": "#dbddfe",
+                        "surface-bright": "#f8f9fa",
+                        "on-primary": "#f8f7ff",
+                        "inverse-primary": "#638aff",
+                        "primary-container": "#dbe1ff",
+                        "on-error-container": "#752121",
+                        "error-dim": "#4e0309",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary-fixed-variant": "#0b50d5",
+                        "primary-fixed-dim": "#c8d3ff",
+                        "on-primary-fixed": "#00369b",
+                        "secondary-fixed-dim": "#cbd5e6",
+                        "on-primary-container": "#0046c3",
+                        "tertiary-container": "#dbddfe",
+                        "inverse-on-surface": "#9b9d9e",
+                        "on-secondary-fixed-variant": "#525c6a",
+                        "tertiary-fixed-dim": "#cdcfef",
+                        "surface-container": "#eaeff1",
+                        "surface-container-low": "#f1f4f6",
+                        "on-secondary-container": "#485260",
+                        "on-tertiary": "#faf8ff",
+                        "on-surface-variant": "#586064",
+                        "on-surface": "#2b3437",
+                        "on-tertiary-fixed": "#383c55",
+                        "inverse-surface": "#0c0f10",
+                        "on-tertiary-fixed-variant": "#555873",
+                        "secondary-dim": "#4a5462",
+                        "on-error": "#fff7f6",
+                        "secondary": "#56606e",
+                        "primary": "#1353d8",
+                        "secondary-fixed": "#d9e3f4",
+                        "primary-dim": "#0047c5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #eaeff1 25%, #f1f4f6 50%, #eaeff1 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .editorial-shadow {
+            box-shadow: 0px 12px 32px rgba(43, 52, 55, 0.06);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- Top Navigation -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-slate-50 dark:bg-slate-900 border-b-0">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold text-slate-900 dark:text-slate-100 font-headline tracking-tight">ReqFlow</span>
+<div class="hidden md:flex gap-6">
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 font-medium text-sm transition-colors" href="#">Projects</a>
+<a class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 pb-1 font-medium text-sm" href="#">Requirements</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 font-medium text-sm transition-colors" href="#">Traceability</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 font-medium text-sm transition-colors" href="#">Reports</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">settings</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/20">
+<img alt="User Profile" data-alt="professional portrait of a system architect in a clean studio setting with neutral lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnb4vDcS8rIePtNng11Ilf5Z1Ica_0pHF5H9y8AeCse7MKTyKr8lSXjLnOIC2eSb2MVjwCykeoyw28eOIo9nXQ69TQToWWANZg5YodtRDcuUDECvgw-TmEkRI_tNJwiZvdItG_fgUY-yVceegyO3oXNbI2oWjfG3s7gLfqd8xFQJRnXFyETIAEkY6BlfpsT6_sCRs3QLCyNR-Usfg_upbBGVfp1h2J6Y9due8FOUyqVSwGh8enJxuELgisQQqQM8D-3UBlvpNcdAk"/>
+</div>
+</div>
+</nav>
+<!-- Side Navigation -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-64px)] w-64 bg-slate-100 dark:bg-slate-950 flex flex-col p-4 gap-2 hidden lg:flex">
+<div class="px-2 py-4 mb-2">
+<h2 class="text-lg font-bold text-slate-900 dark:text-slate-100 font-headline">Project Alpha</h2>
+<p class="text-xs text-on-surface-variant font-medium">Enterprise Core</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 hover:bg-slate-200 hover:translate-x-1 transition-all rounded-lg text-sm font-medium" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span> Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 bg-white dark:bg-slate-800 text-blue-700 shadow-sm rounded-lg text-sm font-medium" href="#">
+<span class="material-symbols-outlined text-[20px]">list_alt</span> All Requirements
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 hover:bg-slate-200 hover:translate-x-1 transition-all rounded-lg text-sm font-medium" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span> Team Activity
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 hover:bg-slate-200 hover:translate-x-1 transition-all rounded-lg text-sm font-medium" href="#">
+<span class="material-symbols-outlined text-[20px]">tune</span> Project Settings
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 hover:bg-slate-200 hover:translate-x-1 transition-all rounded-lg text-sm font-medium" href="#">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span> Archived
+            </a>
+</nav>
+<div class="mt-auto pt-4 border-t border-outline-variant/10">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 hover:bg-slate-200 rounded-lg text-sm font-medium" href="#">
+<span class="material-symbols-outlined text-[20px]">help_outline</span> Help Center
+            </a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="lg:ml-64 pt-20 px-8 pb-12 min-h-screen transition-all">
+<!-- Header Section -->
+<header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="text-4xl font-extrabold font-headline tracking-tight text-on-surface mb-2">System States</h1>
+<p class="text-on-surface-variant max-w-2xl font-medium">Demonstrating how ReqFlow manages various operational conditions and transitions between desktop and mobile interfaces.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-5 py-2.5 rounded-lg bg-surface-container-highest text-on-surface font-semibold text-sm hover:bg-surface-variant transition-colors">
+                    Preview Mode
+                </button>
+</div>
+</header>
+<!-- Banner State: Locked Requirement -->
+<section class="mb-12">
+<div class="bg-surface-container border-l-4 border-primary p-4 rounded-xl flex items-center gap-4 editorial-shadow">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-on-surface">This requirement is locked (Approved).</h4>
+<p class="text-xs text-on-surface-variant">It is now read-only for all roles to ensure baseline integrity.</p>
+</div>
+<button class="ml-auto text-xs font-bold text-primary px-3 py-1.5 hover:bg-primary/5 rounded-lg">View Audit Log</button>
+</div>
+</section>
+<!-- Grid Layout for States -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+<!-- Column 1: Loading & Empty States (Desktop View) -->
+<div class="xl:col-span-8 flex flex-col gap-8">
+<!-- Loading State Card -->
+<div class="bg-surface-container-lowest rounded-xl p-8 editorial-shadow">
+<div class="flex items-center justify-between mb-8">
+<div>
+<span class="text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest block mb-1">State: Fetching Data</span>
+<h3 class="text-xl font-bold font-headline">Requirement Backlog</h3>
+</div>
+<div class="flex gap-2">
+<div class="w-8 h-8 rounded bg-surface-container skeleton"></div>
+<div class="w-8 h-8 rounded bg-surface-container skeleton"></div>
+</div>
+</div>
+<div class="space-y-6">
+<!-- Skeleton List Items -->
+<div class="flex items-center gap-4 py-3">
+<div class="w-12 h-12 rounded-lg skeleton"></div>
+<div class="flex-1 space-y-2">
+<div class="h-4 w-1/3 rounded skeleton"></div>
+<div class="h-3 w-1/2 rounded skeleton opacity-60"></div>
+</div>
+<div class="w-24 h-6 rounded-full skeleton"></div>
+</div>
+<div class="flex items-center gap-4 py-3">
+<div class="w-12 h-12 rounded-lg skeleton"></div>
+<div class="flex-1 space-y-2">
+<div class="h-4 w-1/4 rounded skeleton"></div>
+<div class="h-3 w-2/3 rounded skeleton opacity-60"></div>
+</div>
+<div class="w-20 h-6 rounded-full skeleton"></div>
+</div>
+<div class="flex items-center gap-4 py-3">
+<div class="w-12 h-12 rounded-lg skeleton"></div>
+<div class="flex-1 space-y-2">
+<div class="h-4 w-1/2 rounded skeleton"></div>
+<div class="h-3 w-1/3 rounded skeleton opacity-60"></div>
+</div>
+<div class="w-24 h-6 rounded-full skeleton"></div>
+</div>
+</div>
+</div>
+<!-- Empty State Card -->
+<div class="bg-surface-container-lowest rounded-xl p-8 editorial-shadow min-h-[400px] flex flex-col items-center justify-center text-center">
+<div class="relative w-48 h-48 mb-6">
+<div class="absolute inset-0 bg-primary/5 rounded-full scale-150 blur-3xl"></div>
+<img alt="No Requirements Illustration" class="w-full h-full object-contain relative z-10" data-alt="minimal abstract geometric illustration of a folder with no files, clean lines, soft blue and white palette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDE6pedf086yMTQDldyInYBZWMu9ZiDOftUcz301q7VJ_MorCP077NmQb1tdmyGUlaKewkYHnVaWohZe4d2gm5Qb6NCwBtk9QMgVbD0i72nWyi0htob9w0OXN7krq-lErxI-BpRUiy5Lf9yw7fW73Q5fqH82e0_4Se9vHU2Vk88dVqL-NvVsJkfbt4QmfdCdj9ezFM5dKTfDF5LmhdMrJZg4-xb70mGuC0zuTUEg_rnpH9JDnG6UZHe0tmojQk93000zB2Acei4VDU"/>
+</div>
+<span class="text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest block mb-2">My Assigned Requirements</span>
+<h3 class="text-2xl font-bold font-headline mb-3">No requirements assigned yet</h3>
+<p class="text-on-surface-variant max-w-sm mb-8">You're all caught up! When project managers assign you new modules to review or author, they will appear here.</p>
+<button class="px-8 py-3 rounded-xl bg-gradient-to-br from-primary to-primary-dim text-on-primary font-bold shadow-lg hover:scale-[1.02] transition-transform flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">add</span>
+                        Create Your First Requirement
+                    </button>
+</div>
+</div>
+<!-- Column 2: Responsive Adaptation (Mobile View Mockup) -->
+<div class="xl:col-span-4">
+<div class="bg-surface-container-low rounded-[2.5rem] p-4 border-[8px] border-on-surface/5 editorial-shadow sticky top-24">
+<!-- Mobile Screen Content -->
+<div class="bg-surface rounded-[2rem] overflow-hidden min-h-[600px] flex flex-col">
+<!-- Mobile Header -->
+<div class="px-6 py-8 flex justify-between items-center bg-white">
+<span class="text-lg font-extrabold font-headline">ReqFlow</span>
+<span class="material-symbols-outlined">menu</span>
+</div>
+<div class="p-6 space-y-4">
+<div class="flex items-center justify-between mb-4">
+<h4 class="text-base font-bold font-headline">Requirements List</h4>
+<span class="material-symbols-outlined text-primary">filter_list</span>
+</div>
+<!-- Mobile Collapsed Card 1 -->
+<div class="bg-white p-4 rounded-xl border border-outline-variant/10 shadow-sm">
+<div class="flex justify-between items-start mb-3">
+<span class="text-[10px] font-bold text-primary-dim bg-primary-container px-2 py-0.5 rounded-full">RF-102</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">more_vert</span>
+</div>
+<h5 class="text-sm font-bold mb-1">User Authentication Flow</h5>
+<p class="text-xs text-on-surface-variant mb-4 line-clamp-2">System must support multi-factor authentication via mobile app tokens...</p>
+<div class="flex items-center justify-between pt-3 border-t border-outline-variant/5">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border-2 border-white bg-slate-200"></div>
+<div class="w-6 h-6 rounded-full border-2 border-white bg-slate-300"></div>
+</div>
+<span class="text-[10px] font-bold text-on-error-container bg-error-container/20 px-2 py-0.5 rounded-full">High Priority</span>
+</div>
+</div>
+<!-- Mobile Collapsed Card 2 -->
+<div class="bg-white p-4 rounded-xl border border-outline-variant/10 shadow-sm opacity-90">
+<div class="flex justify-between items-start mb-3">
+<span class="text-[10px] font-bold text-tertiary-dim bg-tertiary-container px-2 py-0.5 rounded-full">RF-105</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+<h5 class="text-sm font-bold mb-1">Data Encryption at Rest</h5>
+<p class="text-xs text-on-surface-variant mb-4 line-clamp-2">All database clusters must implement AES-256 encryption for user data...</p>
+<div class="flex items-center justify-between pt-3 border-t border-outline-variant/5">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border-2 border-white bg-slate-400"></div>
+</div>
+<span class="text-[10px] font-bold text-on-secondary-container bg-secondary-container/30 px-2 py-0.5 rounded-full">Verified</span>
+</div>
+</div>
+<!-- Mobile Collapsed Card 3 -->
+<div class="bg-white p-4 rounded-xl border border-outline-variant/10 shadow-sm">
+<div class="flex justify-between items-start mb-3">
+<span class="text-[10px] font-bold text-primary-dim bg-primary-container px-2 py-0.5 rounded-full">RF-118</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">more_vert</span>
+</div>
+<h5 class="text-sm font-bold mb-1">API Rate Limiting</h5>
+<p class="text-xs text-on-surface-variant mb-4 line-clamp-2">Implement sliding window counter for external API consumers...</p>
+<div class="flex items-center justify-between pt-3 border-t border-outline-variant/5">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border-2 border-white bg-slate-200"></div>
+</div>
+<span class="text-[10px] font-bold text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full">In Progress</span>
+</div>
+</div>
+</div>
+<!-- Mobile Bottom Nav -->
+<div class="mt-auto bg-white flex justify-around p-4 border-t border-outline-variant/10">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="material-symbols-outlined text-on-surface-variant">list_alt</span>
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+</div>
+</div>
+<div class="mt-4 text-center">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Mobile Adaptation View</p>
+<p class="text-[10px] text-outline mt-1 px-8">Rows collapse into individual task cards for better thumb-reach and readability on small screens.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB for Create (Contextual) -->
+<div class="fixed bottom-8 right-8 lg:hidden">
+<button class="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-primary-dim text-white shadow-2xl flex items-center justify-center">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</body></html>

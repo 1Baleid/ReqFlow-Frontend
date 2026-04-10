@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ReqFlow Precision - System States</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#0c0f10",
+                        "surface-container-highest": "#dbe4e7",
+                        "surface-container-high": "#e2e9ec",
+                        "tertiary-container": "#dbddfe",
+                        "on-tertiary-fixed": "#383c55",
+                        "surface-tint": "#1353d8",
+                        "on-tertiary": "#faf8ff",
+                        "on-error": "#fff7f6",
+                        "background": "#f8f9fa",
+                        "on-primary-fixed-variant": "#0b50d5",
+                        "outline": "#737c7f",
+                        "surface": "#f8f9fa",
+                        "error-container": "#fe8983",
+                        "primary-fixed-dim": "#c8d3ff",
+                        "on-background": "#2b3437",
+                        "tertiary-dim": "#4e516c",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-dim": "#4a5462",
+                        "outline-variant": "#abb3b7",
+                        "on-secondary": "#f7f9ff",
+                        "on-secondary-container": "#485260",
+                        "secondary-fixed": "#d9e3f4",
+                        "tertiary-fixed": "#dbddfe",
+                        "tertiary-fixed-dim": "#cdcfef",
+                        "inverse-primary": "#638aff",
+                        "error-dim": "#4e0309",
+                        "on-surface-variant": "#586064",
+                        "primary-fixed": "#dbe1ff",
+                        "primary-container": "#dbe1ff",
+                        "on-secondary-fixed": "#36404d",
+                        "on-error-container": "#752121",
+                        "primary": "#1353d8",
+                        "on-surface": "#2b3437",
+                        "error": "#9f403d",
+                        "on-tertiary-container": "#4b4e69",
+                        "tertiary": "#5a5d78",
+                        "secondary-fixed-dim": "#cbd5e6",
+                        "secondary-container": "#d9e3f4",
+                        "on-primary": "#f8f7ff",
+                        "surface-dim": "#d1dce0",
+                        "surface-container-low": "#f1f4f6",
+                        "on-primary-container": "#0046c3",
+                        "inverse-on-surface": "#9b9d9e",
+                        "surface-variant": "#dbe4e7",
+                        "surface-bright": "#f8f9fa",
+                        "on-tertiary-fixed-variant": "#555873",
+                        "surface-container": "#eaeff1",
+                        "secondary": "#56606e",
+                        "on-primary-fixed": "#00369b",
+                        "on-secondary-fixed-variant": "#525c6a",
+                        "primary-dim": "#0047c5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #eaeff1 25%, #f1f4f6 50%, #eaeff1 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+        }
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="bg-[#f8f9fa] dark:bg-slate-950 w-full sticky top-0 z-50">
+<div class="flex justify-between items-center px-8 py-4 max-w-[1440px] mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-xl font-['Manrope'] font-bold tracking-tight text-[#0F4C81] dark:text-blue-400">ReqFlow</span>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-[#0F4C81] dark:text-blue-400 border-b-2 border-[#0F4C81] pb-1 font-headline text-sm uppercase tracking-wider" href="#">Dashboard</a>
+<a class="text-[#586064] dark:text-slate-400 hover:text-[#0F4C81] dark:hover:text-blue-300 transition-colors font-headline text-sm uppercase tracking-wider" href="#">Requirements</a>
+<a class="text-[#586064] dark:text-slate-400 hover:text-[#0F4C81] dark:hover:text-blue-300 transition-colors font-headline text-sm uppercase tracking-wider" href="#">Traceability</a>
+<a class="text-[#586064] dark:text-slate-400 hover:text-[#0F4C81] dark:hover:text-blue-300 transition-colors font-headline text-sm uppercase tracking-wider" href="#">Team</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container transition-all rounded-full">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container transition-all rounded-full">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-secondary-container overflow-hidden">
+<img alt="User profile avatar" data-alt="portrait of a professional male project manager in a clean studio setting with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_y3mwF2MyTnwZyQboed2KChqWhILjC4nu54Nr9WPIbzCihemQdo0n5U8AcBSJJV_590WoBMRjyPu9NHWB_DUmyEgYDIpxDzJCxOK2cwIipHgUZibprYDF8PsrMVTpSPYsRHF08scPMxcJNtYlDdBIlL6heXcpeT_CU01vu9OMWN1lz4NB36lePnzAJPPmPGDVpVaD-4Hxr61qxkXYOQPFgD4sPUCTXYAD7K_-n2Cfm2LJogB_b5vT1zFHDHwfeg0bkmUZY_4Whkc"/>
+</div>
+</div>
+</div>
+</header>
+<div class="flex max-w-[1440px] mx-auto">
+<!-- SideNavBar -->
+<aside class="hidden lg:flex flex-col p-4 gap-2 bg-[#eaeff1] dark:bg-slate-900 h-[calc(100vh-72px)] sticky top-[72px] w-64">
+<div class="px-4 py-6 mb-4">
+<h2 class="text-lg font-bold text-[#2b3437] dark:text-slate-100 font-headline">Project Alpha</h2>
+<p class="text-xs text-on-surface-variant">V2.1 Stable</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-[#586064] dark:text-slate-400 hover:bg-[#d9e3f4] dark:hover:bg-slate-800 transition-all rounded-lg font-['Inter'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span> Overview
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#0F4C81] dark:text-blue-400 font-bold bg-[#ffffff] dark:bg-slate-800 rounded-lg font-['Inter'] text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="list_alt">list_alt</span> Requirements
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#586064] dark:text-slate-400 hover:bg-[#d9e3f4] dark:hover:bg-slate-800 transition-all rounded-lg font-['Inter'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span> Links
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#586064] dark:text-slate-400 hover:bg-[#d9e3f4] dark:hover:bg-slate-800 transition-all rounded-lg font-['Inter'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span> History
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#586064] dark:text-slate-400 hover:bg-[#d9e3f4] dark:hover:bg-slate-800 transition-all rounded-lg font-['Inter'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span> Analytics
+                </a>
+</nav>
+<button class="mt-4 mx-2 px-4 py-3 bg-gradient-to-br from-primary to-primary-dim text-white rounded-xl font-bold shadow-lg shadow-primary/20 flex items-center justify-center gap-2 active:scale-[0.98] transition-transform">
+<span class="material-symbols-outlined text-sm">add</span> Create Requirement
+            </button>
+<div class="mt-auto border-t border-outline-variant/15 pt-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-[#586064] dark:text-slate-400 hover:bg-[#d9e3f4] transition-all rounded-lg text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span> Help
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-[#586064] dark:text-slate-400 hover:bg-[#d9e3f4] transition-all rounded-lg text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="cloud_off">cloud_off</span> Offline Mode
+                </a>
+</div>
+</aside>
+<!-- Main Workspace -->
+<main class="flex-1 min-h-screen bg-surface p-8 lg:p-12 overflow-hidden">
+<!-- Success Toast (Active State Example) -->
+<div class="fixed top-24 right-8 z-[60] animate-in slide-in-from-right duration-500">
+<div class="flex items-center gap-3 px-6 py-4 bg-surface-container-lowest shadow-[0px_12px_32px_rgba(43,52,55,0.06)] rounded-xl border-l-4 border-primary">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div class="flex flex-col">
+<p class="text-sm font-bold text-on-surface">Requirement Saved</p>
+<p class="text-xs text-on-surface-variant">REQ-104: Secure Login Authentication</p>
+</div>
+<button class="ml-4 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+</div>
+</div>
+<div class="max-w-5xl mx-auto space-y-16">
+<!-- 1. LOADING STATE SECTION -->
+<section>
+<header class="mb-8">
+<span class="text-[0.6875rem] font-bold tracking-[0.05em] uppercase text-on-surface-variant mb-2 block">System Status</span>
+<h3 class="font-headline text-3xl font-bold tracking-tight text-on-surface">1. Loading State</h3>
+</header>
+<div class="space-y-4">
+<!-- Skeleton List -->
+<div class="bg-surface-container-lowest rounded-xl p-6 flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-6 flex-1">
+<div class="w-12 h-12 rounded-lg skeleton"></div>
+<div class="space-y-2 flex-1">
+<div class="h-4 w-1/3 rounded skeleton"></div>
+<div class="h-3 w-1/4 rounded skeleton"></div>
+</div>
+</div>
+<div class="flex gap-2">
+<div class="h-8 w-20 rounded-full skeleton"></div>
+<div class="h-8 w-20 rounded-full skeleton"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-6 flex items-center justify-between shadow-sm opacity-60">
+<div class="flex items-center gap-6 flex-1">
+<div class="w-12 h-12 rounded-lg skeleton"></div>
+<div class="space-y-2 flex-1">
+<div class="h-4 w-1/4 rounded skeleton"></div>
+<div class="h-3 w-1/3 rounded skeleton"></div>
+</div>
+</div>
+<div class="h-8 w-24 rounded-full skeleton"></div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-6 flex items-center justify-between shadow-sm opacity-30">
+<div class="flex items-center gap-6 flex-1">
+<div class="w-12 h-12 rounded-lg skeleton"></div>
+<div class="space-y-2 flex-1">
+<div class="h-4 w-1/2 rounded skeleton"></div>
+<div class="h-3 w-1/5 rounded skeleton"></div>
+</div>
+</div>
+<div class="h-8 w-16 rounded-full skeleton"></div>
+</div>
+</div>
+</section>
+<!-- 2. EMPTY STATE SECTION -->
+<section>
+<header class="mb-8">
+<span class="text-[0.6875rem] font-bold tracking-[0.05em] uppercase text-on-surface-variant mb-2 block">Project Context</span>
+<h3 class="font-headline text-3xl font-bold tracking-tight text-on-surface">2. Empty State</h3>
+</header>
+<div class="bg-surface-container rounded-xl p-16 flex flex-col items-center text-center">
+<div class="w-64 h-64 mb-8 relative">
+<div class="absolute inset-0 bg-primary/5 rounded-full blur-3xl"></div>
+<img alt="Illustration of empty document" class="w-full h-full object-contain mix-blend-multiply opacity-80" data-alt="abstract minimalist illustration of a floating paper with light blue geometric patterns on a clean background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2UieJVi8RJr0q3kawuKUZ31JctzefSKgmUP60Ki6vNVxr9R4G4RkWWmboqN30wyrZQosViKEkO2C8kNg5CIvbunCfqdyC0muDrbQUXd5C0kAp1q1sbTSINWNAjFeNFIZb-A14ZceJZCPp9s7mltu0eTepnQ5S8ArpHp3HmS_TbmKZxVRr0-gDTmMhq02GZ_6HNj8KhuQnmnUJOVqW9X4UzOQUopwcMrCwNAcRBAsqok3iU2j0XawO1K7gihSk6mzxur6BRq_KwB8"/>
+</div>
+<h4 class="text-xl font-bold font-headline mb-3">No Requirements Found</h4>
+<p class="text-on-surface-variant max-w-sm mb-8 leading-relaxed">It looks like Project Alpha hasn't started its documentation journey yet. Create your first requirement to build the traceability matrix.</p>
+<button class="px-8 py-3 bg-gradient-to-br from-primary to-primary-dim text-white rounded-lg font-bold shadow-lg shadow-primary/20 active:scale-95 transition-transform flex items-center gap-3">
+<span class="material-symbols-outlined">add_box</span>
+                            Create Requirement
+                        </button>
+</div>
+</section>
+<!-- 3. VALIDATION & ERROR SECTION -->
+<section>
+<header class="mb-8">
+<span class="text-[0.6875rem] font-bold tracking-[0.05em] uppercase text-on-surface-variant mb-2 block">Data Integrity</span>
+<h3 class="font-headline text-3xl font-bold tracking-tight text-on-surface">3. Validation &amp; Confirmation</h3>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+<!-- Validation Form -->
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm space-y-6">
+<h4 class="font-bold text-lg border-b border-outline-variant/15 pb-4">Edit Requirement</h4>
+<!-- Field with Error -->
+<div class="space-y-2">
+<label class="text-[0.6875rem] font-bold tracking-[0.05em] uppercase text-on-surface-variant">Requirement Title <span class="text-error">*</span></label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-0 border-b-2 border-error text-on-surface px-4 py-3 focus:ring-0 focus:border-primary transition-colors" placeholder="e.g. System Auth Module" type="text" value=""/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-error">error</span>
+</div>
+<p class="text-xs text-error font-medium">Title is required to save changes.</p>
+</div>
+<div class="space-y-2">
+<label class="text-[0.6875rem] font-bold tracking-[0.05em] uppercase text-on-surface-variant">Priority</label>
+<div class="flex gap-2">
+<span class="px-4 py-2 bg-secondary-container text-on-secondary-container rounded-full text-xs font-bold border border-transparent cursor-pointer">Low</span>
+<span class="px-4 py-2 bg-primary-container text-on-primary-container rounded-full text-xs font-bold border border-primary/20 cursor-pointer">Medium</span>
+<span class="px-4 py-2 bg-secondary-container text-on-secondary-container rounded-full text-xs font-bold border border-transparent cursor-pointer">High</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-[0.6875rem] font-bold tracking-[0.05em] uppercase text-on-surface-variant">Description</label>
+<textarea class="w-full bg-surface-container-low border-0 border-b-2 border-outline-variant px-4 py-3 focus:ring-0 focus:border-primary transition-colors resize-none" rows="3">Requirement detailing the biometric unlock feature for the core banking application...</textarea>
+</div>
+<div class="pt-4 flex justify-end gap-4">
+<button class="px-6 py-2 text-on-surface-variant font-bold hover:text-on-surface transition-colors">Discard</button>
+<button class="px-8 py-2 bg-primary text-white rounded-lg font-bold shadow-md opacity-50 cursor-not-allowed">Save Requirement</button>
+</div>
+</div>
+<!-- Unsaved Changes Warning -->
+<div class="bg-surface-container-highest rounded-xl p-8 backdrop-blur-xl bg-opacity-60 border border-white/40 shadow-2xl">
+<div class="flex flex-col items-center text-center space-y-4">
+<div class="w-16 h-16 rounded-full bg-error-container/20 flex items-center justify-center text-error mb-2">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<h4 class="font-headline text-xl font-bold text-on-surface">Unsaved Changes</h4>
+<p class="text-on-surface-variant leading-relaxed">You have unsaved modifications to <span class="font-bold">REQ-104</span>. Navigating away now will permanently delete these changes.</p>
+<div class="flex flex-col w-full gap-3 pt-4">
+<button class="w-full py-3 bg-error text-white rounded-lg font-bold shadow-lg shadow-error/20 active:scale-95 transition-transform">Discard Changes</button>
+<button class="w-full py-3 bg-surface-container-lowest text-on-surface rounded-lg font-bold border border-outline-variant/30 hover:bg-white transition-all">Keep Editing</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Spacer for bottom nav -->
+<div class="h-24 md:hidden"></div>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Mobile) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 md:hidden bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl z-50 rounded-t-xl shadow-[0_-4px_24px_rgba(0,0,0,0.04)] border-t border-[#abb3b7]/15">
+<button class="flex flex-col items-center justify-center text-[#586064] dark:text-slate-500 font-['Inter'] text-[10px] uppercase tracking-widest active:bg-slate-100 transition-all">
+<span class="material-symbols-outlined mb-1">home</span>
+            Home
+        </button>
+<button class="flex flex-col items-center justify-center text-[#0F4C81] dark:text-blue-400 bg-[#d9e3f4]/50 dark:bg-blue-900/20 rounded-xl px-4 py-2 font-['Inter'] text-[10px] uppercase tracking-widest scale-95 duration-100">
+<span class="material-symbols-outlined mb-1">format_list_bulleted</span>
+            Reqs
+        </button>
+<button class="flex flex-col items-center justify-center text-[#586064] dark:text-slate-500 font-['Inter'] text-[10px] uppercase tracking-widest active:bg-slate-100 transition-all">
+<span class="material-symbols-outlined mb-1">notifications</span>
+            Alerts
+        </button>
+<button class="flex flex-col items-center justify-center text-[#586064] dark:text-slate-500 font-['Inter'] text-[10px] uppercase tracking-widest active:bg-slate-100 transition-all">
+<span class="material-symbols-outlined mb-1">person</span>
+            Profile
+        </button>
+</nav>
+</body></html>

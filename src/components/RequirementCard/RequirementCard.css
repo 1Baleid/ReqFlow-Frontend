@@ -1,0 +1,161 @@
+/* RequirementCard Component */
+
+.requirement-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 20px;
+  background: var(--color-surface-container-lowest);
+  border-radius: 12px;
+  box-shadow: 0px 12px 32px rgba(43, 52, 55, 0.06);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.requirement-card:hover {
+  transform: translateX(4px);
+}
+
+/* ID Badge */
+.requirement-card__id {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-container);
+  border-radius: 8px;
+}
+
+.requirement-card__id-prefix {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: var(--color-on-surface-variant);
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.requirement-card__id-number {
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-on-surface-variant);
+  line-height: 1;
+}
+
+/* Content */
+.requirement-card__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.requirement-card__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.requirement-card__title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-on-surface);
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* Status Badge */
+.requirement-card__status {
+  display: inline-flex;
+  padding: 2px 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.requirement-card__status--draft {
+  background: var(--color-surface-container-high);
+  color: var(--color-on-surface-variant);
+}
+
+.requirement-card__status--under-review {
+  background: var(--color-tertiary-container);
+  color: var(--color-on-tertiary-container);
+}
+
+.requirement-card__status--approved {
+  background: var(--color-secondary-container);
+  color: var(--color-on-secondary-container);
+}
+
+.requirement-card__status--rejected {
+  background: rgba(159, 64, 61, 0.15);
+  color: var(--color-error);
+}
+
+.requirement-card__status--locked {
+  background: rgba(90, 93, 120, 0.15);
+  color: var(--color-tertiary);
+}
+
+/* Meta */
+.requirement-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.requirement-card__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: var(--color-on-surface-variant);
+}
+
+.requirement-card__meta-item .material-symbols-outlined {
+  font-size: 14px;
+}
+
+/* Actions */
+.requirement-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.requirement-card__assignee {
+  display: flex;
+}
+
+.requirement-card__menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: var(--color-on-surface-variant);
+  opacity: 0;
+  transition: all 0.15s ease;
+}
+
+.requirement-card:hover .requirement-card__menu {
+  opacity: 1;
+}
+
+.requirement-card__menu:hover {
+  background: var(--color-surface-container);
+}

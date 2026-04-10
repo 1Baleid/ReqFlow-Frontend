@@ -1,0 +1,134 @@
+/* Avatar Component Styles */
+
+.avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--color-secondary-container);
+  color: var(--color-on-secondary-container);
+  font-family: var(--font-label);
+  font-weight: var(--font-semibold);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* ============================================
+   SIZES
+   ============================================ */
+
+.avatar--xs {
+  width: 24px;
+  height: 24px;
+  font-size: var(--text-label-sm);
+}
+
+.avatar--sm {
+  width: 32px;
+  height: 32px;
+  font-size: var(--text-label-md);
+}
+
+.avatar--md {
+  width: 40px;
+  height: 40px;
+  font-size: var(--text-body-md);
+}
+
+.avatar--lg {
+  width: 48px;
+  height: 48px;
+  font-size: var(--text-body-lg);
+}
+
+.avatar--xl {
+  width: 64px;
+  height: 64px;
+  font-size: var(--text-title-lg);
+}
+
+/* ============================================
+   COLOR VARIANTS (for initials)
+   ============================================ */
+
+.avatar--color-0 {
+  background: rgba(19, 83, 216, 0.15);
+  color: var(--color-primary);
+}
+
+.avatar--color-1 {
+  background: rgba(34, 139, 34, 0.15);
+  color: #228b22;
+}
+
+.avatar--color-2 {
+  background: rgba(255, 152, 0, 0.15);
+  color: #f57c00;
+}
+
+.avatar--color-3 {
+  background: rgba(156, 39, 176, 0.15);
+  color: #9c27b0;
+}
+
+.avatar--color-4 {
+  background: rgba(0, 150, 136, 0.15);
+  color: #009688;
+}
+
+.avatar--color-5 {
+  background: rgba(233, 30, 99, 0.15);
+  color: #e91e63;
+}
+
+/* ============================================
+   IMAGE
+   ============================================ */
+
+.avatar__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ============================================
+   INITIALS
+   ============================================ */
+
+.avatar__initials {
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* ============================================
+   STATUS INDICATOR
+   ============================================ */
+
+.avatar__status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 25%;
+  height: 25%;
+  min-width: 8px;
+  min-height: 8px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-surface);
+}
+
+.avatar__status--online {
+  background: #228b22;
+}
+
+.avatar__status--offline {
+  background: var(--color-outline-variant);
+}
+
+.avatar__status--busy {
+  background: var(--color-error);
+}
+
+.avatar__status--away {
+  background: #f57c00;
+}

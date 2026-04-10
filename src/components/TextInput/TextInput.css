@@ -1,0 +1,150 @@
+/* TextInput Component Styles */
+
+.text-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* ============================================
+   LABEL
+   ============================================ */
+
+.text-input__label {
+  font-size: var(--text-label-sm);
+  font-weight: var(--font-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-on-surface-variant);
+  margin-left: var(--space-1);
+}
+
+.text-input__required {
+  color: var(--color-error);
+  margin-left: 2px;
+}
+
+/* ============================================
+   INPUT WRAPPER
+   ============================================ */
+
+.text-input__wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* ============================================
+   INPUT FIELD
+   ============================================ */
+
+.text-input__field {
+  width: 100%;
+  padding: var(--space-4);
+  background: var(--color-surface-container-lowest);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--text-body-md);
+  color: var(--color-on-surface);
+  box-shadow: inset 0 0 0 1px rgba(171, 179, 183, 0.3);
+  transition: all var(--transition-fast);
+}
+
+.text-input__field::placeholder {
+  color: var(--color-outline);
+  opacity: 0.5;
+}
+
+.text-input__field:focus {
+  box-shadow: inset 0 0 0 2px var(--color-primary);
+  background: var(--color-surface-container-lowest);
+}
+
+/* With icon - left */
+.text-input--icon-left .text-input__field {
+  padding-left: 44px;
+}
+
+/* With icon - right */
+.text-input--icon-right .text-input__field {
+  padding-right: 44px;
+}
+
+/* Password field */
+.text-input__field[type="password"],
+.text-input__field[type="text"]:has(~ .text-input__toggle) {
+  padding-right: 48px;
+}
+
+/* ============================================
+   ICON
+   ============================================ */
+
+.text-input__icon {
+  position: absolute;
+  left: var(--space-4);
+  color: var(--color-outline);
+  font-size: 20px;
+  pointer-events: none;
+}
+
+.text-input__icon--right {
+  left: auto;
+  right: var(--space-4);
+}
+
+/* ============================================
+   PASSWORD TOGGLE
+   ============================================ */
+
+.text-input__toggle {
+  position: absolute;
+  right: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-outline);
+  transition: color var(--transition-fast);
+}
+
+.text-input__toggle:hover {
+  color: var(--color-on-surface-variant);
+}
+
+.text-input__toggle .material-symbols-outlined {
+  font-size: 20px;
+}
+
+/* ============================================
+   ERROR STATE
+   ============================================ */
+
+.text-input--error .text-input__field {
+  box-shadow: inset 0 0 0 1px var(--color-error);
+}
+
+.text-input--error .text-input__field:focus {
+  box-shadow: inset 0 0 0 2px var(--color-error);
+}
+
+.text-input__error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-error);
+  font-size: var(--text-body-sm);
+  margin-left: var(--space-1);
+}
+
+.text-input__error .material-symbols-outlined {
+  font-size: 16px;
+}
+
+/* ============================================
+   DISABLED STATE
+   ============================================ */
+
+.text-input--disabled .text-input__field {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

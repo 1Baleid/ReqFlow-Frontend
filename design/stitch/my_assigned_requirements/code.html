@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Requirements | ReqFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#525c6a",
+                        "on-tertiary-container": "#4b4e69",
+                        "surface-container-low": "#f1f4f6",
+                        "surface-variant": "#dbe4e7",
+                        "secondary-fixed-dim": "#cbd5e6",
+                        "surface-container": "#eaeff1",
+                        "primary-dim": "#0047c5",
+                        "secondary": "#56606e",
+                        "on-surface": "#2b3437",
+                        "surface-container-highest": "#dbe4e7",
+                        "on-secondary": "#f7f9ff",
+                        "surface": "#f8f9fa",
+                        "tertiary-container": "#dbddfe",
+                        "inverse-surface": "#0c0f10",
+                        "primary-fixed-dim": "#c8d3ff",
+                        "on-primary": "#f8f7ff",
+                        "secondary-dim": "#4a5462",
+                        "on-tertiary-fixed-variant": "#555873",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#faf8ff",
+                        "primary": "#1353d8",
+                        "on-surface-variant": "#586064",
+                        "on-secondary-fixed": "#36404d",
+                        "on-background": "#2b3437",
+                        "inverse-primary": "#638aff",
+                        "on-secondary-container": "#485260",
+                        "outline-variant": "#abb3b7",
+                        "tertiary": "#5a5d78",
+                        "surface-tint": "#1353d8",
+                        "on-error": "#fff7f6",
+                        "on-primary-fixed": "#00369b",
+                        "on-tertiary-fixed": "#383c55",
+                        "tertiary-fixed": "#dbddfe",
+                        "secondary-fixed": "#d9e3f4",
+                        "inverse-on-surface": "#9b9d9e",
+                        "surface-container-high": "#e2e9ec",
+                        "error-container": "#fe8983",
+                        "tertiary-dim": "#4e516c",
+                        "primary-fixed": "#dbe1ff",
+                        "on-error-container": "#752121",
+                        "surface-bright": "#f8f9fa",
+                        "error-dim": "#4e0309",
+                        "background": "#f8f9fa",
+                        "error": "#9f403d",
+                        "outline": "#737c7f",
+                        "on-primary-container": "#0046c3",
+                        "secondary-container": "#d9e3f4",
+                        "primary-container": "#dbe1ff",
+                        "on-primary-fixed-variant": "#0b50d5",
+                        "surface-dim": "#d1dce0",
+                        "tertiary-fixed-dim": "#cdcfef"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .headline { font-family: 'Manrope', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-900 border-r border-transparent flex flex-col p-4 z-50">
+<div class="mb-8 px-2 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-sm">account_tree</span>
+</div>
+<div>
+<div class="text-xl font-bold text-slate-900 dark:text-white font-headline leading-none">ReqFlow</div>
+<div class="text-[10px] uppercase tracking-widest text-on-surface-variant font-medium">Enterprise Suite</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 rounded-xl group" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="text-sm font-medium font-label">Dashboard</span>
+</a>
+<!-- Active State: Requirements -->
+<a class="flex items-center gap-3 px-3 py-2.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-semibold rounded-xl" href="#">
+<span class="material-symbols-outlined text-[20px]">assignment</span>
+<span class="text-sm font-medium font-label">Requirements</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined text-[20px]">account_tree</span>
+<span class="text-sm font-medium font-label">Traceability</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span>
+<span class="text-sm font-medium font-label">Team</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="text-sm font-medium font-label">Project Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-4">
+<button class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-dim text-on-primary py-3 rounded-xl font-bold text-sm shadow-md transition-all active:scale-95">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Requirement
+            </button>
+</div>
+</aside>
+<!-- TopNavBar Shell -->
+<header class="sticky top-0 z-40 h-16 ml-64 flex justify-between items-center px-8 w-auto bg-white/85 backdrop-blur-md shadow-sm">
+<div class="flex items-center gap-6 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-on-surface-variant/60" placeholder="Search requirements..." type="text"/>
+</div>
+<div class="flex items-center gap-4 border-l border-surface-variant pl-6">
+<span class="text-[10px] tracking-wider uppercase font-label font-bold text-blue-700 border-b-2 border-blue-700 py-5">Project Alpha</span>
+<span class="text-[10px] tracking-wider uppercase font-label font-medium text-slate-500 hover:text-blue-600 cursor-pointer">Beta Phase</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden ml-2 ring-2 ring-surface-variant cursor-pointer">
+<img class="w-full h-full object-cover" data-alt="professional corporate headshot of a team lead in a modern office environment with warm natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrI7aBE1ZVyyJ7Dj_PaEHr8vg73umuDmrDOa_-EJA6xKv7JBrWyrbA_cL1CBLBQrxSpf-hvNFiEiVBZ--SELlhlP9WmHKflweOxZLlhz4LY2P7E3wX0KBx9O_kHRqHraJ3RNnKWYvUqOJajJr9E5ehsG3BmmPVxjNdUnYOCxDL4Gajh9smMVrPrLAtALdAH_fhd9AbRq0MlWB05RWMoei9Pm-aeLJ0SKsw0dATeUM_v63wWiQQPpS9GacQbLAxJRNsBuHoYd4U4XQ"/>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="ml-64 p-8 min-h-[calc(100vh-64px)] bg-surface">
+<!-- Header Section -->
+<div class="flex justify-between items-end mb-10">
+<div>
+<h1 class="text-3xl font-extrabold font-headline text-on-surface tracking-tight mb-2">My Assigned Requirements</h1>
+<p class="text-on-surface-variant text-sm font-medium">Manage and track your active tasks for the current sprint.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2.5 bg-surface-container-lowest text-on-surface border border-outline-variant/20 rounded-xl text-sm font-semibold hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                    Filters
+                </button>
+<button class="flex items-center gap-2 px-4 py-2.5 bg-surface-container-lowest text-on-surface border border-outline-variant/20 rounded-xl text-sm font-semibold hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                    Export
+                </button>
+</div>
+</div>
+<!-- Dashboard Stats Bento -->
+<div class="grid grid-cols-4 gap-6 mb-8">
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Total Assigned</div>
+<div class="text-3xl font-extrabold font-headline text-on-surface">24</div>
+<div class="mt-4 flex items-center text-[11px] font-semibold text-primary">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span>
+                    4 new this week
+                </div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Pending Review</div>
+<div class="text-3xl font-extrabold font-headline text-secondary">08</div>
+<div class="mt-4 flex items-center text-[11px] font-semibold text-on-surface-variant">
+<span class="material-symbols-outlined text-sm mr-1">schedule</span>
+                    Avg 2.4 days
+                </div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Critical Priority</div>
+<div class="text-3xl font-extrabold font-headline text-error">03</div>
+<div class="mt-4 flex items-center text-[11px] font-semibold text-error">
+<span class="material-symbols-outlined text-sm mr-1">warning</span>
+                    Needs attention
+                </div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Completion Rate</div>
+<div class="text-3xl font-extrabold font-headline text-green-600">68%</div>
+<div class="mt-4 w-full bg-surface-container h-1 rounded-full overflow-hidden">
+<div class="bg-green-600 h-full w-[68%]"></div>
+</div>
+</div>
+</div>
+<!-- Requirements List -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-6 py-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">ID</th>
+<th class="px-6 py-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Requirement Title</th>
+<th class="px-6 py-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Priority</th>
+<th class="px-6 py-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Type</th>
+<th class="px-6 py-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Deadline</th>
+<th class="px-6 py-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<!-- Row 1 -->
+<tr class="hover:bg-surface transition-colors group">
+<td class="px-6 py-5">
+<span class="text-xs font-bold text-on-surface-variant font-headline">REQ-101</span>
+</td>
+<td class="px-6 py-5">
+<div class="text-sm font-semibold text-on-surface">User Authentication Flow Encryption</div>
+<div class="text-[11px] text-on-surface-variant mt-0.5">Secure handshake for OAuth2.0 implementation</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-2.5 py-1 text-[10px] font-bold rounded-full bg-blue-100 text-blue-700 uppercase">Under Review</span>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold rounded-full bg-error-container/20 text-on-error-container uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                    High
+                                </span>
+</td>
+<td class="px-6 py-5">
+<span class="text-xs font-medium text-secondary">Functional</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-xs font-semibold text-error">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+                                    Oct 12, 2023
+                                </div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="px-4 py-1.5 rounded-lg bg-surface-container text-primary text-[11px] font-bold uppercase tracking-tight hover:bg-primary hover:text-on-primary transition-all">View</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface transition-colors group">
+<td class="px-6 py-5">
+<span class="text-xs font-bold text-on-surface-variant font-headline">REQ-104</span>
+</td>
+<td class="px-6 py-5">
+<div class="text-sm font-semibold text-on-surface">Real-time Dashboard Latency Optimization</div>
+<div class="text-[11px] text-on-surface-variant mt-0.5">Reduce data fetch time to sub-200ms</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-2.5 py-1 text-[10px] font-bold rounded-full bg-surface-container-high text-on-surface-variant uppercase">Draft</span>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold rounded-full bg-amber-100 text-amber-700 uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                    Medium
+                                </span>
+</td>
+<td class="px-6 py-5">
+<span class="text-xs font-medium text-secondary">Non-Functional</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-xs font-medium text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                                    Oct 20, 2023
+                                </div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="px-4 py-1.5 rounded-lg bg-surface-container text-primary text-[11px] font-bold uppercase tracking-tight hover:bg-primary hover:text-on-primary transition-all">View</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface transition-colors group">
+<td class="px-6 py-5">
+<span class="text-xs font-bold text-on-surface-variant font-headline">REQ-215</span>
+</td>
+<td class="px-6 py-5">
+<div class="text-sm font-semibold text-on-surface">Accessibility Compliance Audit - Phase 1</div>
+<div class="text-[11px] text-on-surface-variant mt-0.5">WCAG 2.1 Level AA adherence across core modules</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-2.5 py-1 text-[10px] font-bold rounded-full bg-green-100 text-green-700 uppercase">Approved</span>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold rounded-full bg-blue-100 text-blue-700 uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                    Low
+                                </span>
+</td>
+<td class="px-6 py-5">
+<span class="text-xs font-medium text-secondary">Functional</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-xs font-medium text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                                    Nov 05, 2023
+                                </div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="px-4 py-1.5 rounded-lg bg-surface-container text-primary text-[11px] font-bold uppercase tracking-tight hover:bg-primary hover:text-on-primary transition-all">View</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface transition-colors group">
+<td class="px-6 py-5">
+<span class="text-xs font-bold text-on-surface-variant font-headline">REQ-089</span>
+</td>
+<td class="px-6 py-5">
+<div class="text-sm font-semibold text-on-surface">Legacy Database Migration Schema</div>
+<div class="text-[11px] text-on-surface-variant mt-0.5">Mapping legacy fields to NewFlow Architecture</div>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold rounded-full bg-slate-200 text-slate-700 uppercase">
+<span class="material-symbols-outlined text-[12px]">lock</span>
+                                    Locked
+                                </span>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold rounded-full bg-error-container/20 text-on-error-container uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                    High
+                                </span>
+</td>
+<td class="px-6 py-5">
+<span class="text-xs font-medium text-secondary">Functional</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-xs font-medium text-green-600">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+                                    Completed
+                                </div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="px-4 py-1.5 rounded-lg bg-surface-container text-primary text-[11px] font-bold uppercase tracking-tight hover:bg-primary hover:text-on-primary transition-all">View</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination / Table Footer -->
+<div class="px-6 py-4 bg-surface-container-low/30 border-t border-surface-container flex justify-between items-center">
+<div class="text-xs font-medium text-on-surface-variant">Showing 1 to 4 of 24 requirements</div>
+<div class="flex items-center gap-2">
+<button class="p-1.5 rounded-lg hover:bg-surface-container disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<div class="flex gap-1">
+<button class="w-8 h-8 rounded-lg bg-primary text-on-primary text-xs font-bold">1</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container text-on-surface text-xs font-medium">2</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container text-on-surface text-xs font-medium">3</button>
+</div>
+<button class="p-1.5 rounded-lg hover:bg-surface-container">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Secondary Info Cards -->
+<div class="grid grid-cols-2 gap-8 mt-8">
+<div class="bg-primary/5 rounded-xl p-6 border border-primary/10">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">notifications_active</span>
+</div>
+<h3 class="font-headline font-bold text-on-surface">Recent Activity</h3>
+</div>
+<div class="space-y-4">
+<div class="flex gap-4">
+<div class="w-2 h-2 rounded-full bg-primary mt-1.5"></div>
+<div>
+<p class="text-sm text-on-surface font-medium">Sarah Jenkins updated the status of REQ-101 to <span class="font-bold">Under Review</span></p>
+<span class="text-[10px] text-on-surface-variant">2 hours ago</span>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-2 h-2 rounded-full bg-outline-variant mt-1.5"></div>
+<div>
+<p class="text-sm text-on-surface font-medium">You were assigned to <span class="font-bold text-primary">REQ-104: Latency Optimization</span></p>
+<span class="text-[10px] text-on-surface-variant">Yesterday, 4:15 PM</span>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+<h3 class="font-headline font-bold text-on-surface mb-4">Quick Shortcuts</h3>
+<div class="grid grid-cols-2 gap-4">
+<button class="flex flex-col gap-2 p-4 rounded-xl bg-surface-container-low hover:bg-primary/5 hover:border-primary/20 border border-transparent transition-all text-left">
+<span class="material-symbols-outlined text-primary">analytics</span>
+<span class="text-xs font-bold text-on-surface">Impact Analysis</span>
+<span class="text-[10px] text-on-surface-variant">Check dependencies</span>
+</button>
+<button class="flex flex-col gap-2 p-4 rounded-xl bg-surface-container-low hover:bg-primary/5 hover:border-primary/20 border border-transparent transition-all text-left">
+<span class="material-symbols-outlined text-tertiary">history</span>
+<span class="text-xs font-bold text-on-surface">Version History</span>
+<span class="text-[10px] text-on-surface-variant">Review all changes</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

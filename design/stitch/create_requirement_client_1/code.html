@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create New Requirement | ReqFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#dbe4e7",
+                        "on-tertiary-container": "#4b4e69",
+                        "on-secondary-fixed": "#36404d",
+                        "on-secondary": "#f7f9ff",
+                        "tertiary": "#5a5d78",
+                        "surface-tint": "#1353d8",
+                        "surface-container-high": "#e2e9ec",
+                        "on-background": "#2b3437",
+                        "background": "#f8f9fa",
+                        "surface-container-highest": "#dbe4e7",
+                        "error": "#9f403d",
+                        "surface-dim": "#d1dce0",
+                        "secondary-container": "#d9e3f4",
+                        "outline": "#737c7f",
+                        "surface": "#f8f9fa",
+                        "tertiary-dim": "#4e516c",
+                        "outline-variant": "#abb3b7",
+                        "error-container": "#fe8983",
+                        "tertiary-fixed": "#dbddfe",
+                        "surface-bright": "#f8f9fa",
+                        "on-primary": "#f8f7ff",
+                        "inverse-primary": "#638aff",
+                        "primary-container": "#dbe1ff",
+                        "on-error-container": "#752121",
+                        "error-dim": "#4e0309",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary-fixed-variant": "#0b50d5",
+                        "primary-fixed-dim": "#c8d3ff",
+                        "on-primary-fixed": "#00369b",
+                        "secondary-fixed-dim": "#cbd5e6",
+                        "on-primary-container": "#0046c3",
+                        "tertiary-container": "#dbddfe",
+                        "inverse-on-surface": "#9b9d9e",
+                        "on-secondary-fixed-variant": "#525c6a",
+                        "tertiary-fixed-dim": "#cdcfef",
+                        "surface-container": "#eaeff1",
+                        "surface-container-low": "#f1f4f6",
+                        "on-secondary-container": "#485260",
+                        "on-tertiary": "#faf8ff",
+                        "on-surface-variant": "#586064",
+                        "on-surface": "#2b3437",
+                        "on-tertiary-fixed": "#383c55",
+                        "inverse-surface": "#0c0f10",
+                        "on-tertiary-fixed-variant": "#555873",
+                        "secondary-dim": "#4a5462",
+                        "on-error": "#fff7f6",
+                        "secondary": "#56606e",
+                        "primary": "#1353d8",
+                        "secondary-fixed": "#d9e3f4",
+                        "primary-dim": "#0047c5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-slate-50 dark:bg-slate-900 border-b-0">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-tight font-headline">ReqFlow</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-body font-medium text-sm" href="#">Projects</a>
+<a class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 dark:border-blue-400 pb-1 font-body font-medium text-sm" href="#">Requirements</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-body font-medium text-sm" href="#">Traceability</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-body font-medium text-sm" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary-container overflow-hidden">
+<img alt="User Profile" data-alt="professional headshot of a middle-aged man with short dark hair and a friendly expression in soft daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbNRzSewO1tujoGLdn_qenpHJbnG3n0vUAODgxrh-1z2pAyHw7zZoSoOLKVq8VkaR4Szhws4EN7XcobIP1moQQ7WLGUsGbi06AtATlBcoohroO7alrblmzQ_luNiNYUU2qwwJzFirqtAkNIv7iHvgK3GXZuAOcz0nB3Y6XpOYn5bHJDBS88Z9wiCoEeFP3csajgS2ZaZPcrS583p_lsqQ5x2B1lfGNHS7GoiGlsYpwRMGqwStudSAnNqXzaD91toT0W3ZtXQ8hL2k"/>
+</div>
+</div>
+</header>
+<div class="flex pt-16 min-h-screen">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-64px)] w-64 flex flex-col p-4 gap-2 bg-slate-100 dark:bg-slate-950 border-r-0 hidden lg:flex">
+<div class="mb-6 px-2">
+<p class="text-lg font-bold text-slate-900 dark:text-slate-100 font-headline">Project Alpha</p>
+<p class="text-xs text-on-surface-variant font-body">Enterprise Core</p>
+</div>
+<a class="flex items-center gap-3 p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:translate-x-1 duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 text-blue-700 dark:text-blue-400 shadow-sm rounded-lg scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="list_alt">list_alt</span>
+<span class="text-sm font-medium">All Requirements</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:translate-x-1 duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-sm font-medium">Team Activity</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:translate-x-1 duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+<span class="text-sm font-medium">Project Settings</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:translate-x-1 duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="text-sm font-medium">Archived</span>
+</a>
+<div class="mt-auto border-t border-slate-200/50 pt-4">
+<a class="flex items-center gap-3 p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:translate-x-1 duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+<span class="text-sm font-medium">Help Center</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 lg:ml-64 p-8 bg-surface">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 mb-6 text-sm text-on-surface-variant font-medium">
+<a class="hover:text-primary transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-base" data-icon="arrow_back">arrow_back</span>
+                    Back to My Requirements
+                </a>
+</nav>
+<header class="mb-10">
+<h1 class="text-3xl font-bold font-headline tracking-tight text-on-surface">Create New Requirement</h1>
+<p class="text-on-surface-variant mt-2 font-body">Define a new functional or non-functional requirement for Project Alpha.</p>
+</header>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<!-- Form Section -->
+<div class="xl:col-span-2 space-y-6">
+<section class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/15 shadow-[0px_12px_32px_rgba(43,52,55,0.04)]">
+<form class="space-y-8">
+<!-- Title Field -->
+<div class="space-y-2">
+<label class="label-sm font-semibold text-on-surface-variant uppercase tracking-wider block" for="title">Requirement Title</label>
+<input class="w-full bg-surface-container-low border-0 border-b-2 border-error focus:border-primary focus:ring-0 px-4 py-3 rounded-t-lg font-body transition-all" id="title" placeholder="e.g., User Authentication via OIDC" type="text"/>
+<!-- Validation Error Sample -->
+<p class="flex items-center gap-1 text-xs text-error font-medium mt-1">
+<span class="material-symbols-outlined text-sm" data-icon="error">error</span>
+                                    Requirement title cannot be empty.
+                                </p>
+</div>
+<!-- Status Field (Draft Default) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="label-sm font-semibold text-on-surface-variant uppercase tracking-wider block">Status</label>
+<div class="relative">
+<select class="w-full bg-surface-container-low border-0 px-4 py-3 rounded-lg font-body text-on-surface-variant appearance-none cursor-not-allowed" disabled="">
+<option selected="">Draft</option>
+</select>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="lock">lock</span>
+</div>
+</div>
+<p class="text-[10px] text-on-surface-variant italic">New requirements default to Draft status.</p>
+</div>
+<div class="space-y-2">
+<label class="label-sm font-semibold text-on-surface-variant uppercase tracking-wider block">Priority</label>
+<select class="w-full bg-surface-container-low border-0 px-4 py-3 rounded-lg font-body focus:ring-2 focus:ring-primary/20 appearance-none">
+<option>Low</option>
+<option selected="">Medium</option>
+<option>High</option>
+<option>Critical</option>
+</select>
+</div>
+</div>
+<!-- Description Field -->
+<div class="space-y-2">
+<label class="label-sm font-semibold text-on-surface-variant uppercase tracking-wider block" for="description">Detailed Description</label>
+<div class="rounded-lg bg-surface-container-low overflow-hidden border border-outline-variant/10">
+<!-- Simple Rich Text Toolbar Simulation -->
+<div class="flex items-center gap-2 p-2 bg-surface-container-high/50 border-b border-outline-variant/10">
+<button class="p-1 hover:bg-white rounded transition-colors" type="button"><span class="material-symbols-outlined text-xl" data-icon="format_bold">format_bold</span></button>
+<button class="p-1 hover:bg-white rounded transition-colors" type="button"><span class="material-symbols-outlined text-xl" data-icon="format_italic">format_italic</span></button>
+<button class="p-1 hover:bg-white rounded transition-colors" type="button"><span class="material-symbols-outlined text-xl" data-icon="format_list_bulleted">format_list_bulleted</span></button>
+<div class="w-px h-4 bg-outline-variant/30 mx-1"></div>
+<button class="p-1 hover:bg-white rounded transition-colors" type="button"><span class="material-symbols-outlined text-xl" data-icon="link">link</span></button>
+</div>
+<textarea class="w-full bg-transparent border-0 focus:ring-0 p-4 font-body leading-relaxed" id="description" placeholder="Describe the goal, context, and acceptance criteria..." rows="10"></textarea>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center justify-end gap-4 pt-4">
+<button class="px-6 py-2.5 text-sm font-semibold text-on-surface-variant hover:text-on-surface transition-colors font-body" type="button">
+                                    Cancel
+                                </button>
+<button class="px-8 py-2.5 rounded-lg bg-gradient-to-br from-primary to-primary-dim text-white font-bold font-headline shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform flex items-center gap-2" type="submit">
+<span class="material-symbols-outlined text-lg" data-icon="save">save</span>
+                                    Save as Draft
+                                </button>
+</div>
+</form>
+</section>
+</div>
+<!-- Sidebar Tips Section -->
+<aside class="space-y-6">
+<div class="bg-surface-container rounded-xl p-6 border border-outline-variant/15">
+<h3 class="text-sm font-bold font-headline mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="lightbulb">lightbulb</span>
+                            Requirement Quality Tips
+                        </h3>
+<ul class="space-y-4">
+<li class="flex gap-3">
+<div class="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+<span class="text-[10px] font-bold text-primary">01</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface mb-1">Be Specific</p>
+<p class="text-xs text-on-surface-variant leading-relaxed">Avoid vague terms like "fast" or "user-friendly". Use measurable metrics where possible.</p>
+</div>
+</li>
+<li class="flex gap-3">
+<div class="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+<span class="text-[10px] font-bold text-primary">02</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface mb-1">Atomicity</p>
+<p class="text-xs text-on-surface-variant leading-relaxed">Each requirement should cover a single functionality to simplify testing and traceability.</p>
+</div>
+</li>
+<li class="flex gap-3">
+<div class="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+<span class="text-[10px] font-bold text-primary">03</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface mb-1">The 'Who' &amp; 'Why'</p>
+<p class="text-xs text-on-surface-variant leading-relaxed">Clearly state which persona benefits from this and what value it creates for the business.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="bg-primary-container/30 rounded-xl p-6 border border-primary/10 overflow-hidden relative">
+<div class="relative z-10">
+<h3 class="text-sm font-bold font-headline text-on-primary-container mb-2">Need a Template?</h3>
+<p class="text-xs text-on-primary-container/80 mb-4">Use our predefined structures for functional requirements.</p>
+<button class="w-full py-2 bg-white rounded-lg text-primary text-xs font-bold shadow-sm hover:bg-primary hover:text-white transition-all">
+                                Browse Templates
+                            </button>
+</div>
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-7xl text-primary opacity-5" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div class="p-6">
+<img alt="Collaboration Illustration" class="rounded-xl grayscale opacity-40 hover:grayscale-0 transition-all duration-500 cursor-pointer shadow-sm" data-alt="minimal workspace with a laptop, notebook, and clean lines in soft neutral tones and professional atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_reG6ch5-s0-ymrWKke5cZmqfUkvrctWHvfKVifMyPa_sVW1SAFoYDHq92gnAyDlmYY0r-9UfYMtmiXjfj3P82vctLNVMSea3juyMFD1rWXCH2JChwPsM9NUGL2XMm9ADEK4YNmsNDxuGAGAf31jEsrYDaPCYJfQdC3aLKvVaQNdIJ5JC6nb2yNwB6QW94IWYU1l2sAKBCl-3d0Ygk9LycPSQC3eayE9QQGLQYC4v1js96vO0o_oNll7sIL9XeSLX8r5EUARgz_g"/>
+</div>
+</aside>
+</div>
+</main>
+</div>
+</body></html>

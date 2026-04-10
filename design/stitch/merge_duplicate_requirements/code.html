@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Duplicate &amp; Merge - ReqFlow Manager</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#dbe4e7",
+                    "on-tertiary-container": "#4b4e69",
+                    "on-secondary-fixed": "#36404d",
+                    "on-secondary": "#f7f9ff",
+                    "tertiary": "#5a5d78",
+                    "surface-tint": "#1353d8",
+                    "surface-container-high": "#e2e9ec",
+                    "on-background": "#2b3437",
+                    "background": "#f8f9fa",
+                    "surface-container-highest": "#dbe4e7",
+                    "error": "#9f403d",
+                    "surface-dim": "#d1dce0",
+                    "secondary-container": "#d9e3f4",
+                    "outline": "#737c7f",
+                    "surface": "#f8f9fa",
+                    "tertiary-dim": "#4e516c",
+                    "outline-variant": "#abb3b7",
+                    "error-container": "#fe8983",
+                    "tertiary-fixed": "#dbddfe",
+                    "surface-bright": "#f8f9fa",
+                    "on-primary": "#f8f7ff",
+                    "inverse-primary": "#638aff",
+                    "primary-container": "#dbe1ff",
+                    "on-error-container": "#752121",
+                    "error-dim": "#4e0309",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed": "#dbe1ff",
+                    "on-primary-fixed-variant": "#0b50d5",
+                    "primary-fixed-dim": "#c8d3ff",
+                    "on-primary-fixed": "#00369b",
+                    "secondary-fixed-dim": "#cbd5e6",
+                    "on-primary-container": "#0046c3",
+                    "tertiary-container": "#dbddfe",
+                    "inverse-on-surface": "#9b9d9e",
+                    "on-secondary-fixed-variant": "#525c6a",
+                    "tertiary-fixed-dim": "#cdcfef",
+                    "surface-container": "#eaeff1",
+                    "surface-container-low": "#f1f4f6",
+                    "on-secondary-container": "#485260",
+                    "on-tertiary": "#faf8ff",
+                    "on-surface-variant": "#586064",
+                    "on-surface": "#2b3437",
+                    "on-tertiary-fixed": "#383c55",
+                    "inverse-surface": "#0c0f10",
+                    "on-tertiary-fixed-variant": "#555873",
+                    "secondary-dim": "#4a5462",
+                    "on-error": "#fff7f6",
+                    "secondary": "#56606e",
+                    "primary": "#1353d8",
+                    "secondary-fixed": "#d9e3f4",
+                    "primary-dim": "#0047c5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .font-manrope { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-slate-50 dark:bg-slate-900 border-b-0">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold text-slate-900 dark:text-slate-100 font-manrope tracking-tight">ReqFlow</span>
+<div class="hidden md:flex gap-6">
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-inter text-sm font-medium" href="#">Projects</a>
+<a class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 dark:border-blue-400 pb-1 font-inter text-sm font-medium" href="#">Requirements</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-inter text-sm font-medium" href="#">Traceability</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-inter text-sm font-medium" href="#">Reports</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-500 hover:text-blue-600">notifications</button>
+<button class="material-symbols-outlined text-slate-500 hover:text-blue-600">settings</button>
+<div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Professional headshot of a product manager in a minimalist studio setting with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3_S1WiEblETpWeOGFq_s45PQf51VxvDFC4uF8mnp0lz4gINEV_Sjer89AtfQCPawkkGycUF1SyGtGQ7ICxOXhtL2CIW_xv-m_p-WnLxZT5eFFftISkzQuNNW-VqsdLcNl_CvTdyYiMXS4oM4Rn4gW7ISdqVXge7JrR8tToGYT4ApTXsCoLROxGaA2gMrhW02kPFIPVgSWnUfqHKjWSZG7ZunZ9SwLc2zBMMo1c7WeqHF4TR4fZTbFwMBxolZ6cvaN3HhAJAnl4F4"/>
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-64px)] flex flex-col p-4 gap-2 bg-slate-100 dark:bg-slate-950 w-64">
+<div class="px-2 py-4 mb-2">
+<h2 class="text-lg font-bold text-slate-900 dark:text-slate-100 font-manrope">Project Alpha</h2>
+<p class="text-xs text-slate-500">Enterprise Core</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg hover:translate-x-1 duration-200 transition-all font-inter text-sm font-medium" href="#">
+<span class="material-symbols-outlined">dashboard</span> Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 bg-white dark:bg-slate-800 text-blue-700 dark:text-blue-400 shadow-sm rounded-lg scale-[0.98] font-inter text-sm font-medium" href="#">
+<span class="material-symbols-outlined">list_alt</span> All Requirements
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg hover:translate-x-1 duration-200 transition-all font-inter text-sm font-medium" href="#">
+<span class="material-symbols-outlined">group</span> Team Activity
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg hover:translate-x-1 duration-200 transition-all font-inter text-sm font-medium" href="#">
+<span class="material-symbols-outlined">tune</span> Project Settings
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg hover:translate-x-1 duration-200 transition-all font-inter text-sm font-medium" href="#">
+<span class="material-symbols-outlined">inventory_2</span> Archived
+            </a>
+</nav>
+<div class="mt-auto pt-4 border-t border-slate-200 dark:border-slate-800">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg font-inter text-sm font-medium" href="#">
+<span class="material-symbols-outlined">help_outline</span> Help Center
+            </a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 min-h-screen bg-surface">
+<div class="max-w-6xl mx-auto px-8 py-12">
+<!-- Header Section -->
+<header class="mb-12">
+<div class="flex items-center gap-2 mb-2">
+<span class="label-sm text-on-surface-variant font-inter uppercase tracking-widest text-[0.6875rem]">CONFLICT RESOLUTION</span>
+<div class="h-px flex-1 bg-surface-container"></div>
+</div>
+<div class="flex justify-between items-end">
+<div>
+<h1 class="display-sm font-bold font-manrope text-3xl tracking-tight text-on-surface mb-2">Duplicate &amp; Merge</h1>
+<p class="text-on-surface-variant max-w-2xl font-inter">Comparing redundant entries detected in the system. Select a primary version to consolidate all metadata, comments, and history into a single authoritative requirement.</p>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-2.5 rounded-lg border border-outline-variant/30 text-on-surface font-medium hover:bg-surface-container-low transition-colors">Cancel</button>
+<button class="px-6 py-2.5 rounded-lg bg-gradient-to-br from-primary to-primary-dim text-white font-medium shadow-lg shadow-primary/20 hover:opacity-90 transition-all">Merge Requirements</button>
+</div>
+</div>
+</header>
+<!-- Comparison Grid -->
+<div class="grid grid-cols-2 gap-8 relative">
+<!-- Vertical Divider (Visual Only) -->
+<div class="absolute inset-y-0 left-1/2 -translate-x-1/2 w-px bg-surface-container z-0"></div>
+<!-- Requirement RF-102 -->
+<section class="space-y-6 relative z-10">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary-container text-on-primary-container font-bold text-sm">102</span>
+<div>
+<h3 class="title-lg font-bold font-manrope text-on-surface">RF-102</h3>
+<p class="text-xs text-on-surface-variant">Last edited by Sarah J. • 2h ago</p>
+</div>
+</div>
+<label class="flex items-center gap-3 group cursor-pointer">
+<span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors">Choose Primary Version</span>
+<div class="relative w-6 h-6 rounded-full border-2 border-primary bg-primary-container flex items-center justify-center">
+<div class="w-2.5 h-2.5 rounded-full bg-primary"></div>
+</div>
+<input checked="" class="hidden" name="primary_version" type="radio" value="rf102"/>
+</label>
+</div>
+<div class="p-8 rounded-xl bg-surface-container-lowest border border-outline-variant/10 shadow-sm">
+<div class="mb-6">
+<label class="label-sm text-[0.6875rem] font-inter uppercase tracking-widest text-on-surface-variant block mb-2">Title</label>
+<p class="text-lg font-semibold text-on-surface font-manrope">OAuth 2.0 Identity Provider Integration</p>
+</div>
+<div class="mb-6">
+<label class="label-sm text-[0.6875rem] font-inter uppercase tracking-widest text-on-surface-variant block mb-2">Description</label>
+<div class="text-on-surface font-inter leading-relaxed space-y-4">
+<p>The system shall support authentication via external OAuth 2.0 providers (Okta, Azure AD). Integration must handle token refreshing and scope validation for API access.</p>
+<p class="bg-surface-container-low p-3 rounded-lg border-l-4 border-primary/50 text-sm">
+<span class="font-bold text-primary mr-1">NOTE:</span>
+                                    Requires specific security audit before production deployment.
+                                </p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-6 pt-6 border-t border-surface-container">
+<div>
+<label class="label-sm text-[0.6875rem] font-inter uppercase tracking-widest text-on-surface-variant block mb-2">Priority</label>
+<span class="px-3 py-1 rounded-full bg-error-container/20 text-on-error-container text-xs font-bold uppercase tracking-wider">High</span>
+</div>
+<div>
+<label class="label-sm text-[0.6875rem] font-inter uppercase tracking-widest text-on-surface-variant block mb-2">Status</label>
+<span class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-bold uppercase tracking-wider">Review</span>
+</div>
+</div>
+</div>
+<!-- Metadata List -->
+<div class="space-y-4">
+<div class="flex justify-between items-center px-4 py-3 bg-surface-container-low rounded-lg">
+<span class="text-sm font-medium text-on-surface-variant">Version history</span>
+<span class="text-sm font-semibold text-on-surface">2.4.0</span>
+</div>
+<div class="flex justify-between items-center px-4 py-3 bg-surface-container-low rounded-lg">
+<span class="text-sm font-medium text-on-surface-variant">Traceability links</span>
+<div class="flex gap-2">
+<span class="px-2 py-0.5 rounded bg-surface-variant text-[10px] font-bold text-on-surface-variant uppercase">STR-001</span>
+<span class="px-2 py-0.5 rounded bg-surface-variant text-[10px] font-bold text-on-surface-variant uppercase">SEC-402</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Requirement RF-105 -->
+<section class="space-y-6 relative z-10">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-highest text-on-surface-variant font-bold text-sm">105</span>
+<div>
+<h3 class="title-lg font-bold font-manrope text-on-surface">RF-105</h3>
+<p class="text-xs text-on-surface-variant">Created by Marc T. • 1d ago</p>
+</div>
+</div>
+<label class="flex items-center gap-3 group cursor-pointer">
+<span class="text-sm font-medium text-on-surface-variant group-hover:text-on-surface transition-colors">Choose Primary Version</span>
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant bg-surface flex items-center justify-center group-hover:border-primary transition-all"></div>
+<input class="hidden" name="primary_version" type="radio" value="rf105"/>
+</label>
+</div>
+<div class="p-8 rounded-xl bg-surface-container-lowest border border-outline-variant/10 shadow-sm opacity-80">
+<div class="mb-6">
+<label class="label-sm text-[0.6875rem] font-inter uppercase tracking-widest text-on-surface-variant block mb-2">Title</label>
+<p class="text-lg font-semibold text-on-surface font-manrope">OAuth2 External Auth Integration</p>
+</div>
+<div class="mb-6">
+<label class="label-sm text-[0.6875rem] font-inter uppercase tracking-widest text-on-surface-variant block mb-2">Description</label>
+<div class="text-on-surface font-inter leading-relaxed space-y-4">
+<p>Allow users to log in using external identity providers like Okta or Azure. Needs to support OpenID Connect scopes.</p>
+<p class="text-sm text-on-surface-variant italic">
+                                    No additional security notes provided.
+                                </p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-6 pt-6 border-t border-surface-container">
+<div>
+<label class="label-sm text-[0.6875rem] font-inter uppercase tracking-widest text-on-surface-variant block mb-2">Priority</label>
+<span class="px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold uppercase tracking-wider">Medium</span>
+</div>
+<div>
+<label class="label-sm text-[0.6875rem] font-inter uppercase tracking-widest text-on-surface-variant block mb-2">Status</label>
+<span class="px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold uppercase tracking-wider">Draft</span>
+</div>
+</div>
+</div>
+<!-- Metadata List -->
+<div class="space-y-4">
+<div class="flex justify-between items-center px-4 py-3 bg-surface-container-low/50 rounded-lg">
+<span class="text-sm font-medium text-on-surface-variant">Version history</span>
+<span class="text-sm font-semibold text-on-surface-variant">1.0.1</span>
+</div>
+<div class="flex justify-between items-center px-4 py-3 bg-surface-container-low/50 rounded-lg">
+<span class="text-sm font-medium text-on-surface-variant">Traceability links</span>
+<div class="flex gap-2">
+<span class="px-2 py-0.5 rounded bg-surface-variant/40 text-[10px] font-bold text-on-surface-variant uppercase">STR-001</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Difference Comparison Highlighting (Asymmetric Bento Element) -->
+<div class="mt-12 bg-surface-container rounded-xl p-8">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">analytics</span>
+<h4 class="font-manrope font-bold text-lg">Detailed Differences</h4>
+</div>
+<div class="grid grid-cols-3 gap-6">
+<div class="col-span-2 bg-surface-container-lowest rounded-lg p-6 border border-outline-variant/10">
+<label class="label-sm text-[0.6875rem] font-inter uppercase tracking-widest text-on-surface-variant block mb-4">Description Text Diff</label>
+<div class="font-inter text-sm leading-loose">
+<p>The system shall support authentication via <span class="bg-error-container/20 text-on-error-container px-1 rounded">external OAuth 2.0 providers (Okta, Azure AD)</span>. Integration must handle <span class="bg-error-container/20 text-on-error-container px-1 rounded">token refreshing and scope validation for API access</span>.</p>
+<div class="my-4 h-px bg-surface-container-low"></div>
+<p>Allow users to log in using <span class="bg-primary-container/30 text-on-primary-container px-1 rounded">external identity providers like Okta or Azure</span>. Needs to support <span class="bg-primary-container/30 text-on-primary-container px-1 rounded">OpenID Connect scopes</span>.</p>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<div class="bg-surface-container-lowest rounded-lg p-6 border border-outline-variant/10">
+<label class="label-sm text-[0.6875rem] font-inter uppercase tracking-widest text-on-surface-variant block mb-3">Conflict Risk</label>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full border-4 border-error-container flex items-center justify-center text-error font-bold font-manrope">84%</div>
+<p class="text-xs text-on-surface-variant leading-tight">High textual overlap suggests redundant documentation.</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-lg p-6 border border-outline-variant/10 flex-1">
+<label class="label-sm text-[0.6875rem] font-inter uppercase tracking-widest text-on-surface-variant block mb-2">Merge Preview</label>
+<div class="flex flex-wrap gap-2">
+<span class="text-[10px] bg-secondary-container px-2 py-1 rounded text-on-secondary-container font-medium">Keep Security Note</span>
+<span class="text-[10px] bg-secondary-container px-2 py-1 rounded text-on-secondary-container font-medium">Sync STR-001 Links</span>
+<span class="text-[10px] bg-secondary-container px-2 py-1 rounded text-on-secondary-container font-medium">Auto-Archive RF-105</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Confirmation Modal Overlay -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center bg-on-surface/40 backdrop-blur-sm">
+<div class="w-full max-w-md bg-surface-container-lowest rounded-xl shadow-2xl overflow-hidden border border-outline-variant/20">
+<div class="p-8">
+<div class="w-12 h-12 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined">call_merge</span>
+</div>
+<h3 class="text-xl font-bold font-manrope text-on-surface mb-3">Confirm Requirement Merge</h3>
+<p class="text-on-surface-variant font-inter text-sm leading-relaxed mb-6">
+                    Merging will archive <span class="font-bold text-on-surface">RF-105</span>. All discussion threads, attachment links, and version history from both items will be preserved under the new unified record. Proceed with consolidation?
+                </p>
+<div class="flex gap-3">
+<button class="flex-1 px-4 py-3 rounded-lg bg-surface-container text-on-surface font-semibold text-sm hover:bg-surface-container-high transition-colors">Go Back</button>
+<button class="flex-1 px-4 py-3 rounded-lg bg-gradient-to-br from-primary to-primary-dim text-white font-semibold text-sm shadow-md shadow-primary/20 hover:opacity-95 transition-all">Merge &amp; Finish</button>
+</div>
+</div>
+<div class="px-8 py-4 bg-surface-container-low border-t border-outline-variant/10 flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">info</span>
+<span class="text-[11px] font-medium text-on-surface-variant uppercase tracking-wider">SYSTEM ACTION LOGGED TO AUDIT TRAIL</span>
+</div>
+</div>
+</div>
+</body></html>

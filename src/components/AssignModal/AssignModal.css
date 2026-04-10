@@ -1,0 +1,152 @@
+.assign-modal__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Search */
+.assign-modal__search {
+  position: relative;
+}
+
+.assign-modal__search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #737c7f;
+}
+
+.assign-modal__search-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  background: #f1f4f6;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0.5rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: #2b3437;
+  transition: all 0.15s ease;
+}
+
+.assign-modal__search-input:focus {
+  outline: none;
+  border-bottom-color: #1353d8;
+}
+
+.assign-modal__search-input::placeholder {
+  color: rgba(88, 96, 100, 0.5);
+}
+
+/* Members List */
+.assign-modal__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.assign-modal__member {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem;
+  background: none;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.assign-modal__member:hover {
+  background: #f1f4f6;
+}
+
+.assign-modal__member--selected {
+  background: rgba(219, 225, 255, 0.3);
+  border-left: 4px solid #1353d8;
+}
+
+.assign-modal__member-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.assign-modal__member-avatar {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1353d8 0%, #0047c5 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.assign-modal__member-status {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 14px;
+  height: 14px;
+  background: #22c55e;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+}
+
+.assign-modal__member-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.assign-modal__member-name {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #2b3437;
+  margin: 0;
+}
+
+.assign-modal__member-role {
+  font-size: 0.75rem;
+  color: #586064;
+  margin: 0;
+}
+
+.assign-modal__member-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.125rem;
+}
+
+.assign-modal__member-tasks {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #1353d8;
+}
+
+.assign-modal__member-tasks--overloaded {
+  color: #9f403d;
+}
+
+.assign-modal__member-capacity {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #586064;
+}
+
+.assign-modal__member-capacity--overloaded {
+  color: #9f403d;
+}

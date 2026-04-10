@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Manager Workload &amp; Assignment - ReqFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#dbe4e7",
+                        "on-tertiary-container": "#4b4e69",
+                        "on-secondary-fixed": "#36404d",
+                        "on-secondary": "#f7f9ff",
+                        "tertiary": "#5a5d78",
+                        "surface-tint": "#1353d8",
+                        "surface-container-high": "#e2e9ec",
+                        "on-background": "#2b3437",
+                        "background": "#f8f9fa",
+                        "surface-container-highest": "#dbe4e7",
+                        "error": "#9f403d",
+                        "surface-dim": "#d1dce0",
+                        "secondary-container": "#d9e3f4",
+                        "outline": "#737c7f",
+                        "surface": "#f8f9fa",
+                        "tertiary-dim": "#4e516c",
+                        "outline-variant": "#abb3b7",
+                        "error-container": "#fe8983",
+                        "tertiary-fixed": "#dbddfe",
+                        "surface-bright": "#f8f9fa",
+                        "on-primary": "#f8f7ff",
+                        "inverse-primary": "#638aff",
+                        "primary-container": "#dbe1ff",
+                        "on-error-container": "#752121",
+                        "error-dim": "#4e0309",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary-fixed-variant": "#0b50d5",
+                        "primary-fixed-dim": "#c8d3ff",
+                        "on-primary-fixed": "#00369b",
+                        "secondary-fixed-dim": "#cbd5e6",
+                        "on-primary-container": "#0046c3",
+                        "tertiary-container": "#dbddfe",
+                        "inverse-on-surface": "#9b9d9e",
+                        "on-secondary-fixed-variant": "#525c6a",
+                        "tertiary-fixed-dim": "#cdcfef",
+                        "surface-container": "#eaeff1",
+                        "surface-container-low": "#f1f4f6",
+                        "on-secondary-container": "#485260",
+                        "on-tertiary": "#faf8ff",
+                        "on-surface-variant": "#586064",
+                        "on-surface": "#2b3437",
+                        "on-tertiary-fixed": "#383c55",
+                        "inverse-surface": "#0c0f10",
+                        "on-tertiary-fixed-variant": "#555873",
+                        "secondary-dim": "#4a5462",
+                        "on-error": "#fff7f6",
+                        "secondary": "#56606e",
+                        "primary": "#1353d8",
+                        "secondary-fixed": "#d9e3f4",
+                        "primary-dim": "#0047c5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-headline { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-slate-50 dark:bg-slate-900 border-b-0">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold text-slate-900 dark:text-slate-100 font-headline tracking-tight">ReqFlow</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-medium text-sm" href="#">Projects</a>
+<a class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 dark:border-blue-400 pb-1 font-medium text-sm" href="#">Requirements</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-medium text-sm" href="#">Traceability</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-medium text-sm" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container ml-2">
+<img alt="User Profile" data-alt="professional headshot of a product manager in a clean studio setting with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-pkfbdka_QTqXNkAcum35qvq8EfwsUfBYFW7jB_GslJPsZcv3SExNItJAzeHob-9U1ReFJxOpgULu9wnW-EVPkfSlC0F0zJpOqsCvgRvBWG8i2_RcSU2LbiAJHGbYwjiFJCQ3BEKXGinOQHpR0OGEgXWMJycuXln5sZJKeTVFWCTGp36LQUUZ5zHIzEIz0ZOzRFZ9QtdYzXe-nwqZ8AHP8QJXWnrrF9OHmGIy_hD-CeTCrVfEY1E5tijk4mSg-Y-uT9J1oXQaMZ4"/>
+</div>
+</div>
+</header>
+<!-- Side Navigation Bar -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-64px)] flex flex-col p-4 gap-2 bg-slate-100 dark:bg-slate-950 w-64 border-r-0">
+<div class="px-4 py-6 mb-2">
+<div class="flex items-center gap-3 mb-1">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-sm" data-icon="architecture">architecture</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-slate-100">Project Alpha</p>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Enterprise Core</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:translate-x-1 duration-200 rounded-lg text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 bg-white dark:bg-slate-800 text-blue-700 dark:text-blue-400 shadow-sm rounded-lg text-sm font-medium scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="list_alt">list_alt</span>
+                All Requirements
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:translate-x-1 duration-200 rounded-lg text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                Team Activity
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:translate-x-1 duration-200 rounded-lg text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+                Project Settings
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:translate-x-1 duration-200 rounded-lg text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                Archived
+            </a>
+</nav>
+<button class="mt-auto bg-primary text-on-primary py-3 rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2 mb-4 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+            Create New
+        </button>
+<div class="border-t border-slate-200 dark:border-slate-800 pt-4">
+<a class="flex items-center gap-3 px-4 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+                Help Center
+            </a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-64 mt-16 p-8 min-h-screen bg-surface">
+<!-- Toast Notification (Absolute) -->
+<div class="fixed top-20 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-3 px-6 py-3 bg-on-surface text-surface-container-lowest rounded-full shadow-xl animate-bounce">
+<span class="material-symbols-outlined text-green-400" data-icon="check_circle">check_circle</span>
+<span class="text-sm font-medium">Requirement RF-101 successfully reassigned to Sarah Jenkins.</span>
+<button class="ml-2 hover:opacity-70"><span class="material-symbols-outlined text-lg" data-icon="close">close</span></button>
+</div>
+<div class="max-w-6xl mx-auto">
+<header class="flex justify-between items-end mb-10">
+<div>
+<h1 class="text-4xl font-extrabold font-headline text-on-surface tracking-tight mb-2">Workload &amp; Assignment</h1>
+<p class="text-on-surface-variant max-w-md">Distribute requirements across the engineering team while monitoring real-time capacity and deadlines.</p>
+</div>
+<div class="flex gap-3">
+<div class="bg-surface-container-low px-4 py-2 rounded-xl flex items-center gap-2">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Active Sprint</span>
+<span class="text-sm font-bold text-primary">Sprint 12 (Core API)</span>
+</div>
+</div>
+</header>
+<!-- Table Section (Asymmetric breathing) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_12px_32px_rgba(43,52,55,0.04)] overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-6 py-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-[0.1em]">Requirement ID</th>
+<th class="px-6 py-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-[0.1em]">Subject</th>
+<th class="px-6 py-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-[0.1em]">Status</th>
+<th class="px-6 py-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-[0.1em]">Assignee</th>
+<th class="px-6 py-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-[0.1em]">Priority</th>
+<th class="px-6 py-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-[0.1em]">Deadline</th>
+</tr>
+</thead>
+<tbody class="divide-y-0">
+<!-- Row 1 -->
+<tr class="group hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-6 font-mono text-sm text-primary font-semibold">RF-101</td>
+<td class="px-6 py-6">
+<span class="block font-bold text-on-surface">OAuth2 Middleware Implementation</span>
+<span class="text-xs text-on-surface-variant">Auth Systems • v2.1</span>
+</td>
+<td class="px-6 py-6">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-xs font-semibold">In Progress</span>
+</td>
+<td class="px-6 py-6">
+<button class="flex items-center gap-2 hover:bg-surface-container-high px-2 py-1 -ml-2 rounded-lg transition-all group-hover:scale-105">
+<img alt="Team member" class="w-7 h-7 rounded-full" data-alt="portrait of a focused developer working in a collaborative office environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzk0SH-InacUhOjZBS-_kbQUkPzm2KYOqy5jlL2rATZZ6P9jCgeA0l_82LnMAQ76BrLoKkz1KdMhYTfFsqoqQCi5aQ9ncFiZluLdmL4Uzs3ZnwzvKIG1il01COxVAM2jld4mCUOEx1ldtLGC6UiYdA5pWpnHjQqjsFjDf3376YbJkNto1lVmTHIyl8o4_AFnGDNobY5_XScbbry7cBiMmISlBTzlFk5YjdIKPcOQgP1Dnj1kshKNpG_P7iasvl9-IFzvo9Zu2Y4h8"/>
+<span class="text-sm font-medium text-on-surface">Sarah Jenkins</span>
+</button>
+</td>
+<td class="px-6 py-6">
+<span class="bg-error-container/20 text-on-error-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">High</span>
+</td>
+<td class="px-6 py-6 text-sm text-on-surface-variant">Oct 24, 2023</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-6 font-mono text-sm text-primary font-semibold">RF-104</td>
+<td class="px-6 py-6">
+<span class="block font-bold text-on-surface">Database Schema Optimization</span>
+<span class="text-xs text-on-surface-variant">Storage • v1.8</span>
+</td>
+<td class="px-6 py-6">
+<span class="bg-surface-container-high text-on-surface-variant px-3 py-1 rounded-full text-xs font-semibold">Backlog</span>
+</td>
+<td class="px-6 py-6">
+<button class="flex items-center gap-2 hover:bg-surface-container-high px-2 py-1 -ml-2 rounded-lg transition-all">
+<div class="w-7 h-7 rounded-full bg-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-xs text-outline" data-icon="person_add">person_add</span>
+</div>
+<span class="text-sm text-outline italic">Unassigned</span>
+</button>
+</td>
+<td class="px-6 py-6">
+<span class="bg-primary-container/20 text-on-primary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Medium</span>
+</td>
+<td class="px-6 py-6 text-sm text-on-surface-variant">Nov 02, 2023</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-6 font-mono text-sm text-primary font-semibold">RF-107</td>
+<td class="px-6 py-6">
+<span class="block font-bold text-on-surface">Frontend Component Library Sync</span>
+<span class="text-xs text-on-surface-variant">UI/UX • v3.0</span>
+</td>
+<td class="px-6 py-6">
+<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">Review</span>
+</td>
+<td class="px-6 py-6">
+<button class="flex items-center gap-2 hover:bg-surface-container-high px-2 py-1 -ml-2 rounded-lg transition-all">
+<img alt="Team member" class="w-7 h-7 rounded-full" data-alt="confident professional woman in a bright modern workspace" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNOvGymA_3iYTCbWFHz2SIJX2qMoxILrW4aW-X0MuwpaQA6BzH1fothfSFdnNValS-R3CJz-18S5scAyOqAuETD9Tq27sJyPGeskQMDeREeiyiKkmVW6i2Bd1SIVQvo7zOouQpar9m5y1FdUL2iqhaUbKAFQ40xxaPebSxYnHD0BNyqQl5U7E3RPkcZLY9vwB6gT_vADAhCFL6lvofsaOkZG2By1tBMy0ON0gPr7Fd_Ge9jOMbS3vLe9wTT_z-7dheWFCgF1HxXsw"/>
+<span class="text-sm font-medium text-on-surface">Alex Rivera</span>
+</button>
+</td>
+<td class="px-6 py-6">
+<span class="bg-surface-container-high/50 text-on-surface-variant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Low</span>
+</td>
+<td class="px-6 py-6 text-sm text-on-surface-variant">Oct 30, 2023</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+<!-- Assignment Modal Overlay -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+<div class="absolute inset-0 bg-on-surface/20 backdrop-blur-md"></div>
+<div class="relative bg-surface-container-lowest w-full max-w-lg rounded-xl shadow-2xl border border-outline-variant/15 flex flex-col overflow-hidden">
+<!-- Modal Header -->
+<div class="px-8 py-6 border-b-0">
+<div class="flex justify-between items-start mb-1">
+<h2 class="text-2xl font-bold font-headline text-on-surface">Reassign Requirement</h2>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<p class="text-on-surface-variant text-sm">Update the owner for <span class="font-mono text-primary font-bold">RF-101</span></p>
+</div>
+<!-- Search Field -->
+<div class="px-8 pb-4">
+<div class="relative group">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-0 border-b-2 border-transparent focus:border-primary focus:ring-0 rounded-lg pl-10 text-sm py-3 transition-all" placeholder="Search team members..." type="text"/>
+</div>
+</div>
+<!-- Team List -->
+<div class="px-4 pb-4 max-h-[400px] overflow-y-auto">
+<div class="space-y-1">
+<!-- Member 1 (Selected) -->
+<button class="w-full flex items-center justify-between p-4 bg-primary-container/20 rounded-xl border-l-4 border-primary transition-all text-left">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="Sarah" class="w-10 h-10 rounded-full" data-alt="headshot of a smiling female engineer in casual tech attire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1I4MLPXxUZxrb5svbH-ChNich7L-0yUBQ1Hvxow5oMc7GKBc9c7Uu_ZDAlUybYZT9qVsEGA1bHT2mgm7EZcnQ0Jif6MwKjkXxXBJKJAYSSoOlvk-Qy1WfO5dUI61XQv3qOXVQViaPYDXCefJ1pxrS1KGM1OtHtDQa3SW8eL10ZoryvrpCxhllTbcyDZsUVOLvJ22HBWZcoEzhyb7n4MgT8CiwoZtzO8spfysw-hniB-aWQfZCc02r_79GZJa3DKQD3kUALU4E9H8"/>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-surface-container-lowest rounded-full"></div>
+</div>
+<div>
+<p class="font-bold text-on-surface text-sm">Sarah Jenkins</p>
+<p class="text-xs text-on-surface-variant">Senior Backend Developer</p>
+</div>
+</div>
+<div class="text-right">
+<span class="block text-xs font-bold text-primary">5 active tasks</span>
+<span class="text-[10px] text-on-surface-variant uppercase font-bold tracking-tighter">85% Capacity</span>
+</div>
+</button>
+<!-- Member 2 -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-container-low rounded-xl transition-all text-left">
+<div class="flex items-center gap-4">
+<img alt="Alex" class="w-10 h-10 rounded-full" data-alt="portrait of a woman in a creative workspace with warm natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0bo3glWMbCBGODFqQ48KZVAenj0jWuE7jQVdASQcWghcV4-04n-rVSkMdrde0FxVsqWyQkwGTU5aVjTcBV_zgORC8i4dYmkApPIgAVOxpitky73HiMS609VM9Gzkwhg-2owbtmOjuCc3bMlSBfStR5pjrRItUyCDTuVbUUxmpuY0eeJheMJr7y0edWIQR6ysW7Ffd7RyetdMq7Zz1A2vpr2uay1EmPmZBTB_JAvhnTiGDpXVxm5wbu7Jtna_4yba8Zj4_SnrTOFY"/>
+<div>
+<p class="font-bold text-on-surface text-sm">Alex Rivera</p>
+<p class="text-xs text-on-surface-variant">UI Lead</p>
+</div>
+</div>
+<div class="text-right">
+<span class="block text-xs font-bold text-on-surface">2 active tasks</span>
+<span class="text-[10px] text-on-surface-variant uppercase font-bold tracking-tighter">30% Capacity</span>
+</div>
+</button>
+<!-- Member 3 -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-container-low rounded-xl transition-all text-left">
+<div class="flex items-center gap-4">
+<img alt="Marcus" class="w-10 h-10 rounded-full" data-alt="professional male headshot with glasses and a friendly expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCOKF7ubXFbkP0RlgPsTm-2pW2tS32rR929wOK3_RwAW8LmAqnnUFAG6MhxPLTAsLRI1K5jaooEo5cSkaJmpuBC3dE1UB9tLZBSVtl6U6Dg6V8XxLvJIpRVEg7G-0EmHr9xi1HZHCDs-V9NHQTAuDuYmPPKq3F3QWIst2wDB0MZCAK7XDXNGCfs-uv-HwyeqHFZvG6if2on6zqbklP8-A4hwjlzzoDRpfrcsvLp0IFr3mW43VLFoVan8hJfVS2oXFMEbOp4bdYr94"/>
+<div>
+<p class="font-bold text-on-surface text-sm">Marcus Chen</p>
+<p class="text-xs text-on-surface-variant">DevOps Engineer</p>
+</div>
+</div>
+<div class="text-right">
+<span class="block text-xs font-bold text-error">9 active tasks</span>
+<span class="text-[10px] text-error uppercase font-bold tracking-tighter">Overloaded</span>
+</div>
+</button>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="p-8 bg-surface-container-low/50 flex gap-4">
+<button class="flex-1 px-6 py-3 rounded-lg font-bold text-sm text-on-surface-variant hover:bg-surface-container-high transition-colors">Cancel</button>
+<button class="flex-[2] bg-gradient-to-br from-primary to-primary-dim px-6 py-3 rounded-lg text-on-primary font-bold text-sm shadow-md hover:opacity-90 transition-opacity">Confirm Assignment</button>
+</div>
+</div>
+</div>
+</body></html>

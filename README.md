@@ -71,7 +71,23 @@ ReqFlow-Frontend/
 - `development` - Integration branch for team work
 - `feature/*` - Feature branches (e.g., feature/auth-ui, feature/client-pages)
 
-## Features (Planned)
+## Demo Accounts
+
+Use these credentials to log in with different user roles:
+
+| Role | Email | Password | Dashboard |
+|------|-------|----------|-----------|
+| **Client** | `client@reqflow.io` | `client123` | Client Dashboard - Create and track requirements |
+| **Team Member** | `member@reqflow.io` | `member123` | Member Dashboard - Work on assigned requirements |
+| **Manager** | `manager@reqflow.io` | `manager123` | Manager Dashboard - Oversee team and approve/reject |
+
+### Role Capabilities
+
+- **Client**: Create requirements, view status, respond to clarifications, track progress
+- **Team Member**: View assigned work, refine requirements, submit for review
+- **Manager**: Full access, approve/reject requirements, assign to team, manage workflow
+
+## Features
 
 - Login and role-based authentication
 - Dashboard for each user role

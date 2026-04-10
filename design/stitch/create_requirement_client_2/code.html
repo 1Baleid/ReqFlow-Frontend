@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Architectural Curator | Create Requirement</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error-container": "#fe8983",
+                      "on-tertiary-fixed": "#383c55",
+                      "primary-fixed-dim": "#c8d3ff",
+                      "surface-dim": "#d1dce0",
+                      "outline-variant": "#abb3b7",
+                      "primary": "#1353d8",
+                      "on-tertiary": "#faf8ff",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary-fixed": "#00369b",
+                      "error-dim": "#4e0309",
+                      "surface-container-low": "#f1f4f6",
+                      "error": "#9f403d",
+                      "surface-container-high": "#e2e9ec",
+                      "primary-dim": "#0047c5",
+                      "tertiary-container": "#dbddfe",
+                      "primary-container": "#dbe1ff",
+                      "primary-fixed": "#dbe1ff",
+                      "surface-tint": "#1353d8",
+                      "secondary-container": "#d9e3f4",
+                      "inverse-on-surface": "#9b9d9e",
+                      "on-secondary-container": "#485260",
+                      "background": "#f8f9fa",
+                      "inverse-primary": "#638aff",
+                      "on-background": "#2b3437",
+                      "tertiary-dim": "#4e516c",
+                      "secondary": "#56606e",
+                      "secondary-fixed": "#d9e3f4",
+                      "on-secondary": "#f7f9ff",
+                      "surface-variant": "#dbe4e7",
+                      "on-error": "#fff7f6",
+                      "surface-container-highest": "#dbe4e7",
+                      "on-error-container": "#752121",
+                      "on-tertiary-fixed-variant": "#555873",
+                      "tertiary-fixed": "#dbddfe",
+                      "outline": "#737c7f",
+                      "surface-bright": "#f8f9fa",
+                      "secondary-fixed-dim": "#cbd5e6",
+                      "on-primary-fixed-variant": "#0b50d5",
+                      "on-secondary-fixed-variant": "#525c6a",
+                      "on-secondary-fixed": "#36404d",
+                      "on-primary": "#f8f7ff",
+                      "on-surface": "#2b3437",
+                      "tertiary-fixed-dim": "#cdcfef",
+                      "on-primary-container": "#0046c3",
+                      "surface": "#f8f9fa",
+                      "surface-container": "#eaeff1",
+                      "secondary-dim": "#4a5462",
+                      "tertiary": "#5a5d78",
+                      "on-tertiary-container": "#4b4e69",
+                      "on-surface-variant": "#586064",
+                      "inverse-surface": "#0c0f10"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Manrope"],
+                      "body": ["Inter"],
+                      "label": ["Inter"]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .editorial-header {
+            letter-spacing: -0.02em;
+        }
+        .ghost-border {
+            outline: 1px solid rgba(171, 179, 183, 0.15);
+        }
+      </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased">
+<!-- SideNavBar (Shared Component) -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-slate-50 dark:bg-slate-900 flex flex-col p-4">
+<div class="mb-8 px-4">
+<h1 class="text-xl font-bold text-slate-900 dark:text-slate-100 font-headline">Curator Pro</h1>
+<p class="text-xs text-on-surface-variant font-medium">Startup Workspace</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-['Manrope'] font-semibold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-blue-700 dark:text-blue-400 bg-white dark:bg-slate-800 rounded-lg shadow-sm" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="font-['Manrope'] font-semibold">Requirements</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="folder_managed">folder_managed</span>
+<span class="font-['Manrope'] font-semibold">Projects</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-['Manrope'] font-semibold">Users</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-['Manrope'] font-semibold">Settings</span>
+</a>
+</nav>
+<button class="mt-auto w-full py-3 bg-primary hover:bg-primary-dim text-on-primary rounded-lg font-headline font-bold text-sm transition-all shadow-lg shadow-primary/20">
+            New Project
+        </button>
+</aside>
+<!-- TopNavBar (Shared Component) -->
+<header class="fixed top-0 right-0 left-64 h-16 bg-white/80 backdrop-blur-xl flex justify-between items-center px-8 z-40 border-b border-slate-100">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all" placeholder="Search architectural assets..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-slate-500">
+<button class="hover:text-blue-600 transition-all"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
+<button class="hover:text-blue-600 transition-all"><span class="material-symbols-outlined" data-icon="help_outline">help_outline</span></button>
+<span class="text-xs font-bold uppercase tracking-widest text-outline-variant">Feedback</span>
+</div>
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-surface-container-high" data-alt="Close up portrait of a professional architect in a creative office setting with soft natural window lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqrv5dLEUtm3H83VeoLelOrTItuxgjEVYnOAk7L_2eP87pDq5isj85ivDkWxRisdPXPbJEsmCMsD-r7JJhLqcKRzKju-5yys6sNc1G8Bdfa2lAkJunK190SzwP65DhS-5RMS0WUe6jTkMKwQNKwAoMl1b5tyAqL7ZTOXoyDB28koqTFmTL4bUm32N2r1eBevEMqLbaO9PSO3svLbicmTqDQ120LbLk8KasSMLyQ_0lWQ8_4tSibjV7TYMGH_s1nIFuAH6j6e1FiVI"/>
+</div>
+</header>
+<main class="ml-64 pt-16 min-h-screen">
+<!-- Success Banner -->
+<div class="px-8 mt-6">
+<div class="bg-primary/5 border border-primary/10 rounded-xl px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-3 text-on-primary-container">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<p class="font-medium text-sm">Requirement submitted successfully!</p>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+</div>
+<div class="p-8 max-w-7xl mx-auto grid grid-cols-12 gap-8">
+<!-- Main Form Canvas -->
+<div class="col-span-8">
+<div class="mb-10">
+<h2 class="text-3xl font-headline font-bold text-on-background editorial-header">Define Requirement</h2>
+<p class="text-on-surface-variant mt-2">Specify the parameters and functional criteria for this architectural component.</p>
+</div>
+<div class="space-y-8">
+<!-- Form Field: Title -->
+<div class="space-y-3">
+<label class="block font-label text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Requirement Title</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest ghost-border rounded-xl px-5 py-4 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all border-b-2 border-error" placeholder="e.g., HVAC Load Distribution Analysis" type="text" value=""/>
+<div class="flex items-center gap-2 mt-2 text-error">
+<span class="material-symbols-outlined text-sm">error</span>
+<span class="text-xs font-medium">Title is required</span>
+</div>
+</div>
+</div>
+<!-- Form Field: Description -->
+<div class="space-y-3">
+<label class="block font-label text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Detailed Description</label>
+<div class="bg-surface-container-lowest ghost-border rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+<!-- Rich Text Toolbar -->
+<div class="px-4 py-2 bg-surface-container-low flex items-center gap-4 border-b border-surface-container-high">
+<div class="flex items-center gap-1">
+<button class="p-1.5 rounded-lg hover:bg-white text-secondary"><span class="material-symbols-outlined text-lg">format_bold</span></button>
+<button class="p-1.5 rounded-lg hover:bg-white text-secondary"><span class="material-symbols-outlined text-lg">format_italic</span></button>
+<button class="p-1.5 rounded-lg hover:bg-white text-secondary"><span class="material-symbols-outlined text-lg">format_underlined</span></button>
+</div>
+<div class="w-px h-4 bg-outline-variant/30"></div>
+<div class="flex items-center gap-1">
+<button class="p-1.5 rounded-lg hover:bg-white text-secondary"><span class="material-symbols-outlined text-lg">format_list_bulleted</span></button>
+<button class="p-1.5 rounded-lg hover:bg-white text-secondary"><span class="material-symbols-outlined text-lg">format_list_numbered</span></button>
+</div>
+<div class="w-px h-4 bg-outline-variant/30"></div>
+<button class="p-1.5 rounded-lg hover:bg-white text-secondary"><span class="material-symbols-outlined text-lg">link</span></button>
+</div>
+<textarea class="w-full border-none focus:ring-0 px-5 py-4 text-on-surface bg-transparent resize-none" placeholder="Provide technical specifications, environmental constraints, and user impact..." rows="10"></textarea>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center justify-end gap-4 pt-6">
+<button class="px-8 py-3 rounded-lg text-secondary font-headline font-bold text-sm hover:bg-surface-container-low transition-colors">
+                            Cancel
+                        </button>
+<button class="px-10 py-3 rounded-lg bg-gradient-to-br from-primary to-primary-dim text-on-primary font-headline font-bold text-sm shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                            Submit Requirement
+                        </button>
+</div>
+</div>
+</div>
+<!-- Sidebar -->
+<div class="col-span-4 space-y-6">
+<!-- Quality Tips Card -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-surface-container-high relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
+<div class="relative z-10">
+<div class="w-10 h-10 bg-primary-container text-primary rounded-xl flex items-center justify-center mb-5">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+</div>
+<h3 class="font-headline font-bold text-on-surface mb-3">Requirement Quality Tips</h3>
+<ul class="space-y-4">
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-primary text-lg">verified</span>
+<div>
+<p class="text-sm font-semibold text-on-surface">Be Atomic</p>
+<p class="text-xs text-on-surface-variant leading-relaxed">Each requirement should address a single concern to improve traceability.</p>
+</div>
+</li>
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-primary text-lg">verified</span>
+<div>
+<p class="text-sm font-semibold text-on-surface">Measurable Criteria</p>
+<p class="text-xs text-on-surface-variant leading-relaxed">Avoid vague terms like "efficient" or "fast." Use concrete metrics.</p>
+</div>
+</li>
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-primary text-lg">verified</span>
+<div>
+<p class="text-sm font-semibold text-on-surface">Context is Key</p>
+<p class="text-xs text-on-surface-variant leading-relaxed">Explain the "Why" to help architects design the right solution.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<!-- Traceability Card Placeholder -->
+<div class="bg-surface-container-low rounded-xl p-6 border border-transparent">
+<label class="block font-label text-[10px] font-bold uppercase tracking-[0.1em] text-outline mb-4">Linked Projects</label>
+<div class="flex flex-wrap gap-2">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full text-[11px] font-bold">HUB-2024</span>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full text-[11px] font-bold">SUSTAIN-CORE</span>
+<button class="w-8 h-8 rounded-full border border-dashed border-outline-variant flex items-center justify-center text-outline hover:border-primary hover:text-primary transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+<!-- Visual Anchor -->
+<div class="rounded-xl overflow-hidden aspect-[4/3] relative group">
+<img alt="Modern Architecture" class="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" data-alt="Minimalist modern glass skyscraper reaching into a clear blue sky with sharp geometric lines and reflection of clouds" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxJwJBJ-_PbP_JOnaj07fVRGwwlZQhZQ8ZSdEQcHv3LjfC3zRINxhlnkPlkWEaHK39Ov-n5IwlcJJcC5PRmMo9rC6J4uGfmDbmEd6vvoxwlyQMvXKob2xJbzEBtWgqN_kn3N4ZZoHBR1CCJaX5Or9ZXcebj7g1EB8gaVZ_iWKaLv4kEaOFaDOz_MGD9BCGLRSp9eg2MS8jCXnXE763cy_XUoJ6VNkCucwaDJR3Np8brf3P6hgOI2FPo2Opoa0P3m5qLOipoiHhOwM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-5">
+<p class="text-white font-headline font-bold text-sm">Inspiring Structural Integrity</p>
+<p class="text-white/70 text-[10px] uppercase tracking-widest">Workspace Curated Series</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

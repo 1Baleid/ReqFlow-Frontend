@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Version History - ReqFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#56606e",
+                        "secondary-fixed-dim": "#cbd5e6",
+                        "tertiary-container": "#dbddfe",
+                        "inverse-on-surface": "#9b9d9e",
+                        "secondary-fixed": "#d9e3f4",
+                        "background": "#f8f9fa",
+                        "on-primary-fixed": "#00369b",
+                        "on-secondary": "#f7f9ff",
+                        "surface": "#f8f9fa",
+                        "inverse-surface": "#0c0f10",
+                        "tertiary-fixed": "#dbddfe",
+                        "on-error": "#fff7f6",
+                        "surface-variant": "#dbe4e7",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container": "#eaeff1",
+                        "surface-dim": "#d1dce0",
+                        "on-background": "#2b3437",
+                        "surface-tint": "#1353d8",
+                        "outline": "#737c7f",
+                        "tertiary-fixed-dim": "#cdcfef",
+                        "error": "#9f403d",
+                        "on-surface-variant": "#586064",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#dbe4e7",
+                        "on-tertiary-fixed": "#383c55",
+                        "on-tertiary-fixed-variant": "#555873",
+                        "surface-container-low": "#f1f4f6",
+                        "on-primary-container": "#0046c3",
+                        "on-surface": "#2b3437",
+                        "outline-variant": "#abb3b7",
+                        "error-dim": "#4e0309",
+                        "primary-dim": "#0047c5",
+                        "tertiary-dim": "#4e516c",
+                        "error-container": "#fe8983",
+                        "primary": "#1353d8",
+                        "primary-fixed": "#dbe1ff",
+                        "on-tertiary": "#faf8ff",
+                        "surface-container-high": "#e2e9ec",
+                        "on-secondary-fixed-variant": "#525c6a",
+                        "on-primary": "#f8f7ff",
+                        "on-secondary-fixed": "#36404d",
+                        "inverse-primary": "#638aff",
+                        "tertiary": "#5a5d78",
+                        "on-tertiary-container": "#4b4e69",
+                        "primary-fixed-dim": "#c8d3ff",
+                        "on-primary-fixed-variant": "#0b50d5",
+                        "on-secondary-container": "#485260",
+                        "secondary-container": "#d9e3f4",
+                        "on-error-container": "#752121",
+                        "secondary-dim": "#4a5462",
+                        "primary-container": "#dbe1ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        .font-headline { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-slate-100 dark:bg-slate-900 flex flex-col border-none z-50">
+<div class="p-6 flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-sm">architecture</span>
+</div>
+<div>
+<h1 class="text-xl font-bold text-blue-700 dark:text-blue-400 font-manrope tracking-tight text-on-surface leading-tight">ReqFlow</h1>
+<p class="text-[10px] text-on-surface-variant font-medium tracking-widest uppercase">Enterprise RMS</p>
+</div>
+</div>
+<nav class="flex-1 px-4 mt-4 space-y-1">
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors cursor-pointer group">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-inter text-sm font-medium">Dashboard</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-blue-700 dark:text-blue-400 font-bold border-r-4 border-blue-700 dark:border-blue-400 bg-white/50 dark:bg-white/5 transition-all">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-inter text-sm font-medium">Requirements</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors cursor-pointer group">
+<span class="material-symbols-outlined">folder_open</span>
+<span class="font-inter text-sm font-medium">Projects</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors cursor-pointer group">
+<span class="material-symbols-outlined">group</span>
+<span class="font-inter text-sm font-medium">Users</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors cursor-pointer group">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-inter text-sm font-medium">Settings</span>
+</div>
+</nav>
+<div class="p-4">
+<button class="w-full bg-primary text-white py-2.5 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 shadow-sm hover:opacity-90 transition-all scale-95 active:opacity-80">
+<span class="material-symbols-outlined text-sm">add</span>
+            New Requirement
+        </button>
+</div>
+</aside>
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-white/85 dark:bg-slate-950/85 backdrop-blur-md flex justify-between items-center px-8 w-full border-none">
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors font-semibold text-sm group">
+<span class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
+            Back to Requirement
+        </button>
+<div class="h-4 w-[1px] bg-outline-variant/30"></div>
+<div class="text-sm font-headline font-bold text-on-surface">RF-742: Authentication Workflow</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-all">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-all">help_outline</span>
+</div>
+<div class="flex items-center gap-3 pl-4 border-l border-outline-variant/20">
+<div class="text-right">
+<p class="text-xs font-semibold leading-tight">Sarah Chen</p>
+<p class="text-[10px] text-on-surface-variant font-medium">Product Architect</p>
+</div>
+<img alt="User profile" class="w-8 h-8 rounded-full object-cover border-2 border-surface-container" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOGAOBkvVEKdCAHbot0gwtNtxKPaiAI8gJr9mYmoQzHICXrsVdpAzJVIoc1o4mJ1dccJrrdD6D3R3WbBvq3_StIQmsluO2MYo362w6jZxLXP9yPQjFQsowma_KOC11OdfHplSqFu8nSefT0n5SlWv0nrb_dDcUZ9JXeQlNMMhapJ_HYROKL9iajGrsvfETrHZFHgrmdQZXMojpnVzG4ui90zXN9qyydH8B4UrRzbHAPqiN0qwxfd3aUU37gGVw3a9iQP2sycdPyOg"/>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="ml-64 pt-16 min-h-screen bg-surface">
+<div class="max-w-7xl mx-auto p-8">
+<!-- Page Header Section -->
+<div class="mb-10 flex justify-between items-end">
+<div>
+<h2 class="text-3xl font-headline font-bold tracking-tight text-on-surface mb-2">Version History</h2>
+<p class="text-on-surface-variant max-w-xl">Review and compare previous iterations of this requirement. Select two versions to visualize precise delta changes.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-5 py-2.5 bg-surface-container-lowest text-on-surface border border-outline-variant/20 rounded-lg text-sm font-semibold hover:bg-surface-container-low transition-all">
+                    Export Log
+                </button>
+<button class="px-5 py-2.5 bg-primary text-white rounded-lg text-sm font-semibold shadow-sm hover:opacity-90 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">compare_arrows</span>
+                    Compare Selected
+                </button>
+</div>
+</div>
+<!-- Bento Grid Layout for History and Comparison -->
+<div class="grid grid-cols-12 gap-6 items-start">
+<!-- Version Sidebar / List -->
+<div class="col-span-3 space-y-4">
+<div class="bg-surface-container-lowest p-1 rounded-xl shadow-sm border border-outline-variant/10">
+<!-- Version Item V3 -->
+<div class="p-4 rounded-lg bg-surface-container-low border border-primary/20 relative group transition-all">
+<div class="absolute top-4 right-4">
+<input checked="" class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox"/>
+</div>
+<div class="flex items-center gap-3 mb-3">
+<div class="px-2 py-1 bg-primary-container text-on-primary-container text-[10px] font-bold rounded uppercase tracking-wider">Current</div>
+<span class="text-xs font-semibold text-on-surface-variant">V3</span>
+</div>
+<div class="flex items-center gap-2 mb-4">
+<img class="w-6 h-6 rounded-full object-cover" data-alt="professional male headshot with neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2w123Nt27-Xz1nofbvlUwWMYLGXNBHwUem0_1XNQWhiHqth6YQyqIQr25SeHTzDCO79PVuhzt2PFYmV_-TOZtD9kUcWra_t5WTgbgWD31VstmGEspdc5bmXPUV2WBu2pvCSKTvz8Mb9Tlq4h1Zhs6ZWT5zeZSdf-jKcswgHGErphlRZYGHr7KsuIClzxVIOJIQ0uiAC6DGcuET7du99e9pFUGVr8BAaD7FhJKvLrbmp702LfGmKbV2a9T09zaniDPSnp5eTolNXY"/>
+<span class="text-sm font-medium">Marcus Aurelius</span>
+</div>
+<p class="text-[10px] text-outline mb-2">Oct 24, 10:45 AM</p>
+<p class="text-xs text-on-surface-variant leading-relaxed line-clamp-2">Refined security handshake protocols and added OAuth2 failure state logic.</p>
+</div>
+<!-- Version Item V2 -->
+<div class="p-4 rounded-lg hover:bg-surface-container-low transition-all relative group cursor-pointer">
+<div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+<input checked="" class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox"/>
+</div>
+<div class="flex items-center gap-3 mb-3">
+<span class="text-xs font-semibold text-on-surface-variant">V2</span>
+</div>
+<div class="flex items-center gap-2 mb-4">
+<img class="w-6 h-6 rounded-full object-cover" data-alt="professional woman headshot in business attire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAz3_lcGRPLlEGGwpyDHec45m4Ia_fY0q6nJepnUsCSwQKMe2vNpP8tar5ecAopIc9RMguWdP5SG0FujyH-vg7RCfin1dL7GFn60Lliq8utM-fq3s6GcQpaL2lpQ3TEPjrGxg9yGsflCbn4l-nJ5V_B5vBn6MR0oDA7k2f5m1xbXxlFtONdxj69Nt8v4lhKiO7N5w1s7LNimDn_4JjMfCS_imajVNI27YBSQ_eM_mJQe-IhM2QgLCmQ88abIj9H32WgLo83s6ECHA"/>
+<span class="text-sm font-medium">Elena Rodriguez</span>
+</div>
+<p class="text-[10px] text-outline mb-2">Oct 22, 02:15 PM</p>
+<p class="text-xs text-on-surface-variant leading-relaxed line-clamp-2">Initial draft for the multi-factor authentication flow implementation.</p>
+</div>
+<!-- Version Item V1 -->
+<div class="p-4 rounded-lg hover:bg-surface-container-low transition-all relative group cursor-pointer opacity-60 hover:opacity-100">
+<div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox"/>
+</div>
+<div class="flex items-center gap-3 mb-3">
+<span class="text-xs font-semibold text-on-surface-variant">V1</span>
+</div>
+<div class="flex items-center gap-2 mb-4">
+<img class="w-6 h-6 rounded-full object-cover" data-alt="man in glasses looking professional" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQtxMN76t_-TA_8OLRJy96xcQgNyMKs-xNJt4514rJcnF2L8TtY4ENvpq1_yvhQ7j7fEbt6JxFoCQgoNgvpoNC8Xh66TkGNlsw6iCjHMyqpOMn-BPIDW1nja8Yak8OvDWX6blInJ1ef9uTE-UlV8v_zFn0kysnmOQSlHPZ0KchZWwwvC1r5xKsQzagNNKN05nq0q89FvlfrMdjfpQqRVSmjkivA1XEFQq35xsahvi0KlzIQ4BI8Z_qauG191LDwjw9kDGBRtPWLUw"/>
+<span class="text-sm font-medium">Marcus Aurelius</span>
+</div>
+<p class="text-[10px] text-outline mb-2">Oct 20, 09:00 AM</p>
+<p class="text-xs text-on-surface-variant leading-relaxed line-clamp-2">Baseline requirement creation from stakeholder workshop notes.</p>
+</div>
+</div>
+</div>
+<!-- Comparison View -->
+<div class="col-span-9">
+<div class="bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant/10 overflow-hidden flex flex-col h-full min-h-[700px]">
+<!-- Comparison Header -->
+<div class="p-6 border-b border-surface-container flex items-center justify-between bg-surface-container-low/30">
+<div class="flex items-center gap-8">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-outline uppercase tracking-widest mb-1">Source Version</span>
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-error ring-2 ring-error/20"></span>
+<span class="text-sm font-bold">V2: Multi-Factor Draft</span>
+</div>
+</div>
+<div class="text-outline">
+<span class="material-symbols-outlined font-light">arrow_forward</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-outline uppercase tracking-widest mb-1">Target Version</span>
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary ring-2 ring-primary/20"></span>
+<span class="text-sm font-bold">V3: Security Refinement</span>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 px-3 py-1.5 hover:bg-surface-container rounded-lg transition-colors text-xs font-semibold text-on-surface-variant border border-outline-variant/20">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+                                Split View
+                            </button>
+<button class="p-2 hover:bg-surface-container rounded-lg transition-colors"><span class="material-symbols-outlined text-[20px]">fullscreen</span></button>
+</div>
+</div>
+<!-- Comparison Body: Side-by-Side Content + Metadata -->
+<div class="flex-1 p-0 flex flex-col overflow-y-auto">
+<!-- Side-by-Side Header Labels -->
+<div class="grid grid-cols-2 bg-surface-container-low/20 border-b border-outline-variant/10">
+<div class="p-4 border-r border-outline-variant/10 flex items-center justify-center">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Original Content (V2)</span>
+</div>
+<div class="p-4 flex items-center justify-center">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Updated Content (V3)</span>
+</div>
+</div>
+<!-- Content Comparison -->
+<div class="flex-1 divide-y divide-outline-variant/10">
+<!-- Section 1 -->
+<div class="grid grid-cols-2 divide-x divide-outline-variant/10">
+<div class="p-8 space-y-6">
+<h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-sm">subject</span>
+                                        1.0 Business Logic
+                                    </h4>
+<div class="p-4 bg-error-container/5 border-l-4 border-error/40 rounded-r-lg">
+<p class="text-sm text-on-surface leading-relaxed line-through decoration-error/40 opacity-70">
+                                            The user must enter a 6-digit code sent via SMS to verify their identity before proceeding to the dashboard.
+                                        </p>
+</div>
+<div class="p-4 bg-surface-container-low/50 rounded-lg">
+<p class="text-sm text-on-surface leading-relaxed">
+                                            If the code is incorrect, the system should allow up to 3 retries.
+                                        </p>
+</div>
+</div>
+<div class="p-8 space-y-6">
+<h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2 mb-4 opacity-0 pointer-events-none">
+                                        1.0 Business Logic
+                                    </h4>
+<div class="p-4 bg-primary-container/10 border-l-4 border-primary/40 rounded-r-lg">
+<p class="text-sm text-on-surface leading-relaxed">
+                                            The system shall support TOTP (Time-based One-Time Password) via authenticator apps as the primary MFA method, with SMS as a secondary fallback only.
+                                        </p>
+</div>
+<div class="p-4 bg-surface-container-low/50 rounded-lg">
+<p class="text-sm text-on-surface leading-relaxed">
+                                            If the code is incorrect, the system should allow up to 3 retries <span class="bg-primary/20 px-1.5 py-0.5 rounded font-bold text-primary text-xs">per 15-minute window</span>.
+                                        </p>
+</div>
+</div>
+</div>
+<!-- Section 2 -->
+<div class="grid grid-cols-2 divide-x divide-outline-variant/10">
+<div class="p-8 space-y-6">
+<h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-sm">security</span>
+                                        2.0 Technical Constraints
+                                    </h4>
+<div class="p-4 bg-surface-container-low/50 rounded-lg">
+<p class="text-sm text-on-surface leading-relaxed">
+                                            Sessions are valid for 2 hours of inactivity.
+                                        </p>
+</div>
+</div>
+<div class="p-8 space-y-6">
+<h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2 mb-4 opacity-0 pointer-events-none">
+                                        2.0 Technical Constraints
+                                    </h4>
+<div class="p-4 bg-surface-container-low/50 rounded-lg">
+<p class="text-sm text-on-surface leading-relaxed">
+                                            Sessions are valid for <span class="bg-error/20 px-1.5 py-0.5 rounded font-bold text-error text-xs line-through">2 hours</span> <span class="bg-primary/20 px-1.5 py-0.5 rounded font-bold text-primary text-xs">30 minutes</span> of inactivity.
+                                        </p>
+</div>
+<div class="p-4 bg-primary-container/10 border-l-4 border-primary/40 rounded-r-lg">
+<p class="text-sm text-on-surface leading-relaxed italic font-medium">
+                                            Requirement RF-742.B: Implement JWT rotation for every high-privilege action within the session.
+                                        </p>
+</div>
+</div>
+</div>
+<!-- Metadata Update Side-by-Side -->
+<div class="grid grid-cols-2 divide-x divide-outline-variant/10 bg-surface-container-high/10">
+<div class="p-8">
+<h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-sm text-secondary">label</span>
+                                        V2 Metadata
+                                    </h4>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<span class="text-xs text-outline font-medium uppercase">Priority</span>
+<span class="text-sm font-semibold text-on-surface">Medium</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-outline font-medium uppercase">Status</span>
+<span class="text-sm font-semibold text-on-surface">Draft</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-outline font-medium uppercase">Assignee</span>
+<span class="text-sm font-semibold text-on-surface">Elena Rodriguez</span>
+</div>
+</div>
+</div>
+<div class="p-8">
+<h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2 mb-6 opacity-0 pointer-events-none">
+                                        V3 Metadata
+                                    </h4>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<span class="text-xs text-outline font-medium uppercase">Priority</span>
+<div class="flex items-center gap-2">
+<span class="text-xs text-outline line-through">Medium</span>
+<span class="px-2 py-0.5 bg-error-container text-on-error-container text-[10px] font-bold rounded-full">High</span>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-outline font-medium uppercase">Status</span>
+<div class="flex items-center gap-2">
+<span class="text-xs text-outline line-through">Draft</span>
+<span class="px-2 py-0.5 bg-primary-container text-on-primary-container text-[10px] font-bold rounded-full uppercase">Review</span>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-outline font-medium uppercase">Assignee</span>
+<div class="flex items-center gap-2">
+<span class="text-xs text-outline line-through">Elena R.</span>
+<span class="text-sm font-bold text-primary">Marcus Aurelius</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Footer for Actions -->
+<div class="p-6 bg-white border-t border-surface-container flex items-center justify-between">
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors font-semibold text-sm">
+<span class="material-symbols-outlined text-[18px]">history</span>
+                            View full audit log
+                        </button>
+<div class="flex items-center gap-3">
+<button class="px-6 py-2.5 bg-surface-container text-on-surface rounded-lg text-sm font-semibold hover:bg-surface-container-high transition-all">
+                                Cancel Comparison
+                            </button>
+<button class="px-8 py-2.5 bg-primary text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary-dim transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">settings_backup_restore</span>
+                                Restore Version V2
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
