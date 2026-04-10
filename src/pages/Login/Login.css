@@ -585,6 +585,50 @@
   color: var(--color-on-surface-variant);
 }
 
+/* Demo Credentials Hint */
+.login__demo-hint {
+  background: rgba(19, 83, 216, 0.05);
+  border: 1px solid rgba(19, 83, 216, 0.15);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.login__demo-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1353d8;
+  margin-bottom: 12px;
+}
+
+.login__demo-title .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.login__demo-credentials {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.login__demo-item {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #586064;
+  display: flex;
+  gap: 8px;
+}
+
+.login__demo-role {
+  font-weight: 600;
+  color: #2b3437;
+  min-width: 60px;
+}
+
 /* Form */
 .login__form {
   display: flex;

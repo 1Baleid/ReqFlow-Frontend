@@ -233,6 +233,28 @@ function Login() {
             <p className="login__subtitle">Enter your credentials to access your workspace.</p>
           </div>
 
+          {/* Demo Credentials */}
+          <div className="login__demo-hint">
+            <div className="login__demo-title">
+              <span className="material-symbols-outlined">info</span>
+              Demo Credentials
+            </div>
+            <div className="login__demo-credentials">
+              <div className="login__demo-item">
+                <span className="login__demo-role">Client:</span>
+                <span>abdullah@kfupm.edu.sa / abdullah123</span>
+              </div>
+              <div className="login__demo-item">
+                <span className="login__demo-role">Manager:</span>
+                <span>khalid@kfupm.edu.sa / khalid123</span>
+              </div>
+              <div className="login__demo-item">
+                <span className="login__demo-role">Member:</span>
+                <span>omar@kfupm.edu.sa / omar123</span>
+              </div>
+            </div>
+          </div>
+
           {/* Form */}
           <form className="login__form" onSubmit={handleSubmit}>
             {/* Email Field */}

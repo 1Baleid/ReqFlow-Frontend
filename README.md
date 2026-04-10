@@ -75,17 +75,17 @@ ReqFlow-Frontend/
 
 Use these credentials to log in with different user roles:
 
-| Role | Email | Password | Dashboard |
-|------|-------|----------|-----------|
-| **Client** | `client@reqflow.io` | `client123` | Client Dashboard - Create and track requirements |
-| **Team Member** | `member@reqflow.io` | `member123` | Member Dashboard - Work on assigned requirements |
-| **Manager** | `manager@reqflow.io` | `manager123` | Manager Dashboard - Oversee team and approve/reject |
+| Role | Email | Password |
+|------|-------|----------|
+| **Client** | `abdullah@kfupm.edu.sa` | `abdullah123` |
+| **Manager** | `khalid@kfupm.edu.sa` | `khalid123` |
+| **Team Member** | `omar@kfupm.edu.sa` | `omar123` |
 
 ### Role Capabilities
 
 - **Client**: Create requirements, view status, respond to clarifications, track progress
-- **Team Member**: View assigned work, refine requirements, submit for review
 - **Manager**: Full access, approve/reject requirements, assign to team, manage workflow
+- **Team Member**: View assigned work, refine requirements, submit for review
 
 ## Features
 
