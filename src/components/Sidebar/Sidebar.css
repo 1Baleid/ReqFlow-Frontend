@@ -43,9 +43,9 @@
 
 /* Toggle Button - Desktop */
 .sidebar__toggle {
-  position: absolute;
+  position: fixed;
   top: 50%;
-  right: -18px;
+  left: 238px;
   transform: translateY(-50%);
   width: 36px;
   height: 36px;
@@ -57,8 +57,12 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 101;
+  z-index: 1000;
   transition: all 0.2s ease;
+}
+
+.sidebar--collapsed .sidebar__toggle {
+  left: 54px;
 }
 
 .sidebar__toggle:hover {
