@@ -35,7 +35,12 @@ function Sidebar({ role = 'client', isCollapsed, onToggle, isMobileOpen, onMobil
   const handleLogout = () => {
     localStorage.removeItem('userRole')
     localStorage.removeItem('userEmail')
-    navigate('/login')
+    window.dispatchEvent(new Event('userChanged'))
+    navigate('/login', { replace: true })
+    // Force a clean app bootstrap after logout to avoid stale in-memory UI state.
+    window.setTimeout(() => {
+      window.location.replace('/login')
+    }, 0)
   }
 
   const handleNavClick = () => {
