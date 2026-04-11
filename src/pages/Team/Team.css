@@ -565,6 +565,34 @@
   gap: 16px;
 }
 
+.team__invite-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.team__invite-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(171, 179, 183, 0.35);
+  background: #f8fafc;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #2b3437;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.team__invite-input:hover {
+  background: #ffffff;
+}
+
+.team__invite-input:focus {
+  border-color: rgba(19, 83, 216, 0.4);
+  box-shadow: 0 0 0 3px rgba(19, 83, 216, 0.1);
+}
+
 .team__modal-user {
   display: flex;
   align-items: center;

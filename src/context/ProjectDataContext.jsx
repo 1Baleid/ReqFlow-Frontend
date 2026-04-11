@@ -26,6 +26,7 @@ const WORKFLOW_STAGE_DEFAULTS = [
 
 const ALLOWED_ASSIGNMENT_ROLES = ['member']
 const ALLOWED_MANAGEABLE_ROLES = ['manager', 'member']
+const ALLOWED_INVITE_ROLES = ['member', 'manager']
 const ALLOWED_REQUIREMENT_STATUSES = ['draft', 'review', 'approved', 'rejected', 'locked']
 
 const ProjectDataContext = createContext(null)
@@ -299,6 +300,80 @@ export function ProjectDataProvider({ children }) {
             createActivityEntry({
               type: 'role_change',
               action: `${targetUser.name} role changed from ${targetUser.role} to ${role}`,
+              actorName
+            }),
+            ...previousState.activityLogs
+          ]
+        }
+      })
+
+      return result
+    },
+    [updateStoreState]
+  )
+
+  const addProjectUser = useCallback(
+    ({ name, email, title, role = 'member', actorName }) => {
+      let result = { ok: false, error: 'Unable to invite user.' }
+
+      updateStoreState((previousState) => {
+        const normalizedName = String(name || '').trim()
+        const normalizedEmail = String(email || '').trim().toLowerCase()
+        const normalizedTitle = String(title || '').trim()
+        const currentProjectId = localStorage.getItem('currentProjectId') || 'proj-1'
+
+        if (!normalizedName) {
+          result = { ok: false, error: 'Name is required.' }
+          return previousState
+        }
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailPattern.test(normalizedEmail)) {
+          result = { ok: false, error: 'A valid email address is required.' }
+          return previousState
+        }
+
+        const roleToAssign = ALLOWED_INVITE_ROLES.includes(role) ? role : 'member'
+
+        const duplicateUser = previousState.projectUsers.find((user) => {
+          if (user.email.toLowerCase() !== normalizedEmail) {
+            return false
+          }
+
+          if (!Array.isArray(user.managedProjectIds)) {
+            return true
+          }
+
+          return user.managedProjectIds.includes(currentProjectId)
+        })
+
+        if (duplicateUser) {
+          result = { ok: false, error: 'A user with this email already exists in the project.' }
+          return previousState
+        }
+
+        const invitedUser = {
+          id: createId('user'),
+          name: normalizedName,
+          title: normalizedTitle || (roleToAssign === 'manager' ? 'Project Manager' : 'Team Member'),
+          email: normalizedEmail,
+          role: roleToAssign,
+          lastActive: 'Invited just now',
+          isOnline: false,
+          avatar: null,
+          activeTasks: 0,
+          capacity: 0,
+          managedProjectIds: [currentProjectId]
+        }
+
+        result = { ok: true, user: invitedUser }
+        return {
+          ...previousState,
+          projectUsers: [...previousState.projectUsers, invitedUser],
+          activityLogs: [
+            createActivityEntry({
+              type: 'invite',
+              action: `${invitedUser.name} invited as ${roleToAssign}`,
               actorName
             }),
             ...previousState.activityLogs
@@ -830,6 +905,7 @@ export function ProjectDataProvider({ children }) {
       notifications: projectNotifications,
       managerNotifications,
       getRequirementById,
+      addProjectUser,
       updateProjectUserRole,
       setWorkflowStages,
       assignRequirement,
@@ -851,6 +927,7 @@ export function ProjectDataProvider({ children }) {
       projectNotifications,
       managerNotifications,
       getRequirementById,
+      addProjectUser,
       updateProjectUserRole,
       setWorkflowStages,
       assignRequirement,

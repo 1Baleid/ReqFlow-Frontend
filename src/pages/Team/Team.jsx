@@ -30,10 +30,17 @@ function Team() {
     currentUser,
     projectUsers,
     activityLogs,
+    addProjectUser,
     updateProjectUserRole
   } = useProjectData()
 
   const [searchQuery, setSearchQuery] = useState('')
+  const [showInviteModal, setShowInviteModal] = useState(false)
+  const [inviteName, setInviteName] = useState('')
+  const [inviteEmail, setInviteEmail] = useState('')
+  const [inviteTitle, setInviteTitle] = useState('')
+  const [inviteRole, setInviteRole] = useState('member')
+  const [inviteError, setInviteError] = useState('')
   const [showRoleModal, setShowRoleModal] = useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
   const [pendingRole, setPendingRole] = useState('member')
@@ -68,6 +75,39 @@ function Team() {
     setShowRoleConfirmation(false)
     setModalError('')
     setShowRoleModal(true)
+  }
+
+  const openInviteModal = () => {
+    setInviteName('')
+    setInviteEmail('')
+    setInviteTitle('')
+    setInviteRole('member')
+    setInviteError('')
+    setShowInviteModal(true)
+  }
+
+  const closeInviteModal = () => {
+    setShowInviteModal(false)
+    setInviteError('')
+  }
+
+  const handleInviteMember = () => {
+    const inviteResult = addProjectUser({
+      name: inviteName,
+      email: inviteEmail,
+      title: inviteTitle,
+      role: inviteRole,
+      actorName: currentUser.name
+    })
+
+    if (!inviteResult.ok) {
+      setInviteError(inviteResult.error || 'Unable to invite user.')
+      return
+    }
+
+    closeInviteModal()
+    setSuccessMessage(`${inviteResult.user.name} invited successfully.`)
+    window.setTimeout(() => setSuccessMessage(''), 3000)
   }
 
   const closeRoleModal = () => {
@@ -117,6 +157,9 @@ function Team() {
           </div>
           <div className="team__header-actions">
             <Button variant="secondary">Export List</Button>
+            <Button variant="primary" icon="person_add" iconPosition="left" onClick={openInviteModal}>
+              Invite New User
+            </Button>
           </div>
         </div>
 
@@ -320,6 +363,83 @@ function Team() {
                     Confirm Change
                   </Button>
                 )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showInviteModal && (
+          <div className="team__modal-overlay" onClick={closeInviteModal}>
+            <div className="team__modal" onClick={(event) => event.stopPropagation()}>
+              <div className="team__modal-header">
+                <h3 className="team__modal-title">Invite New User</h3>
+                <button className="team__modal-close" onClick={closeInviteModal}>
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+
+              <div className="team__modal-body">
+                <div className="team__invite-field">
+                  <label className="team__modal-label" htmlFor="invite-name">Full Name</label>
+                  <input
+                    id="invite-name"
+                    className="team__invite-input"
+                    type="text"
+                    placeholder="Enter full name"
+                    value={inviteName}
+                    onChange={(event) => setInviteName(event.target.value)}
+                  />
+                </div>
+
+                <div className="team__invite-field">
+                  <label className="team__modal-label" htmlFor="invite-email">Email</label>
+                  <input
+                    id="invite-email"
+                    className="team__invite-input"
+                    type="email"
+                    placeholder="name@kfupm.edu.sa"
+                    value={inviteEmail}
+                    onChange={(event) => setInviteEmail(event.target.value)}
+                  />
+                </div>
+
+                <div className="team__invite-field">
+                  <label className="team__modal-label" htmlFor="invite-title">Job Title (optional)</label>
+                  <input
+                    id="invite-title"
+                    className="team__invite-input"
+                    type="text"
+                    placeholder="e.g., QA Engineer"
+                    value={inviteTitle}
+                    onChange={(event) => setInviteTitle(event.target.value)}
+                  />
+                </div>
+
+                <div className="team__invite-field">
+                  <label className="team__modal-label" htmlFor="invite-role">Role</label>
+                  <select
+                    id="invite-role"
+                    className="team__invite-input"
+                    value={inviteRole}
+                    onChange={(event) => setInviteRole(event.target.value)}
+                  >
+                    <option value="member">Member</option>
+                    <option value="manager">Manager</option>
+                  </select>
+                </div>
+
+                {inviteError && <p className="team__modal-error">{inviteError}</p>}
+              </div>
+
+              <div className="team__modal-footer">
+                <Button variant="secondary" onClick={closeInviteModal}>Cancel</Button>
+                <Button
+                  variant="primary"
+                  onClick={handleInviteMember}
+                  disabled={!inviteName.trim() || !inviteEmail.trim()}
+                >
+                  Invite User
+                </Button>
               </div>
             </div>
           </div>
