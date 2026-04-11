@@ -219,6 +219,11 @@
   gap: 32px;
 }
 
+.manager-dash__main-content {
+  display: flex;
+  flex-direction: column;
+}
+
 @media (min-width: 1024px) {
   .manager-dash__content-grid {
     grid-template-columns: 2fr 1fr;
@@ -687,6 +692,11 @@
   color: #1d4ed8;
 }
 
+.manager-dash__badge--rejected {
+  background: rgba(159, 64, 61, 0.15);
+  color: #9f403d;
+}
+
 .manager-dash__owner {
   display: flex;
   align-items: center;
@@ -719,6 +729,11 @@
   font-size: 10px;
   font-weight: 500;
   color: #586064;
+}
+
+.manager-dash__timeline--overdue {
+  color: #9f403d;
+  font-weight: 700;
 }
 
 .manager-dash__actions {

@@ -1,139 +1,179 @@
-import { useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useMemo, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import MainLayout from '../../layouts/MainLayout'
 import Button from '../../components/Button'
-import { getCurrentUser, requirements } from '../../data/mockData'
+import { useProjectData } from '../../context/ProjectDataContext'
 import './RequirementDetail.css'
 
-// Extended mock data for the detail view
-const requirementDetails = {
+const EXTENDED_REQUIREMENT_DETAILS = {
   'REQ-042': {
-    originalDescription: 'The system needs a way to handle sudden spikes in traffic. It should automatically add more servers when load is high and remove them when load drops to save costs. This must work across all regions.',
-    refinedDescription: {
-      version: '2.4',
-      content: [
-        { type: 'text', value: 'The infrastructure ' },
-        { type: 'removed', value: 'needs a way to handle' },
-        { type: 'added', value: 'must implement an automated horizontal scaling mechanism to accommodate' },
-        { type: 'text', value: ' sudden spikes in ' },
-        { type: 'added', value: 'production' },
-        { type: 'text', value: ' traffic. ' },
-        { type: 'removed', value: 'It should automatically add more servers' },
-        { type: 'added', value: 'Scaling policies will trigger additional compute nodes' },
-        { type: 'text', value: ' when ' },
-        { type: 'removed', value: 'load is high' },
-        { type: 'added', value: 'CPU utilization exceeds 75% for 3 consecutive minutes' },
-        { type: 'text', value: ' and ' },
-        { type: 'removed', value: 'remove them' },
-        { type: 'added', value: 'terminate idle instances' },
-        { type: 'text', value: ' when load drops ' },
-        { type: 'added', value: 'below 30%' },
-        { type: 'text', value: ' to ' },
-        { type: 'removed', value: 'save costs' },
-        { type: 'added', value: 'optimize resource expenditure' },
-        { type: 'text', value: '. This ' },
-        { type: 'removed', value: 'must work across all regions' },
-        { type: 'added', value: 'deployment must maintain high-availability parity across all active AWS regions (us-east-1, eu-central-1)' },
-        { type: 'text', value: '.' }
-      ]
-    },
+    originalDescription:
+      'The system needs a way to handle sudden spikes in traffic. It should automatically add more servers when load is high and remove them when load drops to save costs.',
     acceptanceCriteria: [
-      'Auto-scaling group (ASG) responds within 60 seconds of a metric threshold breach.',
-      'Scale-in actions must respect the "Minimum Healthy Instances" setting of 3.',
-      'Metrics are aggregated via CloudWatch with a 1-minute resolution.',
-      'System remains operational if a single region scaling operation fails.'
+      'Auto-scaling policy activates within 60 seconds of threshold breach.',
+      'Scale-in respects a minimum healthy instance pool of 3 nodes.',
+      'Monitoring metrics are sampled every 1 minute.',
+      'The service remains available if one scaling action fails.'
     ],
     linkedRequirements: ['REQ-039', 'REQ-038'],
     discussion: [
       {
-        id: 'disc-1',
+        id: 'comment-1',
         author: 'Marcus Chen',
         role: 'Lead Architect',
-        avatar: null,
-        time: '2 hours ago',
-        message: 'Could you confirm if the 30% scale-in threshold is too aggressive? During testing, we noticed some "flapping" behavior where instances were being added and removed too frequently. Should we consider a cooldown period?'
+        timestampLabel: '2 hours ago',
+        message:
+          'Could we add a cooldown period to reduce scale flapping when traffic oscillates around thresholds?'
       }
-    ],
-    timeline: [
-      { id: 'tl-1', type: 'created', title: 'Requirement Created', date: 'Oct 12, 2023', author: 'Sarah J.', icon: 'add' },
-      { id: 'tl-2', type: 'refined', title: 'Refined Version v2.0', date: 'Oct 14, 2023', author: 'Marcus C.', icon: 'auto_fix_high' },
-      { id: 'tl-3', type: 'clarification', title: 'Clarification Requested', date: 'Oct 15, 2023', author: 'Client Team', icon: 'contact_support' },
-      { id: 'tl-4', type: 'current', title: 'Awaiting Review', date: 'Now', author: 'v2.4 iteration', icon: 'pending' }
-    ],
-    impact: {
-      complexity: 'High',
-      riskScore: 8.4
-    }
+    ]
   }
 }
 
-// Default detail for requirements without specific details
-const defaultDetail = {
-  originalDescription: 'No original description available.',
-  refinedDescription: null,
+const DEFAULT_REQUIREMENT_DETAIL = {
+  originalDescription: 'No extended description is available for this requirement yet.',
   acceptanceCriteria: [],
   linkedRequirements: [],
-  discussion: [],
-  timeline: [
-    { id: 'tl-1', type: 'created', title: 'Requirement Created', date: 'Recently', author: 'System', icon: 'add' }
-  ],
-  impact: {
-    complexity: 'Medium',
-    riskScore: 5.0
-  }
+  discussion: []
 }
 
-const STATUS_CONFIG = {
-  draft: { label: 'Draft', className: 'req-detail__status--draft' },
-  'under-review': { label: 'Under Review', className: 'req-detail__status--review' },
-  approved: { label: 'Approved', className: 'req-detail__status--approved' },
-  rejected: { label: 'Rejected', className: 'req-detail__status--rejected' },
-  locked: { label: 'Locked', className: 'req-detail__status--locked' }
+const STATUS_STYLE_CONFIG = {
+  draft: { className: 'req-detail__status--draft' },
+  review: { className: 'req-detail__status--review' },
+  approved: { className: 'req-detail__status--approved' },
+  rejected: { className: 'req-detail__status--rejected' },
+  locked: { className: 'req-detail__status--locked' }
+}
+
+function formatDateForDisplay(dateOnlyString) {
+  if (!dateOnlyString) {
+    return 'Not set'
+  }
+
+  const parsedDate = new Date(dateOnlyString)
+  if (Number.isNaN(parsedDate.getTime())) {
+    return 'Invalid date'
+  }
+
+  return parsedDate.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  })
 }
 
 function RequirementDetail() {
-  const currentUser = getCurrentUser()
   const { id } = useParams()
   const navigate = useNavigate()
+  const {
+    currentUser,
+    activeRequirements,
+    projectUsers,
+    workflowStageMap,
+    getRequirementById,
+    assignRequirement,
+    setRequirementDeadline,
+    setRequirementStatus
+  } = useProjectData()
 
-  // Find the requirement
-  const requirement = requirements.find(r => r.id === id) || {
-    id: id,
-    title: 'Unknown Requirement',
-    status: 'draft',
-    version: '1.0'
-  }
+  const requirement = getRequirementById(id)
+  const detailSnapshot = EXTENDED_REQUIREMENT_DETAILS[id] || DEFAULT_REQUIREMENT_DETAIL
 
-  // Get extended details
-  const details = requirementDetails[id] || defaultDetail
-
-  const normalizedStatus = requirement.status?.toLowerCase().replace(/\s+/g, '-') || 'draft'
-  const statusConfig = STATUS_CONFIG[normalizedStatus] || STATUS_CONFIG.draft
-
-  // State for interactive features
   const [commentText, setCommentText] = useState('')
-  const [comments, setComments] = useState(details.discussion)
-  const [criteriaList, setCriteriaList] = useState(details.acceptanceCriteria)
+  const [comments, setComments] = useState(detailSnapshot.discussion)
+  const [criteriaList, setCriteriaList] = useState(detailSnapshot.acceptanceCriteria)
   const [newCriteria, setNewCriteria] = useState('')
   const [showAddCriteria, setShowAddCriteria] = useState(false)
-  const [linkedReqs, setLinkedReqs] = useState(details.linkedRequirements)
+  const [linkedRequirementIds, setLinkedRequirementIds] = useState(detailSnapshot.linkedRequirements)
   const [showLinkModal, setShowLinkModal] = useState(false)
-  const [linkSearch, setLinkSearch] = useState('')
-  const [showDeadlineModal, setShowDeadlineModal] = useState(false)
-  const [deadline, setDeadline] = useState('')
-  const [savedDeadline, setSavedDeadline] = useState('')
-  const [reqStatus, setReqStatus] = useState(normalizedStatus)
-  const [showLockConfirm, setShowLockConfirm] = useState(false)
-  const [showRejectModal, setShowRejectModal] = useState(false)
-  const [rejectReason, setRejectReason] = useState('')
-  const [showApproveConfirm, setShowApproveConfirm] = useState(false)
+  const [linkSearchQuery, setLinkSearchQuery] = useState('')
 
-  // Available requirements for linking
-  const availableForLink = requirements
-    .filter(r => r.id !== id && !linkedReqs.includes(r.id))
-    .filter(r => linkSearch === '' || r.id.toLowerCase().includes(linkSearch.toLowerCase()) || r.title.toLowerCase().includes(linkSearch.toLowerCase()))
+  const [showAssignModal, setShowAssignModal] = useState(false)
+  const [selectedAssigneeId, setSelectedAssigneeId] = useState('')
+  const [showDeadlineModal, setShowDeadlineModal] = useState(false)
+  const [deadlineInput, setDeadlineInput] = useState(requirement?.deadline || '')
+  const [showApproveConfirm, setShowApproveConfirm] = useState(false)
+  const [showRejectModal, setShowRejectModal] = useState(false)
+  const [showLockConfirm, setShowLockConfirm] = useState(false)
+  const [rejectReason, setRejectReason] = useState('')
+  const [actionError, setActionError] = useState('')
+  const [feedbackMessage, setFeedbackMessage] = useState('')
+
+  const assignee = useMemo(
+    () => projectUsers.find((user) => user.id === requirement?.assigneeId) || null,
+    [projectUsers, requirement?.assigneeId]
+  )
+
+  const availableTeamMembers = useMemo(
+    () => projectUsers.filter((user) => user.role === 'member'),
+    [projectUsers]
+  )
+
+  const availableLinkedRequirements = useMemo(() => {
+    return activeRequirements.filter((candidateRequirement) => {
+      if (candidateRequirement.id === id) {
+        return false
+      }
+
+      if (linkedRequirementIds.includes(candidateRequirement.id)) {
+        return false
+      }
+
+      if (!linkSearchQuery.trim()) {
+        return true
+      }
+
+      const normalizedQuery = linkSearchQuery.toLowerCase()
+      return (
+        candidateRequirement.id.toLowerCase().includes(normalizedQuery) ||
+        candidateRequirement.title.toLowerCase().includes(normalizedQuery)
+      )
+    })
+  }, [activeRequirements, id, linkedRequirementIds, linkSearchQuery])
+
+  if (!requirement) {
+    return (
+      <MainLayout user={currentUser} role={currentUser.role}>
+        <div className="req-detail">
+          <div className="req-detail__card">
+            <h2 className="req-detail__title">Requirement Not Found</h2>
+            <p className="req-detail__description">
+              This requirement may have been archived after a duplicate merge.
+            </p>
+            <div className="req-detail__header-actions">
+              <Button variant="secondary" onClick={() => navigate('/manager/requirements')}>
+                Back to Requirements
+              </Button>
+            </div>
+          </div>
+        </div>
+      </MainLayout>
+    )
+  }
+
+  const isManager = currentUser.role === 'manager'
+  const isLocked = requirement.status === 'locked'
+  const canEditRequirement = !isLocked && ['draft', 'review', 'rejected'].includes(requirement.status)
+  const canApproveOrReject = isManager && !isLocked && requirement.status === 'review'
+  const canAssign = isManager && !isLocked
+  const canSetDeadline = isManager && !isLocked
+
+  const statusDisplayName =
+    requirement.status === 'locked'
+      ? 'Locked'
+      : workflowStageMap[requirement.status] || requirement.status
+
+  const statusStyle = STATUS_STYLE_CONFIG[requirement.status] || STATUS_STYLE_CONFIG.draft
+
+  const showFeedback = (message) => {
+    setFeedbackMessage(message)
+    window.setTimeout(() => setFeedbackMessage(''), 3000)
+  }
 
   const handleBack = () => {
+    if (currentUser.role === 'manager') {
+      navigate('/manager/requirements')
+      return
+    }
     navigate('/requirements')
   }
 
@@ -141,83 +181,163 @@ function RequirementDetail() {
     navigate(`/requirements/${id}/edit`)
   }
 
-  const handlePostComment = () => {
-    if (!commentText.trim()) return
+  const handleAddComment = () => {
+    if (!commentText.trim() || isLocked) {
+      return
+    }
+
     const newComment = {
-      id: `disc-${Date.now()}`,
+      id: `comment-${Date.now()}`,
       author: currentUser.name,
-      role: currentUser.role === 'client' ? 'Client' : currentUser.role === 'manager' ? 'Manager' : 'Team Member',
-      avatar: null,
-      time: 'Just now',
+      role: currentUser.role,
+      timestampLabel: 'Just now',
       message: commentText.trim()
     }
-    setComments(prev => [...prev, newComment])
+
+    setComments((previousComments) => [...previousComments, newComment])
     setCommentText('')
   }
 
   const handleAddCriteria = () => {
-    if (!newCriteria.trim()) return
-    setCriteriaList(prev => [...prev, newCriteria.trim()])
+    if (!newCriteria.trim() || isLocked) {
+      return
+    }
+
+    setCriteriaList((previousCriteria) => [...previousCriteria, newCriteria.trim()])
     setNewCriteria('')
     setShowAddCriteria(false)
   }
 
-  const handleLinkRequirement = (reqId) => {
-    setLinkedReqs(prev => [...prev, reqId])
+  const handleLinkRequirement = (requirementId) => {
+    if (isLocked) {
+      return
+    }
+    setLinkedRequirementIds((previousIds) => [...previousIds, requirementId])
     setShowLinkModal(false)
-    setLinkSearch('')
+    setLinkSearchQuery('')
   }
 
-  const handleSetDeadline = () => {
-    if (!deadline) return
-    setSavedDeadline(deadline)
+  const openAssignModal = () => {
+    setActionError('')
+    setSelectedAssigneeId(requirement.assigneeId || availableTeamMembers[0]?.id || '')
+    setShowAssignModal(true)
+  }
+
+  const handleAssignConfirm = () => {
+    const assignmentResult = assignRequirement({
+      requirementId: requirement.id,
+      memberId: selectedAssigneeId,
+      actorName: currentUser.name
+    })
+
+    if (!assignmentResult.ok) {
+      setActionError(assignmentResult.error || 'Unable to assign requirement.')
+      return
+    }
+
+    setShowAssignModal(false)
+    setActionError('')
+    showFeedback(requirement.assigneeId ? 'Requirement reassigned successfully.' : 'Requirement assigned successfully.')
+  }
+
+  const openDeadlineModal = () => {
+    setActionError('')
+    setDeadlineInput(requirement.deadline || '')
+    setShowDeadlineModal(true)
+  }
+
+  const handleDeadlineConfirm = () => {
+    const deadlineResult = setRequirementDeadline({
+      requirementId: requirement.id,
+      deadline: deadlineInput,
+      actorName: currentUser.name
+    })
+
+    if (!deadlineResult.ok) {
+      setActionError(deadlineResult.error || 'Unable to save deadline.')
+      return
+    }
+
     setShowDeadlineModal(false)
-  }
-
-  const handleLock = () => {
-    setReqStatus('locked')
-    setShowLockConfirm(false)
+    setActionError('')
+    showFeedback('Deadline updated.')
   }
 
   const handleApprove = () => {
-    setReqStatus('approved')
+    const approveResult = setRequirementStatus({
+      requirementId: requirement.id,
+      status: 'approved',
+      actorName: currentUser.name
+    })
+
+    if (!approveResult.ok) {
+      setActionError(approveResult.error || 'Unable to approve requirement.')
+      return
+    }
+
     setShowApproveConfirm(false)
+    setActionError('')
+    showFeedback('Requirement approved.')
   }
 
   const handleReject = () => {
-    if (!rejectReason.trim()) return
-    setReqStatus('rejected')
+    if (!rejectReason.trim()) {
+      setActionError('Rejection reason is required.')
+      return
+    }
+
+    const rejectResult = setRequirementStatus({
+      requirementId: requirement.id,
+      status: 'rejected',
+      actorName: currentUser.name,
+      reason: rejectReason
+    })
+
+    if (!rejectResult.ok) {
+      setActionError(rejectResult.error || 'Unable to reject requirement.')
+      return
+    }
+
     setShowRejectModal(false)
     setRejectReason('')
+    setActionError('')
+    showFeedback('Requirement rejected.')
   }
 
-  const activeStatusConfig = STATUS_CONFIG[reqStatus] || statusConfig
-
-  const renderDiffContent = () => {
-    if (!details.refinedDescription) return null
-
-    return details.refinedDescription.content.map((part, index) => {
-      if (part.type === 'added') {
-        return <span key={index} className="req-detail__diff-added">{part.value}</span>
-      }
-      if (part.type === 'removed') {
-        return <span key={index} className="req-detail__diff-removed">{part.value}</span>
-      }
-      return <span key={index}>{part.value}</span>
+  const handleLock = () => {
+    const lockResult = setRequirementStatus({
+      requirementId: requirement.id,
+      status: 'locked',
+      actorName: currentUser.name
     })
+
+    if (!lockResult.ok) {
+      setActionError(lockResult.error || 'Unable to lock requirement.')
+      return
+    }
+
+    setShowLockConfirm(false)
+    setActionError('')
+    showFeedback('Requirement locked. Editing disabled for all roles.')
   }
 
   return (
     <MainLayout user={currentUser} role={currentUser.role}>
       <div className="req-detail">
-        {/* Header */}
+        {feedbackMessage && (
+          <div className="req-detail__feedback">
+            <span className="material-symbols-outlined">check_circle</span>
+            <span>{feedbackMessage}</span>
+          </div>
+        )}
+
         <div className="req-detail__header">
           <div className="req-detail__header-left">
             <div className="req-detail__header-meta">
               <span className="req-detail__id">{requirement.id}</span>
-              <span className={`req-detail__status ${activeStatusConfig.className}`}>
+              <span className={`req-detail__status ${statusStyle.className}`}>
                 <span className="req-detail__status-dot"></span>
-                {activeStatusConfig.label}
+                {statusDisplayName}
               </span>
             </div>
             <h1 className="req-detail__title">{requirement.title}</h1>
@@ -226,13 +346,24 @@ function RequirementDetail() {
             <Button variant="secondary" icon="arrow_back" iconPosition="left" onClick={handleBack}>
               Back
             </Button>
-            {(currentUser.role === 'manager') && reqStatus !== 'locked' && (
-              <button className="req-detail__deadline-btn" onClick={() => setShowDeadlineModal(true)}>
-                <span className="material-symbols-outlined">calendar_month</span>
-                {savedDeadline ? `Due: ${new Date(savedDeadline).toLocaleDateString()}` : 'Set Deadline'}
+
+            {canAssign && (
+              <button className="req-detail__assign-btn" onClick={openAssignModal}>
+                <span className="material-symbols-outlined">
+                  {assignee ? 'sync_alt' : 'person_add'}
+                </span>
+                {assignee ? 'Reassign' : 'Assign'}
               </button>
             )}
-            {reqStatus === 'under-review' && (
+
+            {canSetDeadline && (
+              <button className="req-detail__deadline-btn" onClick={openDeadlineModal}>
+                <span className="material-symbols-outlined">calendar_month</span>
+                {requirement.deadline ? `Due: ${formatDateForDisplay(requirement.deadline)}` : 'Set Deadline'}
+              </button>
+            )}
+
+            {canApproveOrReject && (
               <>
                 <button className="req-detail__reject-btn" onClick={() => setShowRejectModal(true)}>
                   <span className="material-symbols-outlined">close</span>
@@ -244,13 +375,15 @@ function RequirementDetail() {
                 </button>
               </>
             )}
-            {reqStatus === 'approved' && currentUser.role === 'manager' && (
+
+            {isManager && !isLocked && requirement.status === 'approved' && (
               <button className="req-detail__lock-btn" onClick={() => setShowLockConfirm(true)}>
                 <span className="material-symbols-outlined">lock</span>
                 Lock Requirement
               </button>
             )}
-            {(reqStatus === 'draft' || reqStatus === 'under-review' || reqStatus === 'rejected') && (
+
+            {canEditRequirement && (
               <Button variant="primary" icon="edit" iconPosition="left" onClick={handleEdit}>
                 Edit
               </Button>
@@ -258,64 +391,40 @@ function RequirementDetail() {
           </div>
         </div>
 
-        {/* Bento Grid */}
         <div className="req-detail__grid">
-          {/* Main Content */}
           <div className="req-detail__main">
-            {/* Original Description */}
             <section className="req-detail__card">
               <div className="req-detail__card-header">
                 <h3 className="req-detail__card-title">Original Description</h3>
                 <span className="material-symbols-outlined req-detail__card-icon">history_edu</span>
               </div>
-              <p className="req-detail__description">
-                {details.originalDescription}
-              </p>
+              <p className="req-detail__description">{detailSnapshot.originalDescription}</p>
             </section>
 
-            {/* Refined Version */}
-            {details.refinedDescription && (
-              <section className="req-detail__card req-detail__card--refined">
-                <div className="req-detail__version-badge">
-                  Current Iteration (v{details.refinedDescription.version})
-                </div>
-                <div className="req-detail__card-header">
-                  <h3 className="req-detail__card-title">Refined Version</h3>
-                  <span className="material-symbols-outlined req-detail__card-icon req-detail__card-icon--primary">auto_fix_high</span>
-                </div>
-                <div className="req-detail__refined-content">
-                  <p className="req-detail__refined-text">
-                    {renderDiffContent()}
-                  </p>
-                </div>
-              </section>
-            )}
-
-            {/* Acceptance Criteria */}
             <section className="req-detail__card">
               <div className="req-detail__card-header">
                 <h3 className="req-detail__card-title">Acceptance Criteria</h3>
-                <div className="req-detail__card-header-right">
-                  {reqStatus !== 'locked' && (
-                    <button className="req-detail__add-criteria-btn" onClick={() => setShowAddCriteria(true)}>
-                      <span className="material-symbols-outlined">add</span>
-                      Add Criteria
-                    </button>
-                  )}
-                  <span className="material-symbols-outlined req-detail__card-icon">rule</span>
-                </div>
+                {!isLocked && (
+                  <button className="req-detail__add-criteria-btn" onClick={() => setShowAddCriteria(true)}>
+                    <span className="material-symbols-outlined">add</span>
+                    Add Criteria
+                  </button>
+                )}
               </div>
+
               <ul className="req-detail__criteria-list">
                 {criteriaList.map((criteria, index) => (
-                  <li key={index} className="req-detail__criteria-item">
+                  <li key={`${criteria}-${index}`} className="req-detail__criteria-item">
                     <span className="material-symbols-outlined req-detail__criteria-icon">task_alt</span>
                     <span>{criteria}</span>
                   </li>
                 ))}
               </ul>
+
               {criteriaList.length === 0 && (
                 <p className="req-detail__empty-text">No acceptance criteria defined yet.</p>
               )}
+
               {showAddCriteria && (
                 <div className="req-detail__add-criteria-form">
                   <input
@@ -323,23 +432,32 @@ function RequirementDetail() {
                     className="req-detail__criteria-input"
                     placeholder="Enter acceptance criteria..."
                     value={newCriteria}
-                    onChange={(e) => setNewCriteria(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleAddCriteria()}
+                    onChange={(event) => setNewCriteria(event.target.value)}
                   />
                   <div className="req-detail__criteria-form-actions">
-                    <button className="req-detail__criteria-cancel" onClick={() => { setShowAddCriteria(false); setNewCriteria('') }}>Cancel</button>
-                    <button className="req-detail__criteria-save" onClick={handleAddCriteria}>Add</button>
+                    <button
+                      className="req-detail__criteria-cancel"
+                      onClick={() => {
+                        setShowAddCriteria(false)
+                        setNewCriteria('')
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button className="req-detail__criteria-save" onClick={handleAddCriteria}>
+                      Add
+                    </button>
                   </div>
                 </div>
               )}
             </section>
 
-            {/* Discussion */}
             <section className="req-detail__card">
               <div className="req-detail__card-header">
                 <h3 className="req-detail__card-title">Discussion & Clarification</h3>
                 <span className="material-symbols-outlined req-detail__card-icon">forum</span>
               </div>
+
               <div className="req-detail__discussion">
                 {comments.map((comment) => (
                   <div key={comment.id} className="req-detail__comment">
@@ -352,35 +470,32 @@ function RequirementDetail() {
                           {comment.author}
                           <span className="req-detail__comment-role">{comment.role}</span>
                         </span>
-                        <span className="req-detail__comment-time">{comment.time}</span>
+                        <span className="req-detail__comment-time">{comment.timestampLabel}</span>
                       </div>
                       <p className="req-detail__comment-text">{comment.message}</p>
                     </div>
                   </div>
                 ))}
-                {comments.length === 0 && (
-                  <p className="req-detail__empty-text">No comments yet. Start the discussion below.</p>
-                )}
 
-                {/* Reply Field */}
                 <div className="req-detail__reply">
                   <div className="req-detail__reply-avatar">
-                    {currentUser.name.split(' ').map(n => n[0]).join('')}
+                    {currentUser.name.split(' ').map((name) => name[0]).join('')}
                   </div>
                   <div className="req-detail__reply-input-wrapper">
                     <textarea
                       className="req-detail__reply-input"
-                      placeholder="Add a comment or request clarification..."
+                      placeholder={isLocked ? 'Requirement is locked. Discussion is read-only.' : 'Add a comment or request clarification...'}
                       rows="3"
                       value={commentText}
-                      onChange={(e) => setCommentText(e.target.value)}
+                      onChange={(event) => setCommentText(event.target.value)}
+                      disabled={isLocked}
                     />
                     <div className="req-detail__reply-actions">
-                      <button className="req-detail__clarify-btn" onClick={() => { setCommentText(prev => prev ? prev : '[Clarification Request] '); }}>
-                        <span className="material-symbols-outlined">contact_support</span>
-                        Request Clarification
-                      </button>
-                      <button className="req-detail__reply-btn" onClick={handlePostComment} disabled={!commentText.trim()}>
+                      <button
+                        className="req-detail__reply-btn"
+                        onClick={handleAddComment}
+                        disabled={isLocked || !commentText.trim()}
+                      >
                         Send Reply
                       </button>
                     </div>
@@ -390,135 +505,108 @@ function RequirementDetail() {
             </section>
           </div>
 
-          {/* Sidebar */}
           <aside className="req-detail__sidebar">
-            {/* Linked Requirements */}
+            <section className="req-detail__sidebar-card">
+              <h3 className="req-detail__sidebar-title">Assignment</h3>
+              <p className="req-detail__assignment-text">
+                Current Assignee:{' '}
+                <strong>{assignee ? assignee.name : 'Unassigned'}</strong>
+              </p>
+              <p className="req-detail__assignment-text">
+                Deadline: <strong>{formatDateForDisplay(requirement.deadline)}</strong>
+              </p>
+            </section>
+
             <section className="req-detail__sidebar-card">
               <h3 className="req-detail__sidebar-title">Linked Requirements</h3>
               <div className="req-detail__links">
-                {linkedReqs.map((linkId) => (
-                  <a
-                    key={linkId}
-                    href={`/requirements/${linkId}`}
+                {linkedRequirementIds.map((linkedRequirementId) => (
+                  <button
+                    key={linkedRequirementId}
                     className="req-detail__link-tag"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      navigate(`/requirements/${linkId}`)
-                    }}
+                    onClick={() => navigate(`/requirements/${linkedRequirementId}`)}
                   >
                     <span className="material-symbols-outlined">link</span>
-                    {linkId}
-                  </a>
+                    {linkedRequirementId}
+                  </button>
                 ))}
-                {linkedReqs.length === 0 && <span className="req-detail__empty-text">No linked requirements</span>}
-                {reqStatus !== 'locked' && (
-                  <button className="req-detail__link-add" onClick={() => setShowLinkModal(true)}>+ Link</button>
+                {linkedRequirementIds.length === 0 && (
+                  <span className="req-detail__empty-text">No linked requirements</span>
+                )}
+                {!isLocked && (
+                  <button className="req-detail__link-add" onClick={() => setShowLinkModal(true)}>
+                    + Link
+                  </button>
                 )}
               </div>
             </section>
 
-            {/* Activity Timeline */}
             <section className="req-detail__sidebar-card req-detail__sidebar-card--white">
-              <div className="req-detail__sidebar-header">
-                <h3 className="req-detail__sidebar-title">Activity History</h3>
-                <button
-                  className="req-detail__history-link"
-                  onClick={() => navigate(`/requirements/${id}/versions`)}
-                >
-                  <span className="material-symbols-outlined">history</span>
-                  View All Versions
-                </button>
-              </div>
+              <h3 className="req-detail__sidebar-title">Requirement History</h3>
               <div className="req-detail__timeline">
-                {details.timeline.map((item, index) => (
-                  <div
-                    key={item.id}
-                    className={`req-detail__timeline-item ${item.type === 'current' ? 'req-detail__timeline-item--current' : ''}`}
-                  >
-                    <div className={`req-detail__timeline-icon req-detail__timeline-icon--${item.type}`}>
-                      <span className="material-symbols-outlined">{item.icon}</span>
+                {requirement.history.slice(-5).reverse().map((historyItem) => (
+                  <div key={historyItem.id} className="req-detail__timeline-item">
+                    <div className="req-detail__timeline-icon req-detail__timeline-icon--created">
+                      <span className="material-symbols-outlined">history</span>
                     </div>
                     <div className="req-detail__timeline-content">
-                      <p className={`req-detail__timeline-title ${item.type === 'current' ? 'req-detail__timeline-title--primary' : ''}`}>
-                        {item.title}
-                      </p>
+                      <p className="req-detail__timeline-title">{historyItem.description}</p>
                       <p className="req-detail__timeline-meta">
-                        {item.date} • by {item.author}
+                        {formatDateForDisplay(historyItem.timestamp)} • by {historyItem.actorName}
                       </p>
                     </div>
                   </div>
                 ))}
               </div>
             </section>
-
-            {/* Impact Assessment */}
-            <section className="req-detail__sidebar-card req-detail__sidebar-card--gradient">
-              <div className="req-detail__impact-header">
-                <span className="material-symbols-outlined">analytics</span>
-                <h4 className="req-detail__impact-title">Impact Assessment</h4>
-              </div>
-              <div className="req-detail__impact-content">
-                <div className="req-detail__impact-row">
-                  <span className="req-detail__impact-label">Complexity</span>
-                  <span className={`req-detail__impact-value req-detail__impact-value--${details.impact.complexity.toLowerCase()}`}>
-                    {details.impact.complexity}
-                  </span>
-                </div>
-                <div className="req-detail__impact-row">
-                  <span className="req-detail__impact-label">Risk Score</span>
-                  <span className="req-detail__impact-value">{details.impact.riskScore} / 10</span>
-                </div>
-                <div className="req-detail__impact-bar">
-                  <div
-                    className="req-detail__impact-bar-fill"
-                    style={{ width: `${details.impact.riskScore * 10}%` }}
-                  />
-                </div>
-              </div>
-            </section>
           </aside>
         </div>
 
-        {/* Link Requirements Modal */}
-        {showLinkModal && (
-          <div className="req-detail__modal-overlay" onClick={() => setShowLinkModal(false)}>
-            <div className="req-detail__modal" onClick={(e) => e.stopPropagation()}>
+        {showAssignModal && (
+          <div className="req-detail__modal-overlay" onClick={() => setShowAssignModal(false)}>
+            <div className="req-detail__modal req-detail__modal--sm" onClick={(event) => event.stopPropagation()}>
               <div className="req-detail__modal-header">
-                <h3>Link Requirement</h3>
-                <button className="req-detail__modal-close" onClick={() => setShowLinkModal(false)}>
+                <h3>{assignee ? 'Reassign Requirement' : 'Assign Requirement'}</h3>
+                <button className="req-detail__modal-close" onClick={() => setShowAssignModal(false)}>
                   <span className="material-symbols-outlined">close</span>
                 </button>
               </div>
-              <input
-                type="text"
-                className="req-detail__modal-search"
-                placeholder="Search requirements by ID or title..."
-                value={linkSearch}
-                onChange={(e) => setLinkSearch(e.target.value)}
-              />
-              <div className="req-detail__modal-list">
-                {availableForLink.map((req) => (
-                  <button
-                    key={req.id}
-                    className="req-detail__modal-item"
-                    onClick={() => handleLinkRequirement(req.id)}
-                  >
-                    <span className="req-detail__modal-item-id">{req.id}</span>
-                    <span className="req-detail__modal-item-title">{req.title}</span>
-                  </button>
-                ))}
-                {availableForLink.length === 0 && (
-                  <p className="req-detail__modal-empty">No requirements available to link.</p>
-                )}
+              <div className="req-detail__modal-body">
+                <label className="req-detail__modal-label">Select Team Member</label>
+                <select
+                  className="req-detail__assignment-select"
+                  value={selectedAssigneeId}
+                  onChange={(event) => setSelectedAssigneeId(event.target.value)}
+                >
+                  <option value="">Choose a team member...</option>
+                  {availableTeamMembers.map((member) => (
+                    <option key={member.id} value={member.id}>
+                      {member.name}
+                    </option>
+                  ))}
+                </select>
+                <p className="req-detail__modal-helper">
+                  Only users with the Team Member role are available for assignment.
+                </p>
+                {actionError && <p className="req-detail__modal-error">{actionError}</p>}
+              </div>
+              <div className="req-detail__modal-footer">
+                <button className="req-detail__modal-cancel" onClick={() => setShowAssignModal(false)}>Cancel</button>
+                <button
+                  className="req-detail__modal-confirm"
+                  onClick={handleAssignConfirm}
+                  disabled={!selectedAssigneeId}
+                >
+                  Confirm Assignment
+                </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Set Deadline Modal */}
         {showDeadlineModal && (
           <div className="req-detail__modal-overlay" onClick={() => setShowDeadlineModal(false)}>
-            <div className="req-detail__modal req-detail__modal--sm" onClick={(e) => e.stopPropagation()}>
+            <div className="req-detail__modal req-detail__modal--sm" onClick={(event) => event.stopPropagation()}>
               <div className="req-detail__modal-header">
                 <h3>Set Deadline</h3>
                 <button className="req-detail__modal-close" onClick={() => setShowDeadlineModal(false)}>
@@ -530,47 +618,24 @@ function RequirementDetail() {
                 <input
                   type="date"
                   className="req-detail__date-input"
-                  value={deadline}
-                  onChange={(e) => setDeadline(e.target.value)}
-                  min={new Date().toISOString().split('T')[0]}
+                  value={deadlineInput}
+                  onChange={(event) => setDeadlineInput(event.target.value)}
                 />
+                {actionError && <p className="req-detail__modal-error">{actionError}</p>}
               </div>
               <div className="req-detail__modal-footer">
                 <button className="req-detail__modal-cancel" onClick={() => setShowDeadlineModal(false)}>Cancel</button>
-                <button className="req-detail__modal-confirm" onClick={handleSetDeadline} disabled={!deadline}>Set Deadline</button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Lock Confirmation Modal */}
-        {showLockConfirm && (
-          <div className="req-detail__modal-overlay" onClick={() => setShowLockConfirm(false)}>
-            <div className="req-detail__modal req-detail__modal--sm" onClick={(e) => e.stopPropagation()}>
-              <div className="req-detail__modal-header">
-                <h3>Lock Requirement</h3>
-                <button className="req-detail__modal-close" onClick={() => setShowLockConfirm(false)}>
-                  <span className="material-symbols-outlined">close</span>
+                <button className="req-detail__modal-confirm" onClick={handleDeadlineConfirm} disabled={!deadlineInput}>
+                  Confirm Deadline
                 </button>
               </div>
-              <div className="req-detail__modal-body">
-                <div className="req-detail__modal-icon-wrapper">
-                  <span className="material-symbols-outlined">lock</span>
-                </div>
-                <p className="req-detail__modal-text">Are you sure you want to lock <strong>{requirement.id}</strong>? This will disable editing for all roles.</p>
-              </div>
-              <div className="req-detail__modal-footer">
-                <button className="req-detail__modal-cancel" onClick={() => setShowLockConfirm(false)}>Cancel</button>
-                <button className="req-detail__modal-confirm req-detail__modal-confirm--lock" onClick={handleLock}>Lock Requirement</button>
-              </div>
             </div>
           </div>
         )}
 
-        {/* Approve Confirmation Modal */}
         {showApproveConfirm && (
           <div className="req-detail__modal-overlay" onClick={() => setShowApproveConfirm(false)}>
-            <div className="req-detail__modal req-detail__modal--sm" onClick={(e) => e.stopPropagation()}>
+            <div className="req-detail__modal req-detail__modal--sm" onClick={(event) => event.stopPropagation()}>
               <div className="req-detail__modal-header">
                 <h3>Approve Requirement</h3>
                 <button className="req-detail__modal-close" onClick={() => setShowApproveConfirm(false)}>
@@ -578,20 +643,22 @@ function RequirementDetail() {
                 </button>
               </div>
               <div className="req-detail__modal-body">
-                <p className="req-detail__modal-text">Are you sure you want to approve <strong>{requirement.id}</strong>? The status will change to Approved.</p>
+                <p className="req-detail__modal-text">
+                  Confirm approving <strong>{requirement.id}</strong>.
+                </p>
+                {actionError && <p className="req-detail__modal-error">{actionError}</p>}
               </div>
               <div className="req-detail__modal-footer">
                 <button className="req-detail__modal-cancel" onClick={() => setShowApproveConfirm(false)}>Cancel</button>
-                <button className="req-detail__modal-confirm" onClick={handleApprove}>Approve</button>
+                <button className="req-detail__modal-confirm" onClick={handleApprove}>Confirm Approval</button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Reject Modal */}
         {showRejectModal && (
           <div className="req-detail__modal-overlay" onClick={() => setShowRejectModal(false)}>
-            <div className="req-detail__modal req-detail__modal--sm" onClick={(e) => e.stopPropagation()}>
+            <div className="req-detail__modal req-detail__modal--sm" onClick={(event) => event.stopPropagation()}>
               <div className="req-detail__modal-header">
                 <h3>Reject Requirement</h3>
                 <button className="req-detail__modal-close" onClick={() => setShowRejectModal(false)}>
@@ -599,28 +666,83 @@ function RequirementDetail() {
                 </button>
               </div>
               <div className="req-detail__modal-body">
-                <label className="req-detail__modal-label">Justification (required)</label>
+                <label className="req-detail__modal-label">Rejection reason</label>
                 <textarea
                   className="req-detail__modal-textarea"
-                  placeholder="Explain why this requirement is being rejected..."
                   rows="4"
                   value={rejectReason}
-                  onChange={(e) => setRejectReason(e.target.value)}
+                  onChange={(event) => setRejectReason(event.target.value)}
+                  placeholder="Explain why this requirement is rejected..."
                 />
+                {actionError && <p className="req-detail__modal-error">{actionError}</p>}
               </div>
               <div className="req-detail__modal-footer">
                 <button className="req-detail__modal-cancel" onClick={() => setShowRejectModal(false)}>Cancel</button>
-                <button className="req-detail__modal-confirm req-detail__modal-confirm--reject" onClick={handleReject} disabled={!rejectReason.trim()}>Reject</button>
+                <button className="req-detail__modal-confirm req-detail__modal-confirm--reject" onClick={handleReject}>
+                  Confirm Rejection
+                </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Deadline Badge */}
-        {savedDeadline && (
-          <div className="req-detail__deadline-badge">
-            <span className="material-symbols-outlined">schedule</span>
-            Deadline: {new Date(savedDeadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+        {showLockConfirm && (
+          <div className="req-detail__modal-overlay" onClick={() => setShowLockConfirm(false)}>
+            <div className="req-detail__modal req-detail__modal--sm" onClick={(event) => event.stopPropagation()}>
+              <div className="req-detail__modal-header">
+                <h3>Lock Requirement</h3>
+                <button className="req-detail__modal-close" onClick={() => setShowLockConfirm(false)}>
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+              <div className="req-detail__modal-body">
+                <p className="req-detail__modal-text">
+                  Confirm locking <strong>{requirement.id}</strong>. Editing will be disabled for all roles.
+                </p>
+                {actionError && <p className="req-detail__modal-error">{actionError}</p>}
+              </div>
+              <div className="req-detail__modal-footer">
+                <button className="req-detail__modal-cancel" onClick={() => setShowLockConfirm(false)}>Cancel</button>
+                <button className="req-detail__modal-confirm req-detail__modal-confirm--lock" onClick={handleLock}>
+                  Confirm Lock
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showLinkModal && (
+          <div className="req-detail__modal-overlay" onClick={() => setShowLinkModal(false)}>
+            <div className="req-detail__modal" onClick={(event) => event.stopPropagation()}>
+              <div className="req-detail__modal-header">
+                <h3>Link Requirement</h3>
+                <button className="req-detail__modal-close" onClick={() => setShowLinkModal(false)}>
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+              <input
+                type="text"
+                className="req-detail__modal-search"
+                placeholder="Search requirements..."
+                value={linkSearchQuery}
+                onChange={(event) => setLinkSearchQuery(event.target.value)}
+              />
+              <div className="req-detail__modal-list">
+                {availableLinkedRequirements.map((candidateRequirement) => (
+                  <button
+                    key={candidateRequirement.id}
+                    className="req-detail__modal-item"
+                    onClick={() => handleLinkRequirement(candidateRequirement.id)}
+                  >
+                    <span className="req-detail__modal-item-id">{candidateRequirement.id}</span>
+                    <span className="req-detail__modal-item-title">{candidateRequirement.title}</span>
+                  </button>
+                ))}
+                {availableLinkedRequirements.length === 0 && (
+                  <p className="req-detail__modal-empty">No requirements available to link.</p>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>

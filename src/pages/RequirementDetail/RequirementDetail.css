@@ -6,6 +6,25 @@
   gap: 40px;
 }
 
+.req-detail__feedback {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(19, 83, 216, 0.1);
+  color: #0046c3;
+  border: 1px solid rgba(19, 83, 216, 0.2);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.req-detail__feedback .material-symbols-outlined {
+  font-size: 18px;
+  font-variation-settings: 'FILL' 1;
+}
+
 /* Header */
 .req-detail__header {
   display: flex;
@@ -184,6 +203,30 @@
 .req-detail__approve-btn .material-symbols-outlined {
   font-size: 18px;
   font-variation-settings: 'FILL' 1;
+}
+
+.req-detail__assign-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1353d8;
+  background: rgba(19, 83, 216, 0.08);
+  border: 1px solid rgba(19, 83, 216, 0.2);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.req-detail__assign-btn:hover {
+  background: rgba(19, 83, 216, 0.15);
+}
+
+.req-detail__assign-btn .material-symbols-outlined {
+  font-size: 18px;
 }
 
 /* Bento Grid */
@@ -505,6 +548,14 @@
   letter-spacing: 0.1em;
   color: #586064;
   margin: 0;
+}
+
+.req-detail__assignment-text {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #2b3437;
 }
 
 .req-detail__history-link {
@@ -1112,6 +1163,38 @@
   font-size: 13px;
   padding: 24px 0;
   margin: 0;
+}
+
+.req-detail__assignment-select {
+  width: 100%;
+  padding: 10px 16px;
+  background: #f1f4f6;
+  border: 1px solid rgba(171, 179, 183, 0.3);
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #2b3437;
+  outline: none;
+}
+
+.req-detail__assignment-select:focus {
+  border-color: rgba(19, 83, 216, 0.3);
+}
+
+.req-detail__modal-helper {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #586064;
+}
+
+.req-detail__modal-error {
+  margin: 0;
+  color: #9f403d;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .req-detail__modal-body {

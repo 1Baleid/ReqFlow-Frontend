@@ -3,6 +3,35 @@
   margin: 0 auto;
 }
 
+.all-reqs__feedback,
+.all-reqs__error {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.all-reqs__feedback {
+  background: rgba(19, 83, 216, 0.1);
+  color: #0046c3;
+  border: 1px solid rgba(19, 83, 216, 0.2);
+}
+
+.all-reqs__error {
+  background: rgba(159, 64, 61, 0.1);
+  color: #9f403d;
+  border: 1px solid rgba(159, 64, 61, 0.2);
+}
+
+.all-reqs__feedback .material-symbols-outlined,
+.all-reqs__error .material-symbols-outlined {
+  font-size: 18px;
+}
+
 /* Header */
 .all-reqs__header {
   display: flex;
@@ -231,6 +260,12 @@
   color: #56606e;
 }
 
+.all-reqs__unassigned {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #9f403d;
+}
+
 /* Priority Badges */
 .all-reqs__priority {
   display: inline-block;
@@ -254,6 +289,11 @@
 .all-reqs__priority--low {
   background: #f1f4f6;
   color: #586064;
+}
+
+.all-reqs__priority--critical {
+  background: rgba(159, 64, 61, 0.15);
+  color: #9f403d;
 }
 
 /* Type Badge */
@@ -667,7 +707,7 @@
 
 .all-reqs__modal-radio {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   padding: 10px 12px;
   background: #f1f4f6;
@@ -687,6 +727,14 @@
 
 .all-reqs__modal-radio input[type="radio"] {
   accent-color: #1353d8;
+}
+
+.all-reqs__modal-desc {
+  display: block;
+  color: #586064;
+  font-size: 12px;
+  line-height: 1.4;
+  margin-top: 4px;
 }
 
 .all-reqs__modal-footer {

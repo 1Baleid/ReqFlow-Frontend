@@ -1,202 +1,303 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MainLayout from '../../layouts/MainLayout'
 import Button from '../../components/Button'
+import { useProjectData } from '../../context/ProjectDataContext'
 import './AllRequirementsManager.css'
 
-// Mock data for all requirements
-const mockRequirements = [
-  {
-    id: 'REQ-101',
-    title: 'Global Authentication Middleware',
-    version: '2.4',
-    status: 'under-review',
-    assignee: { name: 'Sarah Chen', initials: 'SC' },
-    priority: 'high',
-    type: 'Functional',
-    deadline: 'Oct 24, 2023',
-    hasDuplicate: true
-  },
-  {
-    id: 'REQ-102',
-    title: 'Batch Database Migration Schema',
-    version: '1.1',
-    status: 'approved',
-    assignee: { name: 'Marcus Wright', initials: 'MW' },
-    priority: 'medium',
-    type: 'Non-Functional',
-    deadline: 'Oct 21, 2023',
-    isOverdue: true
-  },
-  {
-    id: 'REQ-103',
-    title: 'Data Privacy Compliance Header',
-    version: '3.0',
-    status: 'locked',
-    assignee: { name: 'Elena Rodriguez', initials: 'ER' },
-    priority: 'low',
-    type: 'Functional',
-    deadline: 'Nov 02, 2023'
-  },
-  {
-    id: 'REQ-104',
-    title: 'Audit Log API Implementation',
-    version: '0.8',
-    status: 'draft',
-    assignee: { name: 'James Smith', initials: 'JS' },
-    priority: 'medium',
-    type: 'Functional',
-    deadline: 'Nov 15, 2023'
-  },
-  {
-    id: 'REQ-105',
-    title: 'Legacy Support for IE11',
-    version: '1.0',
-    status: 'rejected',
-    assignee: { name: 'David Miller', initials: 'DM' },
-    priority: 'low',
-    type: 'Non-Functional',
-    deadline: 'Archived'
+function formatDateForDisplay(dateOnlyString) {
+  if (!dateOnlyString) {
+    return 'Not set'
   }
-]
+
+  const parsedDate = new Date(dateOnlyString)
+  if (Number.isNaN(parsedDate.getTime())) {
+    return 'Invalid date'
+  }
+
+  return parsedDate.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  })
+}
 
 function AllRequirementsManager() {
   const navigate = useNavigate()
+  const {
+    currentUser,
+    activeRequirements,
+    projectUsers,
+    workflowStageMap,
+    overdueRequirements,
+    markRequirementsAsDuplicates,
+    mergeDuplicateRequirements,
+    setRequirementDeadline,
+    setRequirementStatus
+  } = useProjectData()
+
   const [selectedIds, setSelectedIds] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
   const [showDuplicateConfirm, setShowDuplicateConfirm] = useState(false)
   const [showMergeModal, setShowMergeModal] = useState(false)
-  const [mergedRequirements, setMergedRequirements] = useState([])
-  const [primaryReq, setPrimaryReq] = useState('')
   const [showDeadlineModal, setShowDeadlineModal] = useState(false)
-  const [deadlineReqId, setDeadlineReqId] = useState('')
+  const [showLockConfirm, setShowLockConfirm] = useState(false)
+  const [deadlineRequirementId, setDeadlineRequirementId] = useState('')
   const [deadlineDate, setDeadlineDate] = useState('')
-  const [reqData, setReqData] = useState(mockRequirements)
+  const [lockRequirementId, setLockRequirementId] = useState('')
+  const [selectedDuplicateGroupId, setSelectedDuplicateGroupId] = useState('')
+  const [primaryRequirementId, setPrimaryRequirementId] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [feedbackMessage, setFeedbackMessage] = useState('')
 
-  const handleSelectAll = (e) => {
-    if (e.target.checked) {
-      setSelectedIds(reqData.map(r => r.id))
-    } else {
-      setSelectedIds([])
-    }
+  const assigneeById = useMemo(
+    () =>
+      projectUsers.reduce((accumulator, user) => {
+        accumulator[user.id] = user
+        return accumulator
+      }, {}),
+    [projectUsers]
+  )
+
+  const duplicateGroups = useMemo(() => {
+    return activeRequirements.reduce((accumulator, requirement) => {
+      if (!requirement.duplicateGroupId) {
+        return accumulator
+      }
+
+      if (!accumulator[requirement.duplicateGroupId]) {
+        accumulator[requirement.duplicateGroupId] = []
+      }
+      accumulator[requirement.duplicateGroupId].push(requirement)
+      return accumulator
+    }, {})
+  }, [activeRequirements])
+
+  const duplicateGroupOptions = useMemo(
+    () => Object.keys(duplicateGroups),
+    [duplicateGroups]
+  )
+
+  const selectedMergeGroupRequirements = useMemo(
+    () => duplicateGroups[selectedDuplicateGroupId] || [],
+    [duplicateGroups, selectedDuplicateGroupId]
+  )
+
+  const selectedRequirements = useMemo(
+    () => activeRequirements.filter((requirement) => selectedIds.includes(requirement.id)),
+    [activeRequirements, selectedIds]
+  )
+
+  const overdueRequirementIdSet = useMemo(
+    () => new Set(overdueRequirements.map((requirement) => requirement.id)),
+    [overdueRequirements]
+  )
+
+  const openRequirement = (requirementId) => {
+    navigate(`/requirements/${requirementId}`)
   }
 
-  const handleSelectRow = (id) => {
-    setSelectedIds(prev => {
-      if (prev.includes(id)) {
-        return prev.filter(i => i !== id)
+  const toggleSelectAll = (event) => {
+    if (event.target.checked) {
+      setSelectedIds(activeRequirements.map((requirement) => requirement.id))
+      return
+    }
+    setSelectedIds([])
+  }
+
+  const toggleSelectRequirement = (requirementId) => {
+    setSelectedIds((previousSelection) => {
+      if (previousSelection.includes(requirementId)) {
+        return previousSelection.filter((selectedRequirementId) => selectedRequirementId !== requirementId)
       }
-      return [...prev, id]
+      return [...previousSelection, requirementId]
     })
   }
 
-  const handleRowClick = (id) => {
-    navigate(`/requirements/${id}`)
-  }
-
-  const handleNewRequirement = () => {
-    navigate('/requirements/new')
-  }
-
-  const handleMarkDuplicate = () => {
-    if (selectedIds.length < 2) return
+  const openDuplicateConfirmation = () => {
+    if (selectedIds.length < 2) {
+      setErrorMessage('Select at least two requirements before marking duplicates.')
+      return
+    }
+    setErrorMessage('')
     setShowDuplicateConfirm(true)
   }
 
   const confirmMarkDuplicate = () => {
-    setReqData(prev => prev.map(r => selectedIds.includes(r.id) ? { ...r, hasDuplicate: true } : r))
-    setMergedRequirements(selectedIds)
+    const markResult = markRequirementsAsDuplicates({
+      requirementIds: selectedIds,
+      actorName: currentUser.name
+    })
+
+    if (!markResult.ok) {
+      setErrorMessage(markResult.error || 'Unable to mark duplicates.')
+      return
+    }
+
     setShowDuplicateConfirm(false)
     setSelectedIds([])
+    setErrorMessage('')
+    setFeedbackMessage('Selected requirements marked as duplicates.')
+    window.setTimeout(() => setFeedbackMessage(''), 3000)
   }
 
-  const handleOpenMerge = () => {
-    const dupes = reqData.filter(r => r.hasDuplicate)
-    if (dupes.length < 2) return
-    setMergedRequirements(dupes.map(r => r.id))
-    setPrimaryReq(dupes[0].id)
+  const openMergeDuplicatesModal = () => {
+    if (duplicateGroupOptions.length === 0) {
+      setErrorMessage('No duplicate requirements are currently marked for merge.')
+      return
+    }
+
+    const firstDuplicateGroupId = duplicateGroupOptions[0]
+    setSelectedDuplicateGroupId(firstDuplicateGroupId)
+    setPrimaryRequirementId(duplicateGroups[firstDuplicateGroupId][0].id)
+    setErrorMessage('')
     setShowMergeModal(true)
   }
 
-  const handleMerge = () => {
-    if (!primaryReq) return
-    setReqData(prev => prev.filter(r => r.id === primaryReq || !mergedRequirements.includes(r.id)))
-    setShowMergeModal(false)
-    setMergedRequirements([])
-    setPrimaryReq('')
-    setSelectedIds([])
+  const handleDuplicateGroupChange = (groupId) => {
+    setSelectedDuplicateGroupId(groupId)
+    const groupRequirements = duplicateGroups[groupId] || []
+    setPrimaryRequirementId(groupRequirements[0]?.id || '')
   }
 
-  const handleSetDeadline = (reqId) => {
-    setDeadlineReqId(reqId)
-    setDeadlineDate('')
+  const confirmMergeDuplicates = () => {
+    const mergeResult = mergeDuplicateRequirements({
+      duplicateGroupId: selectedDuplicateGroupId,
+      primaryRequirementId,
+      actorName: currentUser.name
+    })
+
+    if (!mergeResult.ok) {
+      setErrorMessage(mergeResult.error || 'Unable to merge duplicates.')
+      return
+    }
+
+    setShowMergeModal(false)
+    setSelectedDuplicateGroupId('')
+    setPrimaryRequirementId('')
+    setErrorMessage('')
+    setFeedbackMessage('Duplicate requirements merged and archived successfully.')
+    window.setTimeout(() => setFeedbackMessage(''), 3000)
+  }
+
+  const openDeadlineModal = (requirementId) => {
+    const selectedRequirement = activeRequirements.find(
+      (requirement) => requirement.id === requirementId
+    )
+    if (!selectedRequirement) {
+      return
+    }
+
+    setDeadlineRequirementId(requirementId)
+    setDeadlineDate(selectedRequirement.deadline || '')
+    setErrorMessage('')
     setShowDeadlineModal(true)
   }
 
   const confirmSetDeadline = () => {
-    if (!deadlineDate) return
-    setReqData(prev => prev.map(r => r.id === deadlineReqId ? { ...r, deadline: new Date(deadlineDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) } : r))
+    const setResult = setRequirementDeadline({
+      requirementId: deadlineRequirementId,
+      deadline: deadlineDate,
+      actorName: currentUser.name
+    })
+
+    if (!setResult.ok) {
+      setErrorMessage(setResult.error || 'Unable to save deadline.')
+      return
+    }
+
     setShowDeadlineModal(false)
+    setDeadlineRequirementId('')
+    setDeadlineDate('')
+    setErrorMessage('')
+    setFeedbackMessage('Requirement deadline updated.')
+    window.setTimeout(() => setFeedbackMessage(''), 3000)
   }
 
-  const handleLockReq = (reqId) => {
-    setReqData(prev => prev.map(r => r.id === reqId ? { ...r, status: 'locked' } : r))
+  const openLockConfirmation = (requirementId) => {
+    setLockRequirementId(requirementId)
+    setErrorMessage('')
+    setShowLockConfirm(true)
+  }
+
+  const confirmLockRequirement = () => {
+    const lockResult = setRequirementStatus({
+      requirementId: lockRequirementId,
+      status: 'locked',
+      actorName: currentUser.name
+    })
+
+    if (!lockResult.ok) {
+      setErrorMessage(lockResult.error || 'Unable to lock requirement.')
+      return
+    }
+
+    setShowLockConfirm(false)
+    setLockRequirementId('')
+    setErrorMessage('')
+    setFeedbackMessage('Approved requirement locked successfully.')
+    window.setTimeout(() => setFeedbackMessage(''), 3000)
   }
 
   const getStatusBadge = (status) => {
-    const statusConfig = {
-      'under-review': { label: 'Under Review', className: 'all-reqs__status--review' },
-      'approved': { label: 'Approved', className: 'all-reqs__status--approved' },
-      'rejected': { label: 'Rejected', className: 'all-reqs__status--rejected' },
-      'draft': { label: 'Draft', className: 'all-reqs__status--draft' },
-      'locked': { label: 'Locked', className: 'all-reqs__status--locked', icon: 'lock' }
+    const statusClassMap = {
+      draft: 'all-reqs__status--draft',
+      review: 'all-reqs__status--review',
+      approved: 'all-reqs__status--approved',
+      rejected: 'all-reqs__status--rejected',
+      locked: 'all-reqs__status--locked'
     }
-    const config = statusConfig[status] || statusConfig['draft']
+
     return (
-      <span className={`all-reqs__status ${config.className}`}>
-        {config.icon && <span className="material-symbols-outlined">{config.icon}</span>}
-        {config.label}
+      <span className={`all-reqs__status ${statusClassMap[status] || statusClassMap.draft}`}>
+        {status === 'locked' && (
+          <span className="material-symbols-outlined">lock</span>
+        )}
+        {status === 'locked' ? 'Locked' : workflowStageMap[status] || status}
       </span>
     )
   }
 
   const getPriorityBadge = (priority) => {
-    const priorityConfig = {
-      'high': { label: 'High', className: 'all-reqs__priority--high' },
-      'medium': { label: 'Medium', className: 'all-reqs__priority--medium' },
-      'low': { label: 'Low', className: 'all-reqs__priority--low' }
-    }
-    const config = priorityConfig[priority] || priorityConfig['medium']
+    const normalizedPriority = priority || 'medium'
     return (
-      <span className={`all-reqs__priority ${config.className}`}>
-        {config.label}
+      <span className={`all-reqs__priority all-reqs__priority--${normalizedPriority}`}>
+        {normalizedPriority}
       </span>
     )
   }
 
   return (
-    <MainLayout>
+    <MainLayout user={currentUser} role={currentUser.role}>
       <div className="all-reqs">
-        {/* Header */}
         <div className="all-reqs__header">
           <div className="all-reqs__header-content">
             <span className="all-reqs__label">Management Console</span>
             <h1 className="all-reqs__title">All Requirements</h1>
           </div>
           <div className="all-reqs__header-actions">
-            <Button variant="secondary" icon="merge_type" onClick={handleOpenMerge}>
+            <Button variant="secondary" icon="merge_type" onClick={openMergeDuplicatesModal}>
               Merge Duplicates
             </Button>
-            <Button variant="secondary" icon="filter_list">
-              Filters
-            </Button>
-            <Button variant="primary" icon="add" onClick={handleNewRequirement}>
+            <Button variant="primary" icon="add" onClick={() => navigate('/requirements/new')}>
               New Requirement
             </Button>
           </div>
         </div>
 
-        {/* Table */}
+        {feedbackMessage && (
+          <div className="all-reqs__feedback">
+            <span className="material-symbols-outlined">check_circle</span>
+            <span>{feedbackMessage}</span>
+          </div>
+        )}
+
+        {errorMessage && (
+          <div className="all-reqs__error">
+            <span className="material-symbols-outlined">error</span>
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
         <div className="all-reqs__table-container">
           <table className="all-reqs__table">
             <thead>
@@ -204,8 +305,8 @@ function AllRequirementsManager() {
                 <th className="all-reqs__th all-reqs__th--checkbox">
                   <input
                     type="checkbox"
-                    checked={selectedIds.length === reqData.length}
-                    onChange={handleSelectAll}
+                    checked={selectedIds.length > 0 && selectedIds.length === activeRequirements.length}
+                    onChange={toggleSelectAll}
                   />
                 </th>
                 <th className="all-reqs__th">ID</th>
@@ -213,102 +314,93 @@ function AllRequirementsManager() {
                 <th className="all-reqs__th">Status</th>
                 <th className="all-reqs__th">Assignee</th>
                 <th className="all-reqs__th">Priority</th>
-                <th className="all-reqs__th">Type</th>
                 <th className="all-reqs__th">Deadline</th>
                 <th className="all-reqs__th all-reqs__th--actions"></th>
               </tr>
             </thead>
             <tbody>
-              {reqData.map((req) => (
-                <tr
-                  key={req.id}
-                  className={`all-reqs__row ${selectedIds.includes(req.id) ? 'all-reqs__row--selected' : ''}`}
-                >
-                  <td className="all-reqs__td all-reqs__td--checkbox">
-                    <input
-                      type="checkbox"
-                      checked={selectedIds.includes(req.id)}
-                      onChange={() => handleSelectRow(req.id)}
-                    />
-                  </td>
-                  <td className="all-reqs__td" onClick={() => handleRowClick(req.id)}>
-                    <div className="all-reqs__id-cell">
-                      <span className="all-reqs__id">{req.id}</span>
-                      {req.hasDuplicate && (
-                        <span className="material-symbols-outlined all-reqs__duplicate-icon" title="Duplicate detected">
-                          content_copy
-                        </span>
-                      )}
-                    </div>
-                  </td>
-                  <td className="all-reqs__td all-reqs__td--title" onClick={() => handleRowClick(req.id)}>
-                    <p className="all-reqs__req-title">{req.title}</p>
-                    <span className="all-reqs__version">Version {req.version}</span>
-                  </td>
-                  <td className="all-reqs__td">
-                    {getStatusBadge(req.status)}
-                  </td>
-                  <td className="all-reqs__td">
-                    <div className="all-reqs__assignee">
-                      <div className="all-reqs__assignee-avatar">
-                        {req.assignee.initials}
+              {activeRequirements.map((requirement) => {
+                const assignee = requirement.assigneeId
+                  ? assigneeById[requirement.assigneeId]
+                  : null
+
+                return (
+                  <tr
+                    key={requirement.id}
+                    className={`all-reqs__row ${selectedIds.includes(requirement.id) ? 'all-reqs__row--selected' : ''}`}
+                  >
+                    <td className="all-reqs__td all-reqs__td--checkbox">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.includes(requirement.id)}
+                        onChange={() => toggleSelectRequirement(requirement.id)}
+                      />
+                    </td>
+                    <td className="all-reqs__td" onClick={() => openRequirement(requirement.id)}>
+                      <div className="all-reqs__id-cell">
+                        <span className="all-reqs__id">{requirement.id}</span>
+                        {requirement.duplicateGroupId && (
+                          <span
+                            className="material-symbols-outlined all-reqs__duplicate-icon"
+                            title="Duplicate marked"
+                          >
+                            content_copy
+                          </span>
+                        )}
                       </div>
-                      <span className="all-reqs__assignee-name">{req.assignee.name}</span>
-                    </div>
-                  </td>
-                  <td className="all-reqs__td">
-                    {getPriorityBadge(req.priority)}
-                  </td>
-                  <td className="all-reqs__td">
-                    <span className="all-reqs__type">{req.type}</span>
-                  </td>
-                  <td className="all-reqs__td">
-                    <span className={`all-reqs__deadline ${req.isOverdue ? 'all-reqs__deadline--overdue' : ''}`}>
-                      {req.deadline}
-                    </span>
-                  </td>
-                  <td className="all-reqs__td all-reqs__td--actions">
-                    <div className="all-reqs__action-group">
-                      <button className="all-reqs__action-btn" title="Set Deadline" onClick={() => handleSetDeadline(req.id)}>
-                        <span className="material-symbols-outlined">calendar_month</span>
-                      </button>
-                      {req.status === 'approved' && (
-                        <button className="all-reqs__action-btn all-reqs__action-btn--lock" title="Lock" onClick={() => handleLockReq(req.id)}>
-                          <span className="material-symbols-outlined">lock</span>
-                        </button>
+                    </td>
+                    <td className="all-reqs__td all-reqs__td--title" onClick={() => openRequirement(requirement.id)}>
+                      <p className="all-reqs__req-title">{requirement.title}</p>
+                      <span className="all-reqs__version">Version {requirement.version}</span>
+                    </td>
+                    <td className="all-reqs__td">{getStatusBadge(requirement.status)}</td>
+                    <td className="all-reqs__td">
+                      {assignee ? (
+                        <div className="all-reqs__assignee">
+                          <div className="all-reqs__assignee-avatar">
+                            {assignee.name.split(' ').map((name) => name[0]).join('')}
+                          </div>
+                          <span className="all-reqs__assignee-name">{assignee.name}</span>
+                        </div>
+                      ) : (
+                        <span className="all-reqs__unassigned">Unassigned</span>
                       )}
-                      <button className="all-reqs__more-btn">
-                        <span className="material-symbols-outlined">more_vert</span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="all-reqs__td">{getPriorityBadge(requirement.priority)}</td>
+                    <td className="all-reqs__td">
+                      <span
+                        className={`all-reqs__deadline ${overdueRequirementIdSet.has(requirement.id) ? 'all-reqs__deadline--overdue' : ''}`}
+                      >
+                        {formatDateForDisplay(requirement.deadline)}
+                      </span>
+                    </td>
+                    <td className="all-reqs__td all-reqs__td--actions">
+                      <div className="all-reqs__action-group">
+                        <button
+                          className="all-reqs__action-btn"
+                          title="Set Deadline"
+                          onClick={() => openDeadlineModal(requirement.id)}
+                        >
+                          <span className="material-symbols-outlined">calendar_month</span>
+                        </button>
+                        {requirement.status === 'approved' && (
+                          <button
+                            className="all-reqs__action-btn all-reqs__action-btn--lock"
+                            title="Lock Requirement"
+                            onClick={() => openLockConfirmation(requirement.id)}
+                          >
+                            <span className="material-symbols-outlined">lock</span>
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
 
-        {/* Pagination */}
-        <div className="all-reqs__pagination">
-          <p className="all-reqs__pagination-info">
-            Showing 1-5 of 148 Requirements
-          </p>
-          <div className="all-reqs__pagination-controls">
-            <button className="all-reqs__page-btn" disabled>
-              <span className="material-symbols-outlined">chevron_left</span>
-            </button>
-            <button className="all-reqs__page-btn all-reqs__page-btn--active">1</button>
-            <button className="all-reqs__page-btn">2</button>
-            <button className="all-reqs__page-btn">3</button>
-            <span className="all-reqs__page-ellipsis">...</span>
-            <button className="all-reqs__page-btn">12</button>
-            <button className="all-reqs__page-btn">
-              <span className="material-symbols-outlined">chevron_right</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Bulk Actions Bar */}
         {selectedIds.length > 0 && (
           <div className="all-reqs__bulk-bar">
             <div className="all-reqs__bulk-content">
@@ -318,27 +410,18 @@ function AllRequirementsManager() {
                 <p className="all-reqs__bulk-text">Apply actions to selected requirements</p>
               </div>
               <div className="all-reqs__bulk-actions">
-                <button className="all-reqs__bulk-action">
-                  <span className="material-symbols-outlined">person_outline</span>
-                  Reassign
-                </button>
-                <button className="all-reqs__bulk-action all-reqs__bulk-action--warning" onClick={handleMarkDuplicate}>
+                <button className="all-reqs__bulk-action all-reqs__bulk-action--warning" onClick={openDuplicateConfirmation}>
                   <span className="material-symbols-outlined">content_copy</span>
                   Mark as Duplicate
-                </button>
-                <button className="all-reqs__bulk-action all-reqs__bulk-action--danger">
-                  <span className="material-symbols-outlined">delete</span>
-                  Delete
                 </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Mark as Duplicate Confirmation */}
         {showDuplicateConfirm && (
           <div className="all-reqs__modal-overlay" onClick={() => setShowDuplicateConfirm(false)}>
-            <div className="all-reqs__modal" onClick={(e) => e.stopPropagation()}>
+            <div className="all-reqs__modal" onClick={(event) => event.stopPropagation()}>
               <div className="all-reqs__modal-header">
                 <h3>Mark as Duplicates</h3>
                 <button className="all-reqs__modal-close" onClick={() => setShowDuplicateConfirm(false)}>
@@ -346,26 +429,27 @@ function AllRequirementsManager() {
                 </button>
               </div>
               <div className="all-reqs__modal-body">
-                <p>Mark the following {selectedIds.length} requirements as duplicates?</p>
+                <p>Confirm marking these requirements as duplicates:</p>
                 <div className="all-reqs__modal-reqlist">
-                  {selectedIds.map(sid => {
-                    const r = reqData.find(rr => rr.id === sid)
-                    return r ? <div key={sid} className="all-reqs__modal-reqitem"><span className="all-reqs__modal-reqid">{r.id}</span> {r.title}</div> : null
-                  })}
+                  {selectedRequirements.map((requirement) => (
+                    <div key={requirement.id} className="all-reqs__modal-reqitem">
+                      <span className="all-reqs__modal-reqid">{requirement.id}</span>
+                      {requirement.title}
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="all-reqs__modal-footer">
                 <button className="all-reqs__modal-cancel" onClick={() => setShowDuplicateConfirm(false)}>Cancel</button>
-                <button className="all-reqs__modal-confirm" onClick={confirmMarkDuplicate}>Mark as Duplicates</button>
+                <button className="all-reqs__modal-confirm" onClick={confirmMarkDuplicate}>Confirm</button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Merge Duplicates Modal */}
         {showMergeModal && (
           <div className="all-reqs__modal-overlay" onClick={() => setShowMergeModal(false)}>
-            <div className="all-reqs__modal" onClick={(e) => e.stopPropagation()}>
+            <div className="all-reqs__modal" onClick={(event) => event.stopPropagation()}>
               <div className="all-reqs__modal-header">
                 <h3>Merge Duplicate Requirements</h3>
                 <button className="all-reqs__modal-close" onClick={() => setShowMergeModal(false)}>
@@ -373,34 +457,59 @@ function AllRequirementsManager() {
                 </button>
               </div>
               <div className="all-reqs__modal-body">
-                <p>Select the primary requirement to keep. Others will be archived.</p>
+                <label className="all-reqs__modal-label">Duplicate Group</label>
+                <select
+                  className="all-reqs__date-input"
+                  value={selectedDuplicateGroupId}
+                  onChange={(event) => handleDuplicateGroupChange(event.target.value)}
+                >
+                  {duplicateGroupOptions.map((groupId) => (
+                    <option key={groupId} value={groupId}>
+                      {groupId} ({duplicateGroups[groupId].length} requirements)
+                    </option>
+                  ))}
+                </select>
+
+                <p>Select the primary requirement to keep. Other duplicates will be archived.</p>
                 <div className="all-reqs__modal-reqlist">
-                  {mergedRequirements.map(rid => {
-                    const r = reqData.find(rr => rr.id === rid)
-                    return r ? (
-                      <label key={rid} className={`all-reqs__modal-radio ${primaryReq === rid ? 'all-reqs__modal-radio--active' : ''}`}>
-                        <input type="radio" name="primary" value={rid} checked={primaryReq === rid} onChange={() => setPrimaryReq(rid)} />
-                        <span className="all-reqs__modal-reqid">{r.id}</span>
-                        <span>{r.title}</span>
-                      </label>
-                    ) : null
-                  })}
+                  {selectedMergeGroupRequirements.map((requirement) => (
+                    <label
+                      key={requirement.id}
+                      className={`all-reqs__modal-radio ${primaryRequirementId === requirement.id ? 'all-reqs__modal-radio--active' : ''}`}
+                    >
+                      <input
+                        type="radio"
+                        name="primary-requirement"
+                        value={requirement.id}
+                        checked={primaryRequirementId === requirement.id}
+                        onChange={() => setPrimaryRequirementId(requirement.id)}
+                      />
+                      <span className="all-reqs__modal-reqid">{requirement.id}</span>
+                      <span>{requirement.title}</span>
+                      <small className="all-reqs__modal-desc">{requirement.description}</small>
+                    </label>
+                  ))}
                 </div>
               </div>
               <div className="all-reqs__modal-footer">
                 <button className="all-reqs__modal-cancel" onClick={() => setShowMergeModal(false)}>Cancel</button>
-                <button className="all-reqs__modal-confirm all-reqs__modal-confirm--merge" onClick={handleMerge}>Merge Requirements</button>
+                <button
+                  className="all-reqs__modal-confirm all-reqs__modal-confirm--merge"
+                  onClick={confirmMergeDuplicates}
+                  disabled={!primaryRequirementId}
+                >
+                  Confirm Merge
+                </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Set Deadline Modal */}
         {showDeadlineModal && (
           <div className="all-reqs__modal-overlay" onClick={() => setShowDeadlineModal(false)}>
-            <div className="all-reqs__modal all-reqs__modal--sm" onClick={(e) => e.stopPropagation()}>
+            <div className="all-reqs__modal all-reqs__modal--sm" onClick={(event) => event.stopPropagation()}>
               <div className="all-reqs__modal-header">
-                <h3>Set Deadline for {deadlineReqId}</h3>
+                <h3>Set Deadline for {deadlineRequirementId}</h3>
                 <button className="all-reqs__modal-close" onClick={() => setShowDeadlineModal(false)}>
                   <span className="material-symbols-outlined">close</span>
                 </button>
@@ -411,13 +520,34 @@ function AllRequirementsManager() {
                   type="date"
                   className="all-reqs__date-input"
                   value={deadlineDate}
-                  onChange={(e) => setDeadlineDate(e.target.value)}
-                  min={new Date().toISOString().split('T')[0]}
+                  onChange={(event) => setDeadlineDate(event.target.value)}
                 />
               </div>
               <div className="all-reqs__modal-footer">
                 <button className="all-reqs__modal-cancel" onClick={() => setShowDeadlineModal(false)}>Cancel</button>
-                <button className="all-reqs__modal-confirm" onClick={confirmSetDeadline} disabled={!deadlineDate}>Set Deadline</button>
+                <button className="all-reqs__modal-confirm" onClick={confirmSetDeadline} disabled={!deadlineDate}>
+                  Confirm Deadline
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showLockConfirm && (
+          <div className="all-reqs__modal-overlay" onClick={() => setShowLockConfirm(false)}>
+            <div className="all-reqs__modal all-reqs__modal--sm" onClick={(event) => event.stopPropagation()}>
+              <div className="all-reqs__modal-header">
+                <h3>Lock Approved Requirement</h3>
+                <button className="all-reqs__modal-close" onClick={() => setShowLockConfirm(false)}>
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+              <div className="all-reqs__modal-body">
+                <p>Confirm locking <strong>{lockRequirementId}</strong>. Editing will be disabled for all roles.</p>
+              </div>
+              <div className="all-reqs__modal-footer">
+                <button className="all-reqs__modal-cancel" onClick={() => setShowLockConfirm(false)}>Cancel</button>
+                <button className="all-reqs__modal-confirm" onClick={confirmLockRequirement}>Confirm Lock</button>
               </div>
             </div>
           </div>

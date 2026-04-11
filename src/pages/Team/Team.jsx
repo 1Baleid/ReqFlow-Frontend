@@ -1,135 +1,142 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import MainLayout from '../../layouts/MainLayout'
 import Button from '../../components/Button'
-import { getCurrentUser, teamMembers } from '../../data/mockData'
+import { useProjectData } from '../../context/ProjectDataContext'
 import './Team.css'
 
 const ROLE_CONFIG = {
-  manager: { label: 'Manager', className: 'team__role-badge--manager', editable: true },
-  client: { label: 'Owner', className: 'team__role-badge--client', editable: false, locked: true },
-  member: { label: 'Member', className: 'team__role-badge--editor', editable: true },
-  editor: { label: 'Editor', className: 'team__role-badge--editor', editable: true },
-  viewer: { label: 'Viewer', className: 'team__role-badge--viewer', editable: true }
+  manager: { label: 'Manager', className: 'team__role-badge--manager' },
+  client: { label: 'Client', className: 'team__role-badge--client' },
+  member: { label: 'Member', className: 'team__role-badge--editor' }
 }
 
-const TABS = [
-  { id: 'all', label: 'All Users', count: null },
-  { id: 'pending', label: 'Pending Invites', count: 12 },
-  { id: 'permissions', label: 'Permissions', count: null },
-  { id: 'audit', label: 'Audit Logs', count: null }
-]
+function formatAuditTimestamp(isoDate) {
+  const parsed = new Date(isoDate)
+  if (Number.isNaN(parsed.getTime())) {
+    return 'Invalid time'
+  }
+
+  return parsed.toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
 
 function Team() {
-  const currentUser = getCurrentUser()
-  const [activeTab, setActiveTab] = useState('all')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [showWarning, setShowWarning] = useState(true)
-  const [members, setMembers] = useState(teamMembers)
-  const [auditLogs, setAuditLogs] = useState([
-    { id: 1, action: 'Yusuf Malik invited to the project', time: '2m ago', type: 'invite' },
-    { id: 2, action: 'Omar Faisal promoted to Senior Developer', time: '1h ago', type: 'promote' },
-    { id: 3, action: 'Security policy updated by Manager', time: '3h ago', type: 'security' }
-  ])
-  const [selectedUser, setSelectedUser] = useState(null)
-  const [showRoleModal, setShowRoleModal] = useState(false)
-  const [tempRole, setTempRole] = useState('')
+  const {
+    currentUser,
+    projectUsers,
+    activityLogs,
+    updateProjectUserRole
+  } = useProjectData()
 
-  const filteredMembers = members.filter(member => {
-    if (!searchQuery) return true
-    const query = searchQuery.toLowerCase()
-    return (
-      member.name.toLowerCase().includes(query) ||
-      member.email.toLowerCase().includes(query)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [showRoleModal, setShowRoleModal] = useState(false)
+  const [selectedUser, setSelectedUser] = useState(null)
+  const [pendingRole, setPendingRole] = useState('member')
+  const [showRoleConfirmation, setShowRoleConfirmation] = useState(false)
+  const [modalError, setModalError] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+
+  const filteredMembers = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return projectUsers
+    }
+
+    const normalizedQuery = searchQuery.trim().toLowerCase()
+    return projectUsers.filter(
+      (member) =>
+        member.name.toLowerCase().includes(normalizedQuery) ||
+        member.email.toLowerCase().includes(normalizedQuery)
     )
-  })
+  }, [projectUsers, searchQuery])
+
+  const auditLogs = useMemo(
+    () => activityLogs.filter((entry) => entry.type === 'role_change').slice(0, 10),
+    [activityLogs]
+  )
 
   const openRoleModal = (user) => {
-    if (user.role === 'client') return
+    if (user.role === 'client') {
+      return
+    }
     setSelectedUser(user)
-    setTempRole(user.role)
+    setPendingRole(user.role)
+    setShowRoleConfirmation(false)
+    setModalError('')
     setShowRoleModal(true)
   }
 
-  const handleRoleUpdate = () => {
-    if (!selectedUser || tempRole === selectedUser.role) {
-      setShowRoleModal(false)
+  const closeRoleModal = () => {
+    setShowRoleModal(false)
+    setSelectedUser(null)
+    setPendingRole('member')
+    setShowRoleConfirmation(false)
+    setModalError('')
+  }
+
+  const startRoleUpdateConfirmation = () => {
+    if (!selectedUser) {
+      return
+    }
+    setModalError('')
+    setShowRoleConfirmation(true)
+  }
+
+  const confirmRoleUpdate = () => {
+    if (!selectedUser) {
       return
     }
 
-    // Validation: At least one Manager remains
-    if (selectedUser.role === 'manager' && tempRole !== 'manager') {
-      const managers = members.filter(m => m.role === 'manager')
-      if (managers.length <= 1) {
-        alert("Cannot demote the last manager. At least one Manager must remain in the project.")
-        return
-      }
+    const updateResult = updateProjectUserRole({
+      userId: selectedUser.id,
+      role: pendingRole,
+      actorName: currentUser.name
+    })
+
+    if (!updateResult.ok) {
+      setModalError(updateResult.error || 'Unable to update role.')
+      return
     }
 
-    // Update members
-    const updatedMembers = members.map(m => 
-      m.id === selectedUser.id ? { ...m, role: tempRole } : m
-    )
-    setMembers(updatedMembers)
-
-    // Log the action
-    const newLog = {
-      id: Date.now(),
-      action: `${selectedUser.name}'s role updated from ${selectedUser.role} to ${tempRole}`,
-      time: 'Just now',
-      type: 'role_change'
-    }
-    setAuditLogs([newLog, ...auditLogs])
-    setShowRoleModal(false)
-    setSelectedUser(null)
+    setSuccessMessage(`Role updated for ${selectedUser.name}.`)
+    closeRoleModal()
+    window.setTimeout(() => setSuccessMessage(''), 3000)
   }
 
   return (
     <MainLayout user={currentUser} role={currentUser.role}>
       <div className="team">
-        {/* Header */}
         <div className="team__header">
           <div className="team__header-left">
             <span className="team__breadcrumb">Project Management</span>
-            <h1 className="team__title">Users & Roles</h1>
+            <h1 className="team__title">Project Users</h1>
           </div>
           <div className="team__header-actions">
             <Button variant="secondary">Export List</Button>
-            <Button variant="primary" icon="person_add" iconPosition="left">
-              Invite New User
-            </Button>
           </div>
         </div>
 
-        {/* Warning Banner */}
-        {showWarning && (
-          <div className="team__warning">
-            <div className="team__warning-content">
-              <span className="material-symbols-outlined team__warning-icon">warning</span>
-              <p className="team__warning-text">At least one Manager must remain in the project.</p>
-            </div>
-            <button className="team__warning-close" onClick={() => setShowWarning(false)}>
-              <span className="material-symbols-outlined">close</span>
-            </button>
+        <div className="team__warning">
+          <div className="team__warning-content">
+            <span className="material-symbols-outlined team__warning-icon">warning</span>
+            <p className="team__warning-text">
+              Client role is locked and at least one Manager must remain in the project.
+            </p>
+          </div>
+        </div>
+
+        {successMessage && (
+          <div className="team__success">
+            <span className="material-symbols-outlined">check_circle</span>
+            <span>{successMessage}</span>
           </div>
         )}
 
-        {/* Tabs */}
-        <div className="team__tabs">
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              className={`team__tab ${activeTab === tab.id ? 'team__tab--active' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              {tab.label}
-              {tab.count && <span className="team__tab-count">{tab.count}</span>}
-            </button>
-          ))}
-        </div>
-
-        {/* Table Container */}
         <div className="team__table-container">
-          {/* Search Bar */}
           <div className="team__table-header">
             <div className="team__search">
               <span className="material-symbols-outlined team__search-icon">search</span>
@@ -138,15 +145,11 @@ function Team() {
                 className="team__search-input"
                 placeholder="Filter by name or email..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(event) => setSearchQuery(event.target.value)}
               />
             </div>
-            <button className="team__filter-btn">
-              <span className="material-symbols-outlined">filter_list</span>
-            </button>
           </div>
 
-          {/* Table */}
           <div className="team__table-wrapper">
             <table className="team__table">
               <thead>
@@ -160,13 +163,13 @@ function Team() {
               </thead>
               <tbody>
                 {filteredMembers.map((member) => {
-                  const roleConfig = ROLE_CONFIG[member.role] || ROLE_CONFIG.viewer
+                  const roleConfig = ROLE_CONFIG[member.role] || ROLE_CONFIG.member
                   return (
                     <tr key={member.id}>
                       <td>
                         <div className="team__user">
                           <div className="team__user-avatar">
-                            {member.name.split(' ').map(n => n[0]).join('')}
+                            {member.name.split(' ').map((name) => name[0]).join('')}
                           </div>
                           <div className="team__user-info">
                             <div className="team__user-name">{member.name}</div>
@@ -176,36 +179,28 @@ function Team() {
                       </td>
                       <td className="team__email">{member.email}</td>
                       <td>
-                        <div 
-                          className={`team__role-badge ${roleConfig.className} ${!roleConfig.locked ? 'team__role-badge--editable' : ''}`}
-                          onClick={() => openRoleModal(member)}
-                        >
+                        <span className={`team__role-badge ${roleConfig.className}`}>
                           {roleConfig.label}
-                          {roleConfig.locked ? (
+                          {member.role === 'client' && (
                             <span className="material-symbols-outlined">lock</span>
-                          ) : (
-                            <span className="material-symbols-outlined">expand_more</span>
                           )}
-                        </div>
+                        </span>
                       </td>
                       <td>
                         <div className="team__last-active">
-                          {member.isOnline && (
-                            <span className="team__online-dot"></span>
-                          )}
+                          {member.isOnline && <span className="team__online-dot"></span>}
                           {member.lastActive}
                         </div>
                       </td>
                       <td className="team__td--right">
-                        {member.role === 'manager' ? (
-                          <button className="team__action-btn team__action-btn--danger">
-                            <span className="material-symbols-outlined">delete</span>
-                          </button>
-                        ) : (
-                          <button className="team__action-btn">
-                            <span className="material-symbols-outlined">more_vert</span>
-                          </button>
-                        )}
+                        <button
+                          className="team__action-btn"
+                          onClick={() => openRoleModal(member)}
+                          disabled={member.role === 'client'}
+                        >
+                          <span className="material-symbols-outlined">manage_accounts</span>
+                          Change Role
+                        </button>
                       </td>
                     </tr>
                   )
@@ -214,66 +209,53 @@ function Team() {
             </table>
           </div>
 
-          {/* Pagination */}
           <div className="team__pagination">
-            <span className="team__pagination-info">Showing 1-{filteredMembers.length} of 38 users</span>
-            <div className="team__pagination-controls">
-              <button className="team__pagination-btn" disabled>Previous</button>
-              <button className="team__pagination-btn">Next</button>
-            </div>
+            <span className="team__pagination-info">
+              Showing {filteredMembers.length} users in the current project
+            </span>
           </div>
         </div>
 
-        {/* Info Grid */}
         <div className="team__info-grid">
-          <div className="team__info-card">
-            <div className="team__info-header team__info-header--primary">
-              <span className="material-symbols-outlined">shield</span>
-              <h4 className="team__info-title">Security Note</h4>
-            </div>
-            <p className="team__info-text">
-              Roles control global project permissions. Only Managers can invite new members or change role assignments.
-            </p>
-          </div>
-          <div className="team__info-card">
-            <div className="team__info-header team__info-header--tertiary">
-              <span className="material-symbols-outlined">group_add</span>
-              <h4 className="team__info-title">Bulk Invites</h4>
-            </div>
-            <p className="team__info-text">
-              Manage large teams by uploading a CSV of emails. Invited users will default to the 'Viewer' role until approved.
-            </p>
-          </div>
           <div className="team__info-card">
             <div className="team__info-header team__info-header--secondary">
               <span className="material-symbols-outlined">history</span>
-              <h4 className="team__info-title">Recent Activity</h4>
+              <h4 className="team__info-title">Role Change Audit Log</h4>
             </div>
-            <ul className="team__changes-list">
-              {auditLogs.slice(0, 3).map(log => (
-                <li key={log.id} className="team__changes-item">
-                  <span>{log.action}</span>
-                  <span className="team__changes-time">{log.time}</span>
-                </li>
+            <div className="team__audit-list">
+              {auditLogs.length === 0 && (
+                <div className="team__audit-empty">No role changes recorded yet.</div>
+              )}
+              {auditLogs.map((log) => (
+                <div key={log.id} className="team__audit-item">
+                  <div className="team__audit-icon">
+                    <span className="material-symbols-outlined">rule</span>
+                  </div>
+                  <div className="team__audit-content">
+                    <div className="team__audit-action">{log.action}</div>
+                    <div className="team__audit-timestamp">
+                      {formatAuditTimestamp(log.timestamp)} • by {log.actorName}
+                    </div>
+                  </div>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         </div>
 
-        {/* Role Selection Modal */}
         {showRoleModal && selectedUser && (
-          <div className="team__modal-overlay" onClick={() => setShowRoleModal(false)}>
-            <div className="team__modal" onClick={e => e.stopPropagation()}>
+          <div className="team__modal-overlay" onClick={closeRoleModal}>
+            <div className="team__modal" onClick={(event) => event.stopPropagation()}>
               <div className="team__modal-header">
-                <h3 className="team__modal-title">Change User Role</h3>
-                <button className="team__modal-close" onClick={() => setShowRoleModal(false)}>
+                <h3 className="team__modal-title">Update Role Permission</h3>
+                <button className="team__modal-close" onClick={closeRoleModal}>
                   <span className="material-symbols-outlined">close</span>
                 </button>
               </div>
               <div className="team__modal-body">
                 <div className="team__modal-user">
                   <div className="team__user-avatar">
-                    {selectedUser.name.split(' ').map(n => n[0]).join('')}
+                    {selectedUser.name.split(' ').map((name) => name[0]).join('')}
                   </div>
                   <div className="team__user-info">
                     <div className="team__user-name">{selectedUser.name}</div>
@@ -281,56 +263,64 @@ function Team() {
                   </div>
                 </div>
 
-                <div className="team__role-options">
-                  <label className="team__modal-label">Select New Role</label>
-                  {[
-                    { id: 'manager', label: 'Manager', desc: 'Full project access and team management' },
-                    { id: 'member', label: 'Member', desc: 'Can edit and refine requirements' },
-                    { id: 'viewer', label: 'Viewer', desc: 'Read-only access to progress' }
-                  ].map(role => (
-                    <div 
-                      key={role.id}
-                      className={`team__role-option ${tempRole === role.id ? 'team__role-option--active' : ''}`}
-                      onClick={() => setTempRole(role.id)}
-                    >
-                      <div className="team__role-content">
-                        <div className="team__role-name">{role.label}</div>
-                        <div className="team__role-desc">{role.desc}</div>
+                {!showRoleConfirmation && (
+                  <div className="team__role-options">
+                    <label className="team__modal-label">Select New Role</label>
+                    {[
+                      {
+                        id: 'manager',
+                        label: 'Manager',
+                        desc: 'Can manage users, workflow, and requirement governance.'
+                      },
+                      {
+                        id: 'member',
+                        label: 'Member',
+                        desc: 'Can work on assigned requirements only.'
+                      }
+                    ].map((roleOption) => (
+                      <div
+                        key={roleOption.id}
+                        className={`team__role-option ${pendingRole === roleOption.id ? 'team__role-option--active' : ''}`}
+                        onClick={() => setPendingRole(roleOption.id)}
+                      >
+                        <div className="team__role-content">
+                          <div className="team__role-name">{roleOption.label}</div>
+                          <div className="team__role-desc">{roleOption.desc}</div>
+                        </div>
+                        {pendingRole === roleOption.id && (
+                          <span className="material-symbols-outlined team__checkmark">check_circle</span>
+                        )}
                       </div>
-                      {tempRole === role.id && (
-                        <span className="material-symbols-outlined team__checkmark">check_circle</span>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
+
+                {showRoleConfirmation && (
+                  <div className="team__confirmation">
+                    <p>
+                      Confirm changing <strong>{selectedUser.name}</strong> from{' '}
+                      <strong>{ROLE_CONFIG[selectedUser.role]?.label || selectedUser.role}</strong> to{' '}
+                      <strong>{ROLE_CONFIG[pendingRole]?.label || pendingRole}</strong>.
+                    </p>
+                    <p>The new access rights will be applied immediately.</p>
+                  </div>
+                )}
+
+                {modalError && <p className="team__modal-error">{modalError}</p>}
               </div>
               <div className="team__modal-footer">
-                <Button variant="secondary" onClick={() => setShowRoleModal(false)}>Cancel</Button>
-                <Button variant="primary" onClick={handleRoleUpdate}>Update Role</Button>
+                <Button variant="secondary" onClick={closeRoleModal}>Cancel</Button>
+                {!showRoleConfirmation && (
+                  <Button variant="primary" onClick={startRoleUpdateConfirmation}>
+                    Continue
+                  </Button>
+                )}
+                {showRoleConfirmation && (
+                  <Button variant="primary" onClick={confirmRoleUpdate}>
+                    Confirm Change
+                  </Button>
+                )}
               </div>
-            </div>
-          </div>
-        )}
-
-        {/* Audit Logs View (Overlay for Audit Tab) */}
-        {activeTab === 'audit' && (
-          <div className="team__audit-view">
-            <div className="team__audit-list">
-              {auditLogs.map(log => (
-                <div key={log.id} className="team__audit-item">
-                  <div className="team__audit-icon">
-                    <span className="material-symbols-outlined">
-                      {log.type === 'role_change' ? 'rule' : 
-                       log.type === 'invite' ? 'person_add' : 
-                       log.type === 'security' ? 'shield' : 'info'}
-                    </span>
-                  </div>
-                  <div className="team__audit-content">
-                    <div className="team__audit-action">{log.action}</div>
-                    <div className="team__audit-timestamp">{log.time} • Recorded in system logs</div>
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         )}

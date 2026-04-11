@@ -81,7 +81,24 @@ export const demoUsers = {
 // Get current user based on localStorage (defaults to client)
 export const getCurrentUser = () => {
   const email = localStorage.getItem('userEmail') || 'abdullah@kfupm.edu.sa'
-  return demoUsers[email] || demoUsers['abdullah@kfupm.edu.sa']
+  const user = demoUsers[email] || demoUsers['abdullah@kfupm.edu.sa']
+  const roleOverride = localStorage.getItem('userRole')
+
+  if (!roleOverride || roleOverride === user.role) {
+    return user
+  }
+
+  const roleTitleMap = {
+    client: 'Project Owner',
+    manager: 'Project Manager',
+    member: 'Team Member'
+  }
+
+  return {
+    ...user,
+    role: roleOverride,
+    title: roleTitleMap[roleOverride] || user.title
+  }
 }
 
 // Legacy export for backwards compatibility

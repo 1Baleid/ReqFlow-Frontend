@@ -11,39 +11,42 @@ import ManagerDashboard from './pages/ManagerDashboard'
 import Team from './pages/Team'
 import Settings from './pages/Settings'
 import Projects from './pages/Projects'
+import { ProjectDataProvider } from './context/ProjectDataContext'
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Auth Routes */}
-        <Route path="/login" element={<Login />} />
+    <ProjectDataProvider>
+      <Router>
+        <Routes>
+          {/* Auth Routes */}
+          <Route path="/login" element={<Login />} />
 
-        {/* Dashboard */}
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/manager" element={<ManagerDashboard />} />
+          {/* Dashboard */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/manager" element={<ManagerDashboard />} />
 
-        {/* Requirements */}
-        <Route path="/requirements" element={<Requirements />} />
-        <Route path="/requirements/new" element={<CreateRequirement />} />
-        <Route path="/requirements/:id" element={<RequirementDetail />} />
-        <Route path="/requirements/:id/edit" element={<EditRequirement />} />
-        <Route path="/requirements/:id/versions" element={<VersionHistory />} />
-        <Route path="/manager/requirements" element={<AllRequirementsManager />} />
+          {/* Requirements */}
+          <Route path="/requirements" element={<Requirements />} />
+          <Route path="/requirements/new" element={<CreateRequirement />} />
+          <Route path="/requirements/:id" element={<RequirementDetail />} />
+          <Route path="/requirements/:id/edit" element={<EditRequirement />} />
+          <Route path="/requirements/:id/versions" element={<VersionHistory />} />
+          <Route path="/manager/requirements" element={<AllRequirementsManager />} />
 
-        {/* Other routes */}
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/team" element={<Team />} />
-        <Route path="/traceability" element={<PlaceholderPage title="Traceability" />} />
+          {/* Other routes */}
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/team" element={<Team />} />
+          <Route path="/traceability" element={<PlaceholderPage title="Traceability" />} />
 
-        {/* Redirect root to login */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
+          {/* Redirect root to login */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
 
-        {/* 404 */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
-    </Router>
+          {/* 404 */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </Router>
+    </ProjectDataProvider>
   )
 }
 

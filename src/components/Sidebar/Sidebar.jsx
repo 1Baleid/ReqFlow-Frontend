@@ -15,9 +15,9 @@ function Sidebar({ role = 'client', isCollapsed, onToggle, isMobileOpen, onMobil
     ],
     manager: [
       { path: '/manager', icon: 'dashboard', label: 'Dashboard' },
-      { path: '/requirements', icon: 'assignment', label: 'Requirements' },
+      { path: '/manager/requirements', icon: 'assignment', label: 'Requirements' },
       { path: '/traceability', icon: 'account_tree', label: 'Traceability' },
-      { path: '/team', icon: 'group', label: 'Team' },
+      { path: '/team', icon: 'group', label: 'Project Users' },
       { path: '/projects', icon: 'folder_open', label: 'Projects' },
       { path: '/settings', icon: 'settings', label: 'Settings' }
     ],

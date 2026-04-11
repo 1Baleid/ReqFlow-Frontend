@@ -129,6 +129,25 @@
   margin: 0;
 }
 
+.settings__edit-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0 0 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #475569;
+  background: rgba(19, 83, 216, 0.08);
+  border: 1px solid rgba(19, 83, 216, 0.15);
+  border-radius: 9999px;
+  padding: 6px 10px;
+  width: fit-content;
+}
+
+.settings__edit-hint .material-symbols-outlined {
+  font-size: 14px;
+}
+
 .settings__add-btn {
   display: flex;
   align-items: center;
@@ -173,11 +192,7 @@
 
 .settings__stage:not(.settings__stage--locked):hover {
   border-color: rgba(19, 83, 216, 0.3);
-  cursor: grab;
-}
-
-.settings__stage:not(.settings__stage--locked):active {
-  cursor: grabbing;
+  background: rgba(19, 83, 216, 0.02);
 }
 
 .settings__stage--locked {
@@ -211,6 +226,23 @@
   flex: 1;
 }
 
+.settings__stage-field-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.settings__stage-field-label .material-symbols-outlined {
+  font-size: 14px;
+}
+
 .settings__stage-name-row {
   display: flex;
   align-items: center;
@@ -229,16 +261,24 @@
   font-size: 14px;
   font-weight: 600;
   color: #2b3437;
-  background: transparent;
-  border: none;
-  padding: 0;
+  background: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 8px;
+  padding: 10px 12px;
   outline: none;
   width: 100%;
-  transition: color 0.15s ease;
+  transition: color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.settings__stage-input:hover {
+  background: #ffffff;
+  border-color: rgba(59, 130, 246, 0.35);
 }
 
 .settings__stage-input:focus {
   color: #1353d8;
+  border-color: rgba(19, 83, 216, 0.45);
+  box-shadow: 0 0 0 3px rgba(19, 83, 216, 0.1);
 }
 
 .settings__stage-input--system {
@@ -315,6 +355,24 @@
 .settings__stage-delete:hover {
   color: #9f403d;
   background: rgba(254, 137, 131, 0.1);
+}
+
+.settings__error {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(159, 64, 61, 0.1);
+  color: #9f403d;
+  border: 1px solid rgba(159, 64, 61, 0.2);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.settings__error .material-symbols-outlined {
+  font-size: 18px;
 }
 
 /* Rules Wrapper */
