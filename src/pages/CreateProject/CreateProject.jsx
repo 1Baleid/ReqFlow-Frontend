@@ -24,22 +24,11 @@ const roleOptions = [
 const initialUsers = [
   {
     id: 'client',
-    name: 'Abdullah Al-Rashid',
-    email: 'abdullah@kfupm.edu.sa',
+    name: '',
+    email: '',
     role: 'client',
-    locked: true
-  },
-  {
-    id: 'manager',
-    name: 'Khalid Hassan',
-    email: 'khalid@kfupm.edu.sa',
-    role: 'manager'
-  },
-  {
-    id: 'member',
-    name: 'Omar Faisal',
-    email: 'omar@kfupm.edu.sa',
-    role: 'member'
+    locked: false,
+    protected: true
   }
 ]
 
@@ -64,13 +53,27 @@ function getInitialFormData(project) {
   }
 }
 
-function getProjectUsers(project) {
+function getProjectUsers(project, isEditMode) {
   if (Array.isArray(project?.users) && project.users.length > 0) {
-    return project.users.map((user) => ({
+    const normalizedUsers = project.users.map((user) => ({
       ...user,
       role: user.role || 'member',
-      locked: Boolean(user.locked || user.role === 'client')
+      locked: Boolean(user.locked || user.role === 'client'),
+      protected: user.role === 'client'
     }))
+
+    if (!normalizedUsers.some((user) => user.role === 'client')) {
+      normalizedUsers.unshift({
+        id: 'client',
+        name: 'Project Client',
+        email: '',
+        role: 'client',
+        locked: true,
+        protected: true
+      })
+    }
+
+    return normalizedUsers
   }
 
   if (Array.isArray(project?.team) && project.team.length > 0 && project.team.every((member) => member.email)) {
@@ -83,7 +86,10 @@ function getProjectUsers(project) {
     }))
   }
 
-  return initialUsers.map((user) => ({ ...user }))
+  return initialUsers.map((user) => ({
+    ...user,
+    locked: isEditMode ? true : user.locked
+  }))
 }
 
 function getWorkflowStages(project) {
@@ -115,7 +121,7 @@ function CreateProject() {
   )
   const projectNotFound = isEditMode && !existingProject
   const [formData, setFormData] = useState(() => getInitialFormData(existingProject))
-  const [projectUsers, setProjectUsers] = useState(() => getProjectUsers(existingProject))
+  const [projectUsers, setProjectUsers] = useState(() => getProjectUsers(existingProject, isEditMode))
   const [workflowStages, setWorkflowStages] = useState(() => getWorkflowStages(existingProject))
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -172,7 +178,14 @@ function CreateProject() {
   }
 
   const handleRemoveUser = (userId) => {
-    setProjectUsers((previousUsers) => previousUsers.filter((user) => user.id !== userId))
+    setProjectUsers((previousUsers) => {
+      const userToRemove = previousUsers.find((user) => user.id === userId)
+      if (!userToRemove || userToRemove.role === 'client') {
+        return previousUsers
+      }
+
+      return previousUsers.filter((user) => user.id !== userId)
+    })
   }
 
   const handleWorkflowChange = (stageId, field, value) => {
@@ -198,6 +211,18 @@ function CreateProject() {
 
     if (!formData.name.trim()) {
       nextErrors.name = 'Project name is required.'
+    }
+
+    const clientUsers = trimmedUsers.filter((user) => user.role === 'client')
+    if (clientUsers.length !== 1) {
+      nextErrors.users = 'Exactly one Client must be set during project creation.'
+    }
+
+    if (clientUsers.length === 1) {
+      const [clientUser] = clientUsers
+      if (!clientUser.name || !emailPattern.test(clientUser.email)) {
+        nextErrors.users = 'Client name and a valid client email are required.'
+      }
     }
 
     if (trimmedUsers.some((user) => !user.name || !emailPattern.test(user.email))) {
@@ -427,7 +452,7 @@ function CreateProject() {
                         type="text"
                         value={user.name}
                         onChange={(event) => handleUserChange(user.id, 'name', event.target.value)}
-                        disabled={user.locked}
+                        disabled={Boolean(isEditMode && user.role === 'client') || user.locked}
                         placeholder="Full name"
                         aria-label="User name"
                       />
@@ -435,11 +460,11 @@ function CreateProject() {
                         type="email"
                         value={user.email}
                         onChange={(event) => handleUserChange(user.id, 'email', event.target.value)}
-                        disabled={user.locked}
+                        disabled={Boolean(isEditMode && user.role === 'client') || user.locked}
                         placeholder="name@example.com"
                         aria-label="User email"
                       />
-                      {user.locked ? (
+                      {user.role === 'client' ? (
                         <span className="create-project-page__locked-role">Client</span>
                       ) : (
                         <select
@@ -454,8 +479,10 @@ function CreateProject() {
                           ))}
                         </select>
                       )}
-                      {user.locked ? (
-                        <span className="create-project-page__protected">Protected</span>
+                      {user.role === 'client' || user.locked ? (
+                        <span className="create-project-page__protected">
+                          {isEditMode && user.role === 'client' ? 'Locked after creation' : 'Protected'}
+                        </span>
                       ) : (
                         <button
                           type="button"
@@ -510,7 +537,8 @@ function CreateProject() {
               <section className="create-project-page__side-card create-project-page__side-card--blue">
                 <h3>Access Rules</h3>
                 <ul>
-                  <li>Client role is protected.</li>
+                  <li>Client must be set in this page.</li>
+                  <li>Client cannot be changed later.</li>
                   <li>At least one Manager is required.</li>
                   <li>Saved projects become active immediately.</li>
                 </ul>
