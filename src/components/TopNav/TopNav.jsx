@@ -1,10 +1,18 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Avatar from '../Avatar'
-import { projects, getCurrentProject, setCurrentProject } from '../../data/mockData'
+import {
+  getCurrentProject,
+  getProjects,
+  setCurrentProject
+} from '../../data/mockData'
 import './TopNav.css'
 
 function TopNav({ user, onMenuClick, onProjectChange }) {
+  const navigate = useNavigate()
   const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false)
+  const [projectList, setProjectList] = useState(getProjects)
   const [activeProject, setActiveProject] = useState(getCurrentProject())
 
   // Close dropdown when clicking outside
@@ -18,6 +26,20 @@ function TopNav({ user, onMenuClick, onProjectChange }) {
     return () => document.removeEventListener('click', handleClickOutside)
   }, [])
 
+  useEffect(() => {
+    const syncProjects = () => {
+      setProjectList(getProjects())
+      setActiveProject(getCurrentProject())
+    }
+
+    window.addEventListener('projectsChanged', syncProjects)
+    window.addEventListener('projectChanged', syncProjects)
+    return () => {
+      window.removeEventListener('projectsChanged', syncProjects)
+      window.removeEventListener('projectChanged', syncProjects)
+    }
+  }, [])
+
   const handleProjectSelect = (project) => {
     setActiveProject(project)
     setCurrentProject(project.id)
@@ -27,9 +49,11 @@ function TopNav({ user, onMenuClick, onProjectChange }) {
     if (onProjectChange) {
       onProjectChange(project)
     }
+  }
 
-    // Reload to reflect project change across the app
-    window.location.reload()
+  const handleOpenCreateProject = () => {
+    setIsProjectDropdownOpen(false)
+    navigate('/projects/new')
   }
 
   return (
@@ -73,7 +97,7 @@ function TopNav({ user, onMenuClick, onProjectChange }) {
                 <span className="topnav__dropdown-title">Switch Project</span>
               </div>
               <div className="topnav__dropdown-list">
-                {projects.map((project) => (
+                {projectList.map((project) => (
                   <button
                     key={project.id}
                     className={`topnav__dropdown-item ${project.id === activeProject.id ? 'topnav__dropdown-item--active' : ''}`}
@@ -98,7 +122,7 @@ function TopNav({ user, onMenuClick, onProjectChange }) {
                 ))}
               </div>
               <div className="topnav__dropdown-footer">
-                <button className="topnav__dropdown-action">
+                <button className="topnav__dropdown-action" onClick={handleOpenCreateProject}>
                   <span className="material-symbols-outlined">add</span>
                   Create New Project
                 </button>
@@ -127,6 +151,7 @@ function TopNav({ user, onMenuClick, onProjectChange }) {
           />
         </div>
       </div>
+
     </header>
   )
 }

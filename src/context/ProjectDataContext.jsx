@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {
   createContext,
   useCallback,
@@ -192,6 +193,7 @@ function persistStoreState(storeState) {
 export function ProjectDataProvider({ children }) {
   const [storeState, setStoreState] = useState(() => loadStoreState())
   const [currentUser, setCurrentUser] = useState(getCurrentUser)
+  const [currentProject, setCurrentProjectState] = useState(getCurrentProject)
 
   useEffect(() => {
     function handleUserChanged() {
@@ -199,6 +201,19 @@ export function ProjectDataProvider({ children }) {
     }
     window.addEventListener('userChanged', handleUserChanged)
     return () => window.removeEventListener('userChanged', handleUserChanged)
+  }, [])
+
+  useEffect(() => {
+    function handleProjectChanged() {
+      setCurrentProjectState(getCurrentProject())
+    }
+
+    window.addEventListener('projectChanged', handleProjectChanged)
+    window.addEventListener('projectsChanged', handleProjectChanged)
+    return () => {
+      window.removeEventListener('projectChanged', handleProjectChanged)
+      window.removeEventListener('projectsChanged', handleProjectChanged)
+    }
   }, [])
 
   const updateStoreState = useCallback((updater) => {
@@ -847,8 +862,6 @@ export function ProjectDataProvider({ children }) {
   useEffect(() => {
     persistStoreState(storeState)
   }, [storeState])
-
-  const currentProject = getCurrentProject()
 
   const projectUsers = useMemo(
     () =>

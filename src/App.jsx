@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
@@ -11,6 +12,7 @@ import ManagerDashboard from './pages/ManagerDashboard'
 import Team from './pages/Team'
 import Settings from './pages/Settings'
 import Projects from './pages/Projects'
+import CreateProject from './pages/CreateProject'
 import { ProjectDataProvider } from './context/ProjectDataContext'
 
 function App() {
@@ -35,6 +37,8 @@ function App() {
 
           {/* Other routes */}
           <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/new" element={<CreateProject />} />
+          <Route path="/projects/:projectId/edit" element={<CreateProject />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/team" element={<Team />} />
           <Route path="/traceability" element={<PlaceholderPage title="Traceability" />} />
