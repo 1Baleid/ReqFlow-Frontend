@@ -241,16 +241,24 @@
   color: #1353d8;
 }
 
+.settings__stage-input--system {
+  font-weight: 700;
+  color: #1353d8;
+}
+
 .settings__stage-badge {
-  padding: 2px 8px;
+  padding: 4px 10px;
   font-family: 'Inter', sans-serif;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #586064;
-  background: #dbe4e7;
-  border-radius: 9999px;
+  letter-spacing: 0.08em;
+  color: #1353d8;
+  background: rgba(19, 83, 216, 0.08);
+  border: 1px solid rgba(19, 83, 216, 0.15);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
 }
 
 .settings__stage-desc {
@@ -260,6 +268,25 @@
   margin: 4px 0 0 0;
 }
 
+.settings__stage-desc-input {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #586064;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 4px 0 0 0;
+  outline: none;
+  width: 100%;
+  border-bottom: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.settings__stage-desc-input:focus {
+  border-bottom-color: rgba(19, 83, 216, 0.2);
+  color: #2b3437;
+}
+
 .settings__stage-actions {
   display: flex;
   align-items: center;
@@ -267,8 +294,9 @@
 }
 
 .settings__stage-lock {
-  font-size: 20px;
-  color: #abb3b7;
+  font-size: 18px;
+  color: #1353d8;
+  opacity: 0.6;
 }
 
 .settings__stage-delete {

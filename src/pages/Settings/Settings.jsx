@@ -11,7 +11,7 @@ const initialStages = [
     name: 'Draft',
     description: 'Initial creation phase',
     isSystemRequired: true,
-    isEditable: false
+    isEditable: true
   },
   {
     id: 'under-review',
@@ -28,11 +28,18 @@ const initialStages = [
     isEditable: true
   },
   {
+    id: 'rejected',
+    name: 'Rejected',
+    description: 'Requirement does not meet criteria',
+    isSystemRequired: false,
+    isEditable: true
+  },
+  {
     id: 'approved',
     name: 'Approved',
     description: 'Finalized and baseline-ready',
     isSystemRequired: true,
-    isEditable: false
+    isEditable: true
   }
 ]
 
@@ -70,6 +77,12 @@ function Settings() {
     ))
   }
 
+  const handleStageDescChange = (id, newDesc) => {
+    setStages(stages.map(stage =>
+      stage.id === id ? { ...stage, description: newDesc } : stage
+    ))
+  }
+
   const handleDeleteStage = (id) => {
     setStages(stages.filter(stage => stage.id !== id))
   }
@@ -81,8 +94,30 @@ function Settings() {
   }
 
   const handleSave = () => {
+    // Validation: Draft and Approved must exist
+    const hasDraft = stages.some(stage => stage.id === 'draft');
+    const hasApproved = stages.some(stage => stage.id === 'approved');
+
+    if (!hasDraft || !hasApproved) {
+      alert("Invalid Configuration: Multi-stage workflows must include both a 'Draft' and an 'Approved' stage.");
+      return;
+    }
+
     setShowToast(true)
     setTimeout(() => setShowToast(false), 3000)
+    console.log('Saved Workflow Config:', stages);
+  }
+
+  const handleAddStage = () => {
+    const newId = `stage-${Date.now()}`
+    const newStage = {
+      id: newId,
+      name: 'New Stage',
+      description: 'Custom workflow phase',
+      isSystemRequired: false,
+      isEditable: true
+    }
+    setStages([...stages, newStage])
   }
 
   const handleDiscard = () => {
@@ -120,7 +155,7 @@ function Settings() {
               <h3 className="settings__card-title">Lifecycle Stages</h3>
               <p className="settings__card-subtitle">Reorder or add stages to your workflow.</p>
             </div>
-            <button className="settings__add-btn">
+            <button className="settings__add-btn" onClick={handleAddStage}>
               <span className="material-symbols-outlined">add</span>
               Add Stage
             </button>
@@ -141,9 +176,10 @@ function Settings() {
                       {stage.isEditable ? (
                         <input
                           type="text"
-                          className="settings__stage-input"
+                          className={`settings__stage-input ${stage.isSystemRequired ? 'settings__stage-input--system' : ''}`}
                           value={stage.name}
                           onChange={(e) => handleStageNameChange(stage.id, e.target.value)}
+                          placeholder="Stage Label"
                         />
                       ) : (
                         <span className="settings__stage-name">{stage.name}</span>
@@ -152,7 +188,17 @@ function Settings() {
                         <span className="settings__stage-badge">System Required</span>
                       )}
                     </div>
-                    <p className="settings__stage-desc">{stage.description}</p>
+                    {stage.isEditable ? (
+                      <input
+                        type="text"
+                        className="settings__stage-desc-input"
+                        value={stage.description}
+                        onChange={(e) => handleStageDescChange(stage.id, e.target.value)}
+                        placeholder="Provide a brief description of this phase..."
+                      />
+                    ) : (
+                      <p className="settings__stage-desc">{stage.description}</p>
+                    )}
                   </div>
                 </div>
                 <div className="settings__stage-actions">
