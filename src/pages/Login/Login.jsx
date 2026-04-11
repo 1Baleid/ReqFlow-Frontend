@@ -18,6 +18,7 @@ function Login() {
   })
   const [errors, setErrors] = useState({})
   const [isLoading, setIsLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const [eyeOffset, setEyeOffset] = useState({ x: 0, y: 0 })
   const creatureRef = useRef(null)
 
@@ -307,7 +308,7 @@ function Login() {
               <div className="login__input-wrapper">
                 <span className="login__input-icon material-symbols-outlined">lock</span>
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   id="password"
                   name="password"
                   className={`login__input ${errors.password ? 'login__input--error' : ''}`}
@@ -316,8 +317,16 @@ function Login() {
                   onChange={handleChange}
                   autoComplete="current-password"
                 />
-                <button type="button" className="login__toggle-password">
-                  <span className="material-symbols-outlined">visibility</span>
+                <button
+                  type="button"
+                  className="login__toggle-password"
+                  onClick={() => setShowPassword((isVisible) => !isVisible)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-pressed={showPassword}
+                >
+                  <span className="material-symbols-outlined">
+                    {showPassword ? 'visibility_off' : 'visibility'}
+                  </span>
                 </button>
               </div>
               {errors.password && (
@@ -374,7 +383,7 @@ function Login() {
 
           {/* Contact Admin */}
           <p className="login__contact">
-            Don't have an account? <a href="#">Contact your admin</a>
+            Don&apos;t have an account? <a href="#">Contact your admin</a>
           </p>
         </div>
 
