@@ -80,6 +80,17 @@
   color: #2b3437;
 }
 
+.requirements__sort-select {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #2b3437;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
 /* Table */
 .requirements__table {
   display: flex;

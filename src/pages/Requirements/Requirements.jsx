@@ -19,16 +19,24 @@ function Requirements() {
   const navigate = useNavigate()
   const [activeFilter, setActiveFilter] = useState('all')
   const [currentPage, setCurrentPage] = useState(1)
+  const [sortBy, setSortBy] = useState('updated')
   const itemsPerPage = 10
 
   // Filter requirements
   const filteredRequirements = requirements.filter(req => {
+    if (currentUser.role === 'client' && req.createdBy?.id !== currentUser.id) return false
     if (activeFilter === 'all') return true
     return req.status === activeFilter
   })
 
-  const totalPages = Math.ceil(filteredRequirements.length / itemsPerPage)
-  const paginatedRequirements = filteredRequirements.slice(
+  const statusOrder = ['draft', 'under-review', 'approved', 'rejected', 'locked']
+  const sortedRequirements = [...filteredRequirements].sort((a, b) => {
+    if (sortBy === 'status') return statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status)
+    return 0
+  })
+
+  const totalPages = Math.ceil(sortedRequirements.length / itemsPerPage)
+  const paginatedRequirements = sortedRequirements.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   )
@@ -87,7 +95,15 @@ function Requirements() {
           />
           <div className="requirements__sort">
             <span className="material-symbols-outlined">filter_list</span>
-            <span>Sort by: <strong>Recently Updated</strong></span>
+            <span>Sort by:</span>
+            <select
+              value={sortBy}
+              onChange={(e) => { setSortBy(e.target.value); setCurrentPage(1) }}
+              className="requirements__sort-select"
+            >
+              <option value="updated">Recently Updated</option>
+              <option value="status">Status</option>
+            </select>
           </div>
         </div>
 
@@ -165,7 +181,7 @@ function Requirements() {
         {/* Pagination */}
         <div className="requirements__pagination">
           <p className="requirements__pagination-info">
-            Showing <strong>{paginatedRequirements.length}</strong> of <strong>{filteredRequirements.length}</strong> requirements
+            Showing <strong>{paginatedRequirements.length}</strong> of <strong>{sortedRequirements.length}</strong> requirements
           </p>
           <div className="requirements__pagination-controls">
             <button

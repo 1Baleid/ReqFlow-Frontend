@@ -6,6 +6,7 @@ import TextArea from '../../components/TextArea'
 import Select from '../../components/Select'
 import Button from '../../components/Button'
 import { getCurrentUser } from '../../data/mockData'
+import Toast from '../../components/Toast'
 import './CreateRequirement.css'
 
 const priorityOptions = [
@@ -36,6 +37,7 @@ function CreateRequirement() {
   })
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showToast, setShowToast] = useState(false)
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -64,6 +66,7 @@ function CreateRequirement() {
     }
 
     setIsSubmitting(true)
+    setShowToast(true)
 
     // Simulate API call
     setTimeout(() => {
@@ -78,6 +81,15 @@ function CreateRequirement() {
 
   return (
     <MainLayout user={currentUser} role={currentUser.role}>
+      <Toast
+        isOpen={showToast}
+        onClose={() => setShowToast(false)}
+        title="Requirement Created"
+        message="Your requirement has been saved as a draft."
+        variant="success"
+        duration={1000}
+      />
+
       {/* Breadcrumb */}
       <Link to="/requirements" className="create-req__breadcrumb">
         <span className="material-symbols-outlined">arrow_back</span>

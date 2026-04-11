@@ -191,6 +191,15 @@ function persistStoreState(storeState) {
 
 export function ProjectDataProvider({ children }) {
   const [storeState, setStoreState] = useState(() => loadStoreState())
+  const [currentUser, setCurrentUser] = useState(getCurrentUser)
+
+  useEffect(() => {
+    function handleUserChanged() {
+      setCurrentUser(getCurrentUser())
+    }
+    window.addEventListener('userChanged', handleUserChanged)
+    return () => window.removeEventListener('userChanged', handleUserChanged)
+  }, [])
 
   const updateStoreState = useCallback((updater) => {
     setStoreState((previousState) => {
@@ -894,7 +903,7 @@ export function ProjectDataProvider({ children }) {
 
   const value = useMemo(
     () => ({
-      currentUser: getCurrentUser(),
+      currentUser,
       currentProject,
       workflowStages: storeState.workflowStages,
       workflowStageMap,
@@ -918,6 +927,7 @@ export function ProjectDataProvider({ children }) {
     }),
     [
       currentProject,
+      currentUser,
       workflowStageMap,
       storeState.workflowStages,
       projectUsers,

@@ -103,7 +103,7 @@ function EditRequirement() {
           <div className="edit-req__header-left">
             <div className="edit-req__header-meta">
               <span className="edit-req__id">{requirement.id}</span>
-              <span className="edit-req__status">Draft</span>
+              <span className="edit-req__status">{normalizedStatus.replace('-', ' ').replace(/\b\w/g, c => c.toUpperCase())}</span>
             </div>
             <h2 className="edit-req__title">Edit Requirement</h2>
           </div>
@@ -111,11 +111,21 @@ function EditRequirement() {
             <button className="edit-req__discard-btn" onClick={handleDiscard}>
               Discard Changes
             </button>
-            <Button variant="primary" onClick={handleSave}>
-              Save Version
-            </Button>
+            {!isLocked && (
+              <Button variant="primary" onClick={handleSave}>
+                Save Version
+              </Button>
+            )}
           </div>
         </section>
+
+        {/* Edit Restriction Banner */}
+        {isLocked && (
+          <div className="edit-req__toast edit-req__toast--warning">
+            <span className="material-symbols-outlined edit-req__toast-icon">lock</span>
+            <p className="edit-req__toast-text">Editing is disabled — this requirement is in <strong>{normalizedStatus.replace('-', ' ')}</strong> status and can no longer be modified.</p>
+          </div>
+        )}
 
         {/* Success Toast */}
         {showToast && (
@@ -142,6 +152,7 @@ function EditRequirement() {
                   placeholder="Enter title..."
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
+                  disabled={isLocked}
                 />
                 <div className="edit-req__progress-bar">
                   <div
@@ -157,6 +168,7 @@ function EditRequirement() {
                   className="edit-req__type-select"
                   value={reqType}
                   onChange={(e) => setReqType(e.target.value)}
+                  disabled={isLocked}
                 >
                   <option value="functional">Functional</option>
                   <option value="non-functional">Non-Functional</option>
@@ -171,6 +183,7 @@ function EditRequirement() {
                   rows="8"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
+                  disabled={isLocked}
                 />
               </div>
             </div>
@@ -187,6 +200,7 @@ function EditRequirement() {
                 placeholder="Explain what changed in this draft (e.g., 'Updated latency benchmarks')..."
                 value={versionNote}
                 onChange={(e) => setVersionNote(e.target.value)}
+                disabled={isLocked}
               />
             </div>
           </div>

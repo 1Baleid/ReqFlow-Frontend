@@ -89,6 +89,7 @@ function Login() {
     // Store user role in localStorage for session persistence
     localStorage.setItem('userRole', user.role)
     localStorage.setItem('userEmail', formData.email.toLowerCase())
+    window.dispatchEvent(new Event('userChanged'))
 
     setIsLoading(true)
     setTimeout(() => {

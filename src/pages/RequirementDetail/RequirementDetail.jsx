@@ -97,6 +97,7 @@ function RequirementDetail() {
   const [rejectReason, setRejectReason] = useState('')
   const [actionError, setActionError] = useState('')
   const [feedbackMessage, setFeedbackMessage] = useState('')
+  const [savedRejectReason, setSavedRejectReason] = useState('')
 
   const assignee = useMemo(
     () => projectUsers.find((user) => user.id === requirement?.assigneeId) || null,
@@ -153,7 +154,7 @@ function RequirementDetail() {
   const isManager = currentUser.role === 'manager'
   const isLocked = requirement.status === 'locked'
   const canEditRequirement = !isLocked && ['draft', 'review', 'rejected'].includes(requirement.status)
-  const canApproveOrReject = isManager && !isLocked && requirement.status === 'review'
+  const canApproveOrReject = currentUser.role === 'client' && !isLocked && requirement.status === 'review'
   const canAssign = isManager && !isLocked
   const canSetDeadline = isManager && !isLocked
 
@@ -286,6 +287,8 @@ function RequirementDetail() {
       return
     }
 
+    setSavedRejectReason(rejectReason.trim())
+
     const rejectResult = setRequirementStatus({
       requirementId: requirement.id,
       status: 'rejected',
@@ -297,7 +300,6 @@ function RequirementDetail() {
       setActionError(rejectResult.error || 'Unable to reject requirement.')
       return
     }
-
     setShowRejectModal(false)
     setRejectReason('')
     setActionError('')
@@ -400,6 +402,17 @@ function RequirementDetail() {
               </div>
               <p className="req-detail__description">{detailSnapshot.originalDescription}</p>
             </section>
+
+            {requirement.status === 'rejected' && savedRejectReason && (
+              <section className="req-detail__card">
+                <div className="req-detail__card-header">
+                  <h3 className="req-detail__card-title">Rejection Reason</h3>
+                  <span className="material-symbols-outlined req-detail__card-icon">cancel</span>
+                </div>
+                <p className="req-detail__description">{savedRejectReason}</p>
+              </section>
+            )}
+
 
             <section className="req-detail__card">
               <div className="req-detail__card-header">
