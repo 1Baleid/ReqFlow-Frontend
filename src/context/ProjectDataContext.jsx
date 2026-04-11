@@ -118,6 +118,9 @@ function getInitialStoreState() {
         archivedAt: null,
         mergedFromIds: [],
         deadline: initialDeadline,
+        originalDescription: requirement.description,
+        rejectionReason: null,
+        comments: [],
         history: [
           createRequirementHistoryEntry({
             type: 'created',
@@ -160,6 +163,9 @@ function normalizeLoadedStore(store) {
     archivedAt: requirement.archivedAt || null,
     mergedFromIds: Array.isArray(requirement.mergedFromIds) ? requirement.mergedFromIds : [],
     deadline: toDateOnlyString(requirement.deadline),
+    originalDescription: requirement.originalDescription || requirement.description,
+    rejectionReason: requirement.rejectionReason || null,
+    comments: Array.isArray(requirement.comments) ? requirement.comments : [],
     history: Array.isArray(requirement.history) ? requirement.history : []
   }))
 
@@ -756,6 +762,7 @@ export function ProjectDataProvider({ children }) {
           return {
             ...requirement,
             status,
+            rejectionReason: status === 'rejected' ? (reason || null) : null,
             history: [
               ...requirement.history,
               createRequirementHistoryEntry({
@@ -777,6 +784,88 @@ export function ProjectDataProvider({ children }) {
             createActivityEntry({
               type: 'status_change',
               action: `${requirementId} moved to ${status}`,
+              actorName
+            }),
+            ...previousState.activityLogs
+          ]
+        }
+      })
+
+      return result
+    },
+    [updateStoreState]
+  )
+
+  const addRequirementComment = useCallback(
+    ({ requirementId, author, role, message }) => {
+      updateStoreState((previousState) => {
+        const targetRequirement = previousState.requirements.find((req) => req.id === requirementId)
+        if (!targetRequirement || targetRequirement.isArchived) {
+          return previousState
+        }
+
+        const newComment = {
+          id: createId('comment'),
+          author,
+          role,
+          timestampLabel: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+          message
+        }
+
+        return {
+          ...previousState,
+          requirements: previousState.requirements.map((req) =>
+            req.id !== requirementId
+              ? req
+              : { ...req, comments: [...(req.comments || []), newComment] }
+          )
+        }
+      })
+    },
+    [updateStoreState]
+  )
+
+  const updateRequirement = useCallback(
+    ({ requirementId, title, description, actorName }) => {
+      let result = { ok: false, error: 'Unable to update requirement.' }
+
+      updateStoreState((previousState) => {
+        const targetRequirement = previousState.requirements.find((req) => req.id === requirementId)
+        if (!targetRequirement || targetRequirement.isArchived) {
+          result = { ok: false, error: 'Requirement not found.' }
+          return previousState
+        }
+
+        if (targetRequirement.status === 'locked') {
+          result = { ok: false, error: 'Locked requirements cannot be modified.' }
+          return previousState
+        }
+
+        const now = new Date().toISOString().split('T')[0]
+        result = { ok: true }
+        return {
+          ...previousState,
+          requirements: previousState.requirements.map((req) => {
+            if (req.id !== requirementId) return req
+            return {
+              ...req,
+              title: title ?? req.title,
+              description: description ?? req.description,
+              updatedAt: now,
+              history: [
+                ...req.history,
+                createRequirementHistoryEntry({
+                  type: 'edited',
+                  description: 'Requirement content updated',
+                  actorName
+                })
+              ]
+            }
+          }),
+          activityLogs: [
+            createActivityEntry({
+              type: 'edit',
+              action: `${requirementId} requirement updated`,
               actorName
             }),
             ...previousState.activityLogs
@@ -935,6 +1024,8 @@ export function ProjectDataProvider({ children }) {
       markRequirementsAsDuplicates,
       mergeDuplicateRequirements,
       setRequirementStatus,
+      addRequirementComment,
+      updateRequirement,
       dismissNotification,
       appendActivityLog
     }),
@@ -958,6 +1049,8 @@ export function ProjectDataProvider({ children }) {
       markRequirementsAsDuplicates,
       mergeDuplicateRequirements,
       setRequirementStatus,
+      addRequirementComment,
+      updateRequirement,
       dismissNotification,
       appendActivityLog
     ]

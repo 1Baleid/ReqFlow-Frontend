@@ -300,6 +300,17 @@
   font-size: 20px;
 }
 
+/* Card List */
+.requirements__list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.requirement-card:hover .requirements__actions {
+  opacity: 1;
+}
+
 /* Pagination */
 .requirements__pagination {
   display: flex;

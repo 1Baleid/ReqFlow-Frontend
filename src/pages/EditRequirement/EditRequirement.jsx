@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import MainLayout from '../../layouts/MainLayout'
 import Button from '../../components/Button'
-import { getCurrentUser, requirements } from '../../data/mockData'
+import { useProjectData } from '../../context/ProjectDataContext'
 import './EditRequirement.css'
 
 // Extended mock data for editable requirements
@@ -43,12 +43,11 @@ const editableData = {
 }
 
 function EditRequirement() {
-  const currentUser = getCurrentUser()
   const { id } = useParams()
   const navigate = useNavigate()
+  const { currentUser, getRequirementById, updateRequirement } = useProjectData()
 
-  // Find the requirement
-  const requirement = requirements.find(r => r.id === id) || {
+  const requirement = getRequirementById(id) || {
     id: id,
     title: 'Unknown Requirement',
     description: '',
@@ -82,9 +81,18 @@ function EditRequirement() {
   }
 
   const handleSave = () => {
-    // Simulate save action
-    setShowToast(true)
-    setTimeout(() => setShowToast(false), 3000)
+    const result = updateRequirement({
+      requirementId: id,
+      title,
+      description,
+      actorName: currentUser.name
+    })
+    if (result.ok) {
+      navigate(`/requirements/${id}`)
+    } else {
+      setShowToast(true)
+      setTimeout(() => setShowToast(false), 3000)
+    }
   }
 
   const calculateProgress = () => {

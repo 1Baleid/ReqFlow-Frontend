@@ -18,7 +18,7 @@ const STATUS_LABELS = {
   locked: 'Locked'
 }
 
-function RequirementCard({ requirement, onClick }) {
+function RequirementCard({ requirement, onClick, actions }) {
   const navigate = useNavigate()
   const { id, title, status, updatedAt, version, assignee } = requirement
 
@@ -81,13 +81,15 @@ function RequirementCard({ requirement, onClick }) {
             />
           </div>
         )}
-        <button
-          className="requirement-card__menu"
-          onClick={handleMenuClick}
-          aria-label="More options"
-        >
-          <span className="material-symbols-outlined">more_vert</span>
-        </button>
+        {actions !== undefined ? actions : (
+          <button
+            className="requirement-card__menu"
+            onClick={handleMenuClick}
+            aria-label="More options"
+          >
+            <span className="material-symbols-outlined">more_vert</span>
+          </button>
+        )}
       </div>
     </div>
   )

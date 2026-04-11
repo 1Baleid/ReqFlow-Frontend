@@ -3,31 +3,29 @@ import { useNavigate } from 'react-router-dom'
 import MainLayout from '../../layouts/MainLayout'
 import Button from '../../components/Button'
 import FilterChips from '../../components/FilterChips'
-import { getCurrentUser, requirements, statusFilters } from '../../data/mockData'
+import RequirementCard from '../../components/RequirementCard'
+import { statusFilters } from '../../data/mockData'
+import { useProjectData } from '../../context/ProjectDataContext'
 import './Requirements.css'
 
-const STATUS_CONFIG = {
-  draft: { label: 'Draft', className: 'requirements__status--draft' },
-  'under-review': { label: 'Under Review', className: 'requirements__status--review' },
-  approved: { label: 'Approved', className: 'requirements__status--approved' },
-  rejected: { label: 'Rejected', className: 'requirements__status--rejected' },
-  locked: { label: 'Locked', className: 'requirements__status--locked' }
-}
-
 function Requirements() {
-  const currentUser = getCurrentUser()
+  const { currentUser, activeRequirements } = useProjectData()
   const navigate = useNavigate()
+
   const [activeFilter, setActiveFilter] = useState('all')
   const [currentPage, setCurrentPage] = useState(1)
   const [sortBy, setSortBy] = useState('updated')
   const itemsPerPage = 10
 
-  // Filter requirements
-  const filteredRequirements = requirements.filter(req => {
-    if (currentUser.role === 'client' && req.createdBy?.id !== currentUser.id) return false
-    if (activeFilter === 'all') return true
-    return req.status === activeFilter
-  })
+  // Filter requirements — client sees only their own
+  const filteredRequirements = activeRequirements
+    .filter(req => {
+      if (currentUser.role === 'client' && req.createdBy?.id !== currentUser.id) return false
+      const displayStatus = req.status === 'review' ? 'under-review' : req.status
+      if (activeFilter === 'all') return true
+      return displayStatus === activeFilter
+    })
+    .map(req => ({ ...req, status: req.status === 'review' ? 'under-review' : req.status }))
 
   const statusOrder = ['draft', 'under-review', 'approved', 'rejected', 'locked']
   const sortedRequirements = [...filteredRequirements].sort((a, b) => {
@@ -107,75 +105,39 @@ function Requirements() {
           </div>
         </div>
 
-        {/* Table */}
-        <div className="requirements__table">
-          {/* Table Header */}
-          <div className="requirements__table-header">
-            <div className="requirements__col requirements__col--id">ID</div>
-            <div className="requirements__col requirements__col--title">TITLE & DESCRIPTION</div>
-            <div className="requirements__col requirements__col--status">STATUS</div>
-            <div className="requirements__col requirements__col--date">LAST UPDATED</div>
-            <div className="requirements__col requirements__col--actions"></div>
-          </div>
-
-          {/* Table Body */}
-          <div className="requirements__table-body">
-            {paginatedRequirements.map((req) => {
-              const normalizedStatus = req.status?.toLowerCase().replace(/\s+/g, '-') || 'draft'
-              const statusConfig = STATUS_CONFIG[normalizedStatus] || STATUS_CONFIG.draft
-
-              return (
-                <div
-                  key={req.id}
-                  className={`requirements__row ${normalizedStatus === 'approved' ? 'requirements__row--approved' : ''}`}
-                  onClick={() => handleViewRequirement(req.id)}
-                >
-                  <div className="requirements__col requirements__col--id">
-                    <span className="requirements__id">{req.id}</span>
-                  </div>
-                  <div className="requirements__col requirements__col--title">
-                    <h3 className="requirements__req-title">{req.title}</h3>
-                    <p className="requirements__req-desc">{req.description || 'No description provided.'}</p>
-                  </div>
-                  <div className="requirements__col requirements__col--status">
-                    <span className={`requirements__status ${statusConfig.className}`}>
-                      <span className="requirements__status-dot"></span>
-                      {statusConfig.label}
-                    </span>
-                  </div>
-                  <div className="requirements__col requirements__col--date">
-                    <p className="requirements__date">{req.updatedAt}</p>
-                    <p className="requirements__time">V {req.version}</p>
-                  </div>
-                  <div className="requirements__col requirements__col--actions">
-                    <div className="requirements__actions">
-                      <button
-                        className="requirements__action-btn"
-                        onClick={(e) => { e.stopPropagation(); handleViewRequirement(req.id) }}
-                        aria-label="View"
-                      >
-                        <span className="material-symbols-outlined">visibility</span>
-                      </button>
-                      <button
-                        className="requirements__action-btn"
-                        onClick={(e) => handleEditRequirement(req.id, e)}
-                        aria-label="Edit"
-                      >
-                        <span className="material-symbols-outlined">edit</span>
-                      </button>
-                      <button
-                        className="requirements__action-btn requirements__action-btn--danger"
-                        onClick={(e) => handleDeleteRequirement(req.id, e)}
-                        aria-label="Delete"
-                      >
-                        <span className="material-symbols-outlined">delete</span>
-                      </button>
-                    </div>
-                  </div>
+        {/* Cards */}
+        <div className="requirements__list">
+          {paginatedRequirements.map((req) => (
+            <RequirementCard
+              key={req.id}
+              requirement={req}
+              actions={
+                <div className="requirements__actions">
+                  <button
+                    className="requirements__action-btn"
+                    onClick={(e) => { e.stopPropagation(); handleViewRequirement(req.id) }}
+                    aria-label="View"
+                  >
+                    <span className="material-symbols-outlined">visibility</span>
+                  </button>
+                  <button
+                    className="requirements__action-btn"
+                    onClick={(e) => handleEditRequirement(req.id, e)}
+                    aria-label="Edit"
+                  >
+                    <span className="material-symbols-outlined">edit</span>
+                  </button>
+                  <button
+                    className="requirements__action-btn requirements__action-btn--danger"
+                    onClick={(e) => handleDeleteRequirement(req.id, e)}
+                    aria-label="Delete"
+                  >
+                    <span className="material-symbols-outlined">delete</span>
+                  </button>
                 </div>
-              )
-            })}
-          </div>
+              }
+            />
+          ))}
         </div>
 
         {/* Pagination */}

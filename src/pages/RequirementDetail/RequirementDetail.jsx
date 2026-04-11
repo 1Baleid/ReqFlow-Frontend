@@ -72,14 +72,15 @@ function RequirementDetail() {
     getRequirementById,
     assignRequirement,
     setRequirementDeadline,
-    setRequirementStatus
+    setRequirementStatus,
+    addRequirementComment
   } = useProjectData()
 
   const requirement = getRequirementById(id)
   const detailSnapshot = EXTENDED_REQUIREMENT_DETAILS[id] || DEFAULT_REQUIREMENT_DETAIL
 
   const [commentText, setCommentText] = useState('')
-  const [comments, setComments] = useState(detailSnapshot.discussion)
+  const displayComments = [...detailSnapshot.discussion, ...(requirement?.comments || [])]
   const [criteriaList, setCriteriaList] = useState(detailSnapshot.acceptanceCriteria)
   const [newCriteria, setNewCriteria] = useState('')
   const [showAddCriteria, setShowAddCriteria] = useState(false)
@@ -97,7 +98,6 @@ function RequirementDetail() {
   const [rejectReason, setRejectReason] = useState('')
   const [actionError, setActionError] = useState('')
   const [feedbackMessage, setFeedbackMessage] = useState('')
-  const [savedRejectReason, setSavedRejectReason] = useState('')
 
   const assignee = useMemo(
     () => projectUsers.find((user) => user.id === requirement?.assigneeId) || null,
@@ -187,15 +187,12 @@ function RequirementDetail() {
       return
     }
 
-    const newComment = {
-      id: `comment-${Date.now()}`,
+    addRequirementComment({
+      requirementId: id,
       author: currentUser.name,
       role: currentUser.role,
-      timestampLabel: 'Just now',
       message: commentText.trim()
-    }
-
-    setComments((previousComments) => [...previousComments, newComment])
+    })
     setCommentText('')
   }
 
@@ -286,8 +283,6 @@ function RequirementDetail() {
       setActionError('Rejection reason is required.')
       return
     }
-
-    setSavedRejectReason(rejectReason.trim())
 
     const rejectResult = setRequirementStatus({
       requirementId: requirement.id,
@@ -403,13 +398,34 @@ function RequirementDetail() {
               <p className="req-detail__description">{detailSnapshot.originalDescription}</p>
             </section>
 
-            {requirement.status === 'rejected' && savedRejectReason && (
+            {requirement.status === 'review' &&
+              requirement.originalDescription &&
+              requirement.originalDescription !== requirement.description && (
+              <section className="req-detail__card">
+                <div className="req-detail__card-header">
+                  <h3 className="req-detail__card-title">Refinement Changes</h3>
+                  <span className="material-symbols-outlined req-detail__card-icon">compare_arrows</span>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div>
+                    <p style={{ fontSize: '0.75rem', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Original</p>
+                    <p className="req-detail__description" style={{ background: '#fef2f2', padding: '0.75rem', borderRadius: '8px', border: '1px solid #fecaca' }}>{requirement.originalDescription}</p>
+                  </div>
+                  <div>
+                    <p style={{ fontSize: '0.75rem', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Refined</p>
+                    <p className="req-detail__description" style={{ background: '#f0fdf4', padding: '0.75rem', borderRadius: '8px', border: '1px solid #bbf7d0' }}>{requirement.description}</p>
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {requirement.status === 'rejected' && requirement.rejectionReason && (
               <section className="req-detail__card">
                 <div className="req-detail__card-header">
                   <h3 className="req-detail__card-title">Rejection Reason</h3>
                   <span className="material-symbols-outlined req-detail__card-icon">cancel</span>
                 </div>
-                <p className="req-detail__description">{savedRejectReason}</p>
+                <p className="req-detail__description">{requirement.rejectionReason}</p>
               </section>
             )}
 
@@ -472,7 +488,7 @@ function RequirementDetail() {
               </div>
 
               <div className="req-detail__discussion">
-                {comments.map((comment) => (
+                {displayComments.map((comment) => (
                   <div key={comment.id} className="req-detail__comment">
                     <div className="req-detail__comment-avatar">
                       {comment.author.charAt(0)}

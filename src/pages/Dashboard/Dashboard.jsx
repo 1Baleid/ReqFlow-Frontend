@@ -10,29 +10,32 @@ import EmptyState from '../../components/EmptyState'
 import StatCard from '../../components/StatCard'
 import ActivityFeed from '../../components/ActivityFeed'
 import {
-  getCurrentUser,
-  requirements,
   activities,
   projectStats,
   statusFilters,
   getCurrentProject
 } from '../../data/mockData'
+import { useProjectData } from '../../context/ProjectDataContext'
 import './Dashboard.css'
 
 function Dashboard() {
-  const currentUser = getCurrentUser()
+  const { currentUser, activeRequirements } = useProjectData()
   const navigate = useNavigate()
   const [activeFilter, setActiveFilter] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const currentProject = getCurrentProject()
 
-  // Filter requirements
-  const filteredRequirements = requirements.filter(req => {
-    const matchesFilter = activeFilter === 'all' || req.status === activeFilter
-    const matchesSearch = req.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          req.id.toLowerCase().includes(searchQuery.toLowerCase())
-    return matchesFilter && matchesSearch
-  })
+  // Filter requirements — client sees only their own
+  const filteredRequirements = activeRequirements
+    .filter(req => {
+      if (req.createdBy?.id !== currentUser.id) return false
+      const displayStatus = req.status === 'review' ? 'under-review' : req.status
+      const matchesFilter = activeFilter === 'all' || displayStatus === activeFilter
+      const matchesSearch = req.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            req.id.toLowerCase().includes(searchQuery.toLowerCase())
+      return matchesFilter && matchesSearch
+    })
+    .map(req => ({ ...req, status: req.status === 'review' ? 'under-review' : req.status }))
 
   const handleCreateRequirement = () => {
     navigate('/requirements/new')
