@@ -24,8 +24,15 @@ function Team() {
   const [activeTab, setActiveTab] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [showWarning, setShowWarning] = useState(true)
+  const [members, setMembers] = useState([...teamMembers])
+  const [changeLog, setChangeLog] = useState([
+    { text: 'Yusuf Malik invited', time: '2m ago' },
+    { text: 'Omar promoted to Senior', time: '1h ago' }
+  ])
+  const [roleEdit, setRoleEdit] = useState({ userId: null, newRole: '', show: false })
+  const [error, setError] = useState('')
 
-  const filteredMembers = teamMembers.filter(member => {
+  const filteredMembers = members.filter(member => {
     if (!searchQuery) return true
     const query = searchQuery.toLowerCase()
     return (
@@ -33,6 +40,51 @@ function Team() {
       member.email.toLowerCase().includes(query)
     )
   })
+
+  // Count managers for validation
+  const managerCount = members.filter(m => m.role === 'manager').length
+
+  // Handle role change click
+  const handleRoleChange = (userId, newRole) => {
+    setRoleEdit({ userId, newRole, show: true })
+    setError('')
+  }
+
+  // Confirm role change
+  const confirmRoleChange = () => {
+    const idx = members.findIndex(m => m.id === roleEdit.userId)
+    if (idx === -1) return
+    const member = members[idx]
+    // Prevent changing client
+    if (member.role === 'client') {
+      setError('Cannot change the Client (Owner) role.')
+      setRoleEdit({ userId: null, newRole: '', show: false })
+      return
+    }
+    // Prevent demoting last manager
+    if (member.role === 'manager' && roleEdit.newRole !== 'manager' && managerCount === 1) {
+      setError('At least one Manager must remain in the project.')
+      setRoleEdit({ userId: null, newRole: '', show: false })
+      return
+    }
+    // Update role
+    const updated = [...members]
+    updated[idx] = { ...member, role: roleEdit.newRole }
+    setMembers(updated)
+    // Log the change
+    setChangeLog([
+      { text: `${member.name} role changed to ${ROLE_CONFIG[roleEdit.newRole].label}`, time: new Date().toLocaleTimeString() },
+      ...changeLog.slice(0, 4)
+    ])
+    setRoleEdit({ userId: null, newRole: '', show: false })
+    setError('')
+  }
+
+  // Cancel role change
+  const cancelRoleChange = () => {
+    setRoleEdit({ userId: null, newRole: '', show: false })
+    setError('')
+  }
 
   return (
     <MainLayout user={currentUser} role={currentUser.role}>
@@ -112,6 +164,7 @@ function Team() {
               <tbody>
                 {filteredMembers.map((member) => {
                   const roleConfig = ROLE_CONFIG[member.role] || ROLE_CONFIG.viewer
+                  const editable = currentUser.role === 'manager' && member.role !== 'client' && member.id !== currentUser.id
                   return (
                     <tr key={member.id}>
                       <td>
@@ -127,14 +180,26 @@ function Team() {
                       </td>
                       <td className="team__email">{member.email}</td>
                       <td>
-                        <div className={`team__role-badge ${roleConfig.className}`}>
-                          {roleConfig.label}
-                          {roleConfig.locked ? (
-                            <span className="material-symbols-outlined">lock</span>
-                          ) : (
-                            <span className="material-symbols-outlined">expand_more</span>
-                          )}
-                        </div>
+                        {editable ? (
+                          <select
+                            className={`team__role-select ${roleConfig.className}`}
+                            value={member.role}
+                            onChange={e => handleRoleChange(member.id, e.target.value)}
+                          >
+                            {Object.entries(ROLE_CONFIG).map(([role, config]) => (
+                              (role !== 'client') && <option key={role} value={role}>{config.label}</option>
+                            ))}
+                          </select>
+                        ) : (
+                          <div className={`team__role-badge ${roleConfig.className}`}>
+                            {roleConfig.label}
+                            {roleConfig.locked ? (
+                              <span className="material-symbols-outlined">lock</span>
+                            ) : (
+                              <span className="material-symbols-outlined">expand_more</span>
+                            )}
+                          </div>
+                        )}
                       </td>
                       <td>
                         <div className="team__last-active">
@@ -145,15 +210,7 @@ function Team() {
                         </div>
                       </td>
                       <td className="team__td--right">
-                        {member.role === 'manager' ? (
-                          <button className="team__action-btn team__action-btn--danger">
-                            <span className="material-symbols-outlined">delete</span>
-                          </button>
-                        ) : (
-                          <button className="team__action-btn">
-                            <span className="material-symbols-outlined">more_vert</span>
-                          </button>
-                        )}
+                        {/* ...existing code for actions... */}
                       </td>
                     </tr>
                   )
@@ -198,18 +255,39 @@ function Team() {
               <h4 className="team__info-title">Recent Changes</h4>
             </div>
             <ul className="team__changes-list">
-              <li className="team__changes-item">
-                <span>Yusuf Malik invited</span>
-                <span className="team__changes-time">2m ago</span>
-              </li>
-              <li className="team__changes-item">
-                <span>Omar promoted to Senior</span>
-                <span className="team__changes-time">1h ago</span>
-              </li>
+              {changeLog.map((log, i) => (
+                <li className="team__changes-item" key={i}>
+                  <span>{log.text}</span>
+                  <span className="team__changes-time">{log.time}</span>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
       </div>
+      {/* Role Change Confirmation Modal */}
+      {roleEdit.show && (
+        <div className="team__modal-overlay" onClick={cancelRoleChange}>
+          <div className="team__modal" onClick={e => e.stopPropagation()}>
+            <h3>Confirm Role Change</h3>
+            <p>Are you sure you want to change this user's role to <b>{ROLE_CONFIG[roleEdit.newRole]?.label}</b>?</p>
+            <div className="team__modal-actions">
+              <Button variant="secondary" onClick={cancelRoleChange}>Cancel</Button>
+              <Button variant="primary" onClick={confirmRoleChange}>Confirm</Button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Error Banner */}
+      {error && (
+        <div className="team__error-banner">
+          <span className="material-symbols-outlined">error</span>
+          <span>{error}</span>
+          <button className="team__error-close" onClick={() => setError('')}>
+            <span className="material-symbols-outlined">close</span>
+          </button>
+        </div>
+      )}
     </MainLayout>
   )
 }
