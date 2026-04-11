@@ -329,12 +329,12 @@ function persistStoreState(storeState) {
 
 export function ProjectDataProvider({ children }) {
   const [storeState, setStoreState] = useState(() => loadStoreState())
-  const [currentUser, setCurrentUser] = useState(getCurrentUser)
+  const [sessionUser, setSessionUser] = useState(getCurrentUser)
   const [currentProject, setCurrentProjectState] = useState(getCurrentProject)
 
   useEffect(() => {
     function handleUserChanged() {
-      setCurrentUser(getCurrentUser())
+      setSessionUser(getCurrentUser())
     }
     window.addEventListener('userChanged', handleUserChanged)
     return () => window.removeEventListener('userChanged', handleUserChanged)
@@ -1414,7 +1414,99 @@ export function ProjectDataProvider({ children }) {
     persistStoreState(storeState)
   }, [storeState])
 
-  const projectUsers = useMemo(
+  useEffect(() => {
+    const projectId = currentProject?.id
+    const currentProjectUsers = Array.isArray(currentProject?.users) ? currentProject.users : []
+
+    if (!projectId || currentProjectUsers.length === 0) {
+      return
+    }
+
+    updateStoreState((previousState) => {
+      let hasUpdates = false
+      const nextUsers = [...previousState.projectUsers]
+
+      currentProjectUsers.forEach((projectUser) => {
+        const projectUserEmail = String(projectUser.email || '').trim().toLowerCase()
+        const existingUserIndex = nextUsers.findIndex((user) => {
+          if (projectUser.id && user.id === projectUser.id) {
+            return true
+          }
+
+          if (!projectUserEmail) {
+            return false
+          }
+
+          return String(user.email || '').trim().toLowerCase() === projectUserEmail
+        })
+
+        if (existingUserIndex === -1) {
+          hasUpdates = true
+          const normalizedRole = projectUser.role || 'member'
+          nextUsers.push({
+            id: projectUser.id || createId('user'),
+            name: projectUser.name || 'Project User',
+            title:
+              normalizedRole === 'client'
+                ? 'Project Owner'
+                : normalizedRole === 'manager'
+                  ? 'Project Manager'
+                  : 'Team Member',
+            email: String(projectUser.email || '').trim(),
+            role: normalizedRole,
+            lastActive: 'Active now',
+            isOnline: false,
+            avatar: null,
+            activeTasks: 0,
+            capacity: 0,
+            managedProjectIds: [projectId]
+          })
+          return
+        }
+
+        const existingUser = nextUsers[existingUserIndex]
+        const managedProjectIds = Array.isArray(existingUser.managedProjectIds)
+          ? existingUser.managedProjectIds
+          : []
+        const includesProject = managedProjectIds.includes(projectId)
+        const normalizedRole = projectUser.role || existingUser.role || 'member'
+        const normalizedName = projectUser.name || existingUser.name
+        const normalizedEmail = String(projectUser.email || existingUser.email || '').trim()
+
+        const shouldUpdate =
+          !includesProject ||
+          existingUser.role !== normalizedRole ||
+          existingUser.name !== normalizedName ||
+          existingUser.email !== normalizedEmail
+
+        if (!shouldUpdate) {
+          return
+        }
+
+        hasUpdates = true
+        nextUsers[existingUserIndex] = {
+          ...existingUser,
+          role: normalizedRole,
+          name: normalizedName,
+          email: normalizedEmail,
+          managedProjectIds: includesProject
+            ? managedProjectIds
+            : [...managedProjectIds, projectId]
+        }
+      })
+
+      if (!hasUpdates) {
+        return previousState
+      }
+
+      return {
+        ...previousState,
+        projectUsers: nextUsers
+      }
+    })
+  }, [currentProject?.id, currentProject?.users, updateStoreState])
+
+  const projectUsersFromStore = useMemo(
     () =>
       storeState.projectUsers.filter((user) => {
         if (!Array.isArray(user.managedProjectIds)) {
@@ -1424,6 +1516,77 @@ export function ProjectDataProvider({ children }) {
       }),
     [storeState.projectUsers, currentProject.id]
   )
+
+  const projectUsers = useMemo(() => {
+    if (projectUsersFromStore.length > 0) {
+      return projectUsersFromStore
+    }
+
+    const currentProjectUsers = Array.isArray(currentProject?.users) ? currentProject.users : []
+    return currentProjectUsers.map((user) => ({
+      id: user.id || createId('user'),
+      name: user.name || 'Project User',
+      email: String(user.email || '').trim(),
+      title:
+        user.role === 'client'
+          ? 'Project Owner'
+          : user.role === 'manager'
+            ? 'Project Manager'
+            : 'Team Member',
+      role: user.role || 'member',
+      lastActive: 'Active now',
+      isOnline: false,
+      avatar: null,
+      activeTasks: 0,
+      capacity: 0,
+      managedProjectIds: [currentProject.id]
+    }))
+  }, [projectUsersFromStore, currentProject?.users, currentProject.id])
+
+  const currentUser = useMemo(() => {
+    if (!sessionUser) {
+      return null
+    }
+
+    const sessionEmailKey = String(sessionUser.email || '').trim().toLowerCase()
+    const currentProjectUsers = Array.isArray(currentProject?.users) ? currentProject.users : []
+    const matchedProjectUser = currentProjectUsers.find((user) => {
+      if (sessionUser.id && user.id === sessionUser.id) {
+        return true
+      }
+
+      if (!sessionEmailKey) {
+        return false
+      }
+
+      return String(user.email || '').trim().toLowerCase() === sessionEmailKey
+    })
+
+    const matchedStoreUser = projectUsers.find((user) => {
+      if (sessionUser.id && user.id === sessionUser.id) {
+        return true
+      }
+
+      if (!sessionEmailKey) {
+        return false
+      }
+
+      return String(user.email || '').trim().toLowerCase() === sessionEmailKey
+    })
+
+    const resolvedRole = matchedProjectUser?.role || matchedStoreUser?.role || sessionUser.role || 'client'
+    const roleTitleMap = {
+      client: 'Project Owner',
+      manager: 'Project Manager',
+      member: 'Team Member'
+    }
+
+    return {
+      ...sessionUser,
+      role: resolvedRole,
+      title: roleTitleMap[resolvedRole] || sessionUser.title
+    }
+  }, [sessionUser, currentProject?.users, projectUsers])
 
   const activeRequirements = useMemo(
     () =>

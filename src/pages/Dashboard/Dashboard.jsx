@@ -38,6 +38,24 @@ function Dashboard() {
     })
     .map(req => ({ ...req, status: req.status === 'review' ? 'under-review' : req.status }))
 
+  const activeFilterLabel = statusFilters.find((filter) => filter.value === activeFilter)?.label || 'Requirements'
+
+  const emptyStateTitle = searchQuery.trim()
+    ? 'No matching requirements found'
+    : activeFilter === 'all'
+      ? 'No requirements found'
+      : `No ${activeFilterLabel.toLowerCase()} requirements found`
+
+  const emptyStateDescription = searchQuery.trim()
+    ? `No ${activeFilterLabel.toLowerCase()} requirements match "${searchQuery.trim()}" in the "${currentProject.name}" project.`
+    : activeFilter === 'all'
+      ? `It looks like there are no requirements in the "${currentProject.name}" project yet. Ready to build something great?`
+      : `There are no ${activeFilterLabel.toLowerCase()} requirements in the "${currentProject.name}" project right now.`
+
+  const emptyStateActionLabel = searchQuery.trim() || activeFilter !== 'all'
+    ? 'Create Requirement'
+    : 'Create First Requirement'
+
   const handleCreateRequirement = () => {
     navigate('/requirements/new')
   }
@@ -97,9 +115,9 @@ function Dashboard() {
             ) : (
               <EmptyState
                 icon="post_add"
-                title="No active drafts found"
-                description={`It looks like you haven't started any requirements for the "Enterprise Portal" project yet. Ready to build something great?`}
-                actionLabel="Create First Requirement"
+                title={emptyStateTitle}
+                description={emptyStateDescription}
+                actionLabel={emptyStateActionLabel}
                 onAction={handleCreateRequirement}
               />
             )}

@@ -2,10 +2,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import MainLayout from '../../layouts/MainLayout'
 import Button from '../../components/Button'
-import { deleteProject, getProjects, setCurrentProject } from '../../data/mockData'
+import { deleteProject, getCurrentUser, getProjects, setCurrentProject } from '../../data/mockData'
+import { useProjectData } from '../../context/ProjectDataContext'
 import './Projects.css'
 
 function Projects() {
+  const { currentUser } = useProjectData()
   const navigate = useNavigate()
   const location = useLocation()
   const [filter, setFilter] = useState('all')
@@ -103,8 +105,24 @@ function Projects() {
   }
 
   const handleProjectClick = (projectId) => {
+    const selectedProject = projectList.find((project) => project.id === projectId)
+    const sessionUser = getCurrentUser()
+    const sessionEmail = String(sessionUser?.email || '').trim().toLowerCase()
+    const projectUserMatch = selectedProject?.users?.find((user) => {
+      if (sessionUser?.id && user.id === sessionUser.id) {
+        return true
+      }
+
+      if (!sessionEmail) {
+        return false
+      }
+
+      return String(user.email || '').trim().toLowerCase() === sessionEmail
+    })
+    const targetRole = projectUserMatch?.role || sessionUser?.role || 'client'
+
     setCurrentProject(projectId)
-    navigate('/requirements')
+    navigate(targetRole === 'manager' ? '/manager' : '/dashboard')
   }
 
   const handleMenuToggle = (event, projectId) => {
@@ -139,7 +157,7 @@ function Projects() {
   }
 
   return (
-    <MainLayout>
+    <MainLayout user={currentUser} role={currentUser.role}>
       <div className="projects">
         {/* Header */}
         <div className="projects__header">

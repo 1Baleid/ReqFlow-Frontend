@@ -53,7 +53,51 @@ function getInitialFormData(project) {
   }
 }
 
-function getProjectUsers(project, isEditMode) {
+function ensureCreatorManager(users, currentUser) {
+  if (!Array.isArray(users) || !currentUser?.id) {
+    return Array.isArray(users) ? users : []
+  }
+
+  const creatorName = String(currentUser.name || '').trim()
+  const creatorEmail = String(currentUser.email || '').trim()
+  const creatorEmailKey = creatorEmail.toLowerCase()
+  const creatorIndex = users.findIndex((user) => {
+    if (user.id === currentUser.id) {
+      return true
+    }
+
+    const userEmail = String(user.email || '').trim().toLowerCase()
+    return Boolean(creatorEmailKey) && userEmail === creatorEmailKey
+  })
+
+  if (creatorIndex === -1) {
+    return [
+      ...users,
+      {
+        id: currentUser.id,
+        name: creatorName,
+        email: creatorEmail,
+        role: 'manager'
+      }
+    ]
+  }
+
+  return users.map((user, index) => {
+    if (index !== creatorIndex) {
+      return user
+    }
+
+    return {
+      ...user,
+      id: currentUser.id,
+      role: 'manager',
+      name: String(user.name || '').trim() || creatorName,
+      email: String(user.email || '').trim() || creatorEmail
+    }
+  })
+}
+
+function getProjectUsers(project, isEditMode, currentUser) {
   if (Array.isArray(project?.users) && project.users.length > 0) {
     const normalizedUsers = project.users.map((user) => ({
       ...user,
@@ -86,10 +130,16 @@ function getProjectUsers(project, isEditMode) {
     }))
   }
 
-  return initialUsers.map((user) => ({
+  const baseUsers = initialUsers.map((user) => ({
     ...user,
     locked: isEditMode ? true : user.locked
   }))
+
+  if (isEditMode) {
+    return baseUsers
+  }
+
+  return ensureCreatorManager(baseUsers, currentUser)
 }
 
 function getWorkflowStages(project) {
@@ -121,7 +171,7 @@ function CreateProject() {
   )
   const projectNotFound = isEditMode && !existingProject
   const [formData, setFormData] = useState(() => getInitialFormData(existingProject))
-  const [projectUsers, setProjectUsers] = useState(() => getProjectUsers(existingProject, isEditMode))
+  const [projectUsers, setProjectUsers] = useState(() => getProjectUsers(existingProject, isEditMode, currentUser))
   const [workflowStages, setWorkflowStages] = useState(() => getWorkflowStages(existingProject))
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -200,9 +250,9 @@ function CreateProject() {
     setWorkflowStages(getWorkflowStages(existingProject))
   }
 
-  const validate = () => {
+  const validate = (usersToValidate = projectUsers) => {
     const nextErrors = {}
-    const trimmedUsers = projectUsers.map((user) => ({
+    const trimmedUsers = usersToValidate.map((user) => ({
       ...user,
       name: user.name.trim(),
       email: user.email.trim()
@@ -242,7 +292,10 @@ function CreateProject() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    const validationErrors = validate()
+    const submissionUsers = isEditMode
+      ? projectUsers
+      : ensureCreatorManager(projectUsers, currentUser)
+    const validationErrors = validate(submissionUsers)
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
@@ -251,7 +304,7 @@ function CreateProject() {
 
     setIsSubmitting(true)
 
-    const sanitizedUsers = projectUsers.map((user) => ({
+    const sanitizedUsers = submissionUsers.map((user) => ({
       ...user,
       name: user.name.trim(),
       email: user.email.trim()
@@ -539,6 +592,7 @@ function CreateProject() {
                 <ul>
                   <li>Client must be set in this page.</li>
                   <li>Client cannot be changed later.</li>
+                  <li>Project creator is added as Manager by default.</li>
                   <li>At least one Manager is required.</li>
                   <li>Saved projects become active immediately.</li>
                 </ul>
