@@ -32,7 +32,6 @@ function RequirementCard({ requirement, onClick, actions }) {
 
   const handleMenuClick = (e) => {
     e.stopPropagation()
-    // TODO: Show menu dropdown
   }
 
   // Format the ID (e.g., "REQ-042" -> display as REQ and 042 separately)

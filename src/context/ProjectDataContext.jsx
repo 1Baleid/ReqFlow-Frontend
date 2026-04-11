@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import {
   createContext,
   useCallback,
@@ -29,6 +28,8 @@ const ALLOWED_ASSIGNMENT_ROLES = ['member']
 const ALLOWED_MANAGEABLE_ROLES = ['manager', 'member']
 const ALLOWED_INVITE_ROLES = ['member', 'manager']
 const ALLOWED_REQUIREMENT_STATUSES = ['draft', 'review', 'approved', 'rejected', 'locked']
+const ALLOWED_REQUIREMENT_TYPES = ['functional', 'non-functional']
+const ALLOWED_PRIORITY_LEVELS = ['low', 'medium', 'high', 'critical']
 
 const ProjectDataContext = createContext(null)
 
@@ -89,6 +90,134 @@ function createRequirementHistoryEntry({ type, description, actorName }) {
   }
 }
 
+function getRequirementVersionNumber(requirement) {
+  if (Number.isFinite(requirement.versionNumber)) {
+    return requirement.versionNumber
+  }
+
+  const versionText = String(requirement.version || '1')
+  const [majorVersion] = versionText.split('.')
+  const parsedVersion = Number.parseInt(majorVersion, 10)
+  return Number.isNaN(parsedVersion) || parsedVersion <= 0 ? 1 : parsedVersion
+}
+
+function toVersionString(versionNumber) {
+  return `${versionNumber}.0`
+}
+
+function createRequirementId(existingRequirements) {
+  const usedIds = new Set(existingRequirements.map((requirement) => requirement.id))
+  let numericCandidate = 1
+
+  while (usedIds.has(`REQ-${String(numericCandidate).padStart(3, '0')}`)) {
+    numericCandidate += 1
+  }
+
+  return `REQ-${String(numericCandidate).padStart(3, '0')}`
+}
+
+function normalizeRequirementType(type) {
+  return ALLOWED_REQUIREMENT_TYPES.includes(type) ? type : 'functional'
+}
+
+function normalizePriority(priority) {
+  return ALLOWED_PRIORITY_LEVELS.includes(priority) ? priority : 'medium'
+}
+
+function buildRequirementSnapshot(requirement) {
+  return {
+    title: requirement.title,
+    description: requirement.description,
+    type: normalizeRequirementType(requirement.type),
+    priority: normalizePriority(requirement.priority),
+    acceptanceCriteria: Array.isArray(requirement.acceptanceCriteria)
+      ? [...requirement.acceptanceCriteria]
+      : [],
+    linkedRequirementIds: Array.isArray(requirement.linkedRequirementIds)
+      ? [...requirement.linkedRequirementIds]
+      : []
+  }
+}
+
+function createRequirementVersionEntry({
+  versionNumber,
+  snapshot,
+  actorName,
+  summary,
+  sourceVersionId = null
+}) {
+  return {
+    id: createId('version'),
+    versionNumber,
+    label: `V${versionNumber}`,
+    actorName,
+    summary,
+    sourceVersionId,
+    createdAt: new Date().toISOString(),
+    snapshot
+  }
+}
+
+function normalizeRequirementRecord(requirement, fallbackActorName = 'System') {
+  const normalizedVersionNumber = getRequirementVersionNumber(requirement)
+  const normalizedRecord = {
+    ...requirement,
+    status: toNormalizedStatus(requirement.status || 'draft'),
+    assigneeId: requirement.assigneeId ?? requirement.assignee?.id ?? null,
+    duplicateGroupId: requirement.duplicateGroupId || null,
+    isArchived: Boolean(requirement.isArchived),
+    archivedAt: requirement.archivedAt || null,
+    mergedFromIds: Array.isArray(requirement.mergedFromIds) ? requirement.mergedFromIds : [],
+    deadline: toDateOnlyString(requirement.deadline),
+    originalDescription: requirement.originalDescription || requirement.description,
+    rejectionReason: requirement.rejectionReason || null,
+    comments: Array.isArray(requirement.comments) ? requirement.comments : [],
+    history: Array.isArray(requirement.history) ? requirement.history : [],
+    type: normalizeRequirementType(requirement.type),
+    priority: normalizePriority(requirement.priority),
+    acceptanceCriteria: Array.isArray(requirement.acceptanceCriteria)
+      ? requirement.acceptanceCriteria.filter(Boolean)
+      : [],
+    linkedRequirementIds: Array.isArray(requirement.linkedRequirementIds)
+      ? [...new Set(requirement.linkedRequirementIds.filter((linkedId) => linkedId && linkedId !== requirement.id))]
+      : [],
+    versionNumber: normalizedVersionNumber,
+    version: requirement.version || toVersionString(normalizedVersionNumber)
+  }
+
+  const fallbackSnapshot = buildRequirementSnapshot(normalizedRecord)
+  const normalizedVersions = Array.isArray(requirement.versions) && requirement.versions.length > 0
+    ? requirement.versions.map((versionEntry) => {
+      const normalizedEntryVersionNumber = Number.isFinite(versionEntry.versionNumber)
+        ? versionEntry.versionNumber
+        : normalizedVersionNumber
+
+      return {
+        ...versionEntry,
+        id: versionEntry.id || createId('version'),
+        versionNumber: normalizedEntryVersionNumber,
+        label: versionEntry.label || `V${normalizedEntryVersionNumber}`,
+        actorName: versionEntry.actorName || fallbackActorName,
+        summary: versionEntry.summary || 'Requirement updated',
+        createdAt: versionEntry.createdAt || new Date().toISOString(),
+        snapshot: versionEntry.snapshot || fallbackSnapshot
+      }
+    })
+    : [
+      createRequirementVersionEntry({
+        versionNumber: normalizedVersionNumber,
+        snapshot: fallbackSnapshot,
+        actorName: fallbackActorName,
+        summary: 'Requirement initialized'
+      })
+    ]
+
+  return {
+    ...normalizedRecord,
+    versions: normalizedVersions
+  }
+}
+
 function getInitialStoreState() {
   const now = new Date().toISOString().split('T')[0]
   const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0]
@@ -108,27 +237,35 @@ function getInitialStoreState() {
             ? now
             : null
 
-      return {
-        ...requirement,
-        projectId: 'proj-1',
-        status: normalizedStatus,
-        assigneeId: requirement.assignee?.id ?? null,
-        duplicateGroupId: null,
-        isArchived: false,
-        archivedAt: null,
-        mergedFromIds: [],
-        deadline: initialDeadline,
-        originalDescription: requirement.description,
-        rejectionReason: null,
-        comments: [],
-        history: [
-          createRequirementHistoryEntry({
-            type: 'created',
-            description: `Requirement ${requirement.id} initialized in the project`,
-            actorName: requirement.createdBy?.name || 'System'
-          })
-        ]
-      }
+      const normalizedRequirement = normalizeRequirementRecord(
+        {
+          ...requirement,
+          type: requirement.type || 'functional',
+          acceptanceCriteria: requirement.acceptanceCriteria || [],
+          linkedRequirementIds: requirement.linkedRequirementIds || [],
+          projectId: 'proj-1',
+          status: normalizedStatus,
+          assigneeId: requirement.assignee?.id ?? null,
+          duplicateGroupId: null,
+          isArchived: false,
+          archivedAt: null,
+          mergedFromIds: [],
+          deadline: initialDeadline,
+          originalDescription: requirement.description,
+          rejectionReason: null,
+          comments: [],
+          history: [
+            createRequirementHistoryEntry({
+              type: 'created',
+              description: `Requirement ${requirement.id} initialized in the project`,
+              actorName: requirement.createdBy?.name || 'System'
+            })
+          ]
+        },
+        requirement.createdBy?.name || 'System'
+      )
+
+      return normalizedRequirement
     }),
     notifications: [],
     activityLogs: [
@@ -153,21 +290,15 @@ function normalizeLoadedStore(store) {
   const loadedNotifications = Array.isArray(store.notifications) ? store.notifications : []
   const loadedLogs = Array.isArray(store.activityLogs) ? store.activityLogs : fallback.activityLogs
 
-  const normalizedRequirements = loadedRequirements.map((requirement) => ({
-    ...requirement,
-    projectId: requirement.projectId || 'proj-1',
-    status: toNormalizedStatus(requirement.status || 'draft'),
-    assigneeId: requirement.assigneeId ?? requirement.assignee?.id ?? null,
-    duplicateGroupId: requirement.duplicateGroupId || null,
-    isArchived: Boolean(requirement.isArchived),
-    archivedAt: requirement.archivedAt || null,
-    mergedFromIds: Array.isArray(requirement.mergedFromIds) ? requirement.mergedFromIds : [],
-    deadline: toDateOnlyString(requirement.deadline),
-    originalDescription: requirement.originalDescription || requirement.description,
-    rejectionReason: requirement.rejectionReason || null,
-    comments: Array.isArray(requirement.comments) ? requirement.comments : [],
-    history: Array.isArray(requirement.history) ? requirement.history : []
-  }))
+  const normalizedRequirements = loadedRequirements.map((requirement) =>
+    normalizeRequirementRecord(
+      {
+        ...requirement,
+        projectId: requirement.projectId || 'proj-1'
+      },
+      requirement.createdBy?.name || 'System'
+    )
+  )
 
   return {
     workflowStages: loadedStages,
@@ -414,6 +545,103 @@ export function ProjectDataProvider({ children }) {
       return result
     },
     [updateStoreState]
+  )
+
+  const createRequirement = useCallback(
+    ({
+      title,
+      description,
+      type = 'functional',
+      priority = 'medium',
+      actorId,
+      actorName
+    }) => {
+      const normalizedTitle = String(title || '').trim()
+      const normalizedDescription = String(description || '').trim()
+      const normalizedType = normalizeRequirementType(type)
+      const normalizedPriority = normalizePriority(priority)
+
+      if (!normalizedTitle) {
+        return { ok: false, error: 'Requirement title is required.' }
+      }
+
+      if (!normalizedDescription) {
+        return { ok: false, error: 'Requirement description is required.' }
+      }
+
+      let result = { ok: false, error: 'Unable to create requirement.' }
+
+      updateStoreState((previousState) => {
+        const now = new Date().toISOString().split('T')[0]
+        const requirementId = createRequirementId(previousState.requirements)
+        const versionNumber = 1
+        const baseRequirement = {
+          id: requirementId,
+          title: normalizedTitle,
+          description: normalizedDescription,
+          status: 'draft',
+          priority: normalizedPriority,
+          type: normalizedType,
+          versionNumber,
+          version: toVersionString(versionNumber),
+          createdAt: now,
+          updatedAt: now,
+          projectId: currentProject.id,
+          assigneeId: null,
+          duplicateGroupId: null,
+          isArchived: false,
+          archivedAt: null,
+          mergedFromIds: [],
+          deadline: null,
+          originalDescription: normalizedDescription,
+          rejectionReason: null,
+          comments: [],
+          acceptanceCriteria: [],
+          linkedRequirementIds: [],
+          createdBy: {
+            id: actorId,
+            name: actorName
+          },
+          history: [
+            createRequirementHistoryEntry({
+              type: 'created',
+              description: `${requirementId} created in Draft`,
+              actorName
+            })
+          ]
+        }
+
+        const snapshot = buildRequirementSnapshot(baseRequirement)
+        const createdRequirement = {
+          ...baseRequirement,
+          versions: [
+            createRequirementVersionEntry({
+              versionNumber,
+              snapshot,
+              actorName,
+              summary: 'Initial draft created'
+            })
+          ]
+        }
+
+        result = { ok: true, requirement: createdRequirement }
+        return {
+          ...previousState,
+          requirements: [createdRequirement, ...previousState.requirements],
+          activityLogs: [
+            createActivityEntry({
+              type: 'created',
+              action: `${requirementId} created`,
+              actorName
+            }),
+            ...previousState.activityLogs
+          ]
+        }
+      })
+
+      return result
+    },
+    [currentProject.id, updateStoreState]
   )
 
   const assignRequirement = useCallback(
@@ -804,21 +1032,58 @@ export function ProjectDataProvider({ children }) {
           return previousState
         }
 
+        const normalizedMessage = String(message || '').trim()
+        if (!normalizedMessage) {
+          return previousState
+        }
+
         const newComment = {
           id: createId('comment'),
           author,
           role,
           timestampLabel: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-          message
+          message: normalizedMessage
         }
+
+        const managerRecipients = previousState.projectUsers
+          .filter((user) => user.role === 'manager')
+          .map((user) => user.id)
+        const notificationRecipients = [...new Set([
+          targetRequirement.createdBy?.id,
+          ...managerRecipients
+        ].filter(Boolean))]
+        const commentNotifications = role === 'member'
+          ? notificationRecipients.map((recipientId) => ({
+            id: createId('notification'),
+            type: 'clarification',
+            projectId: targetRequirement.projectId,
+            requirementId: targetRequirement.id,
+            recipientId,
+            message: `${targetRequirement.id} has a new clarification request from ${author}.`,
+            isRead: false,
+            timestamp: new Date().toISOString()
+          }))
+          : []
 
         return {
           ...previousState,
           requirements: previousState.requirements.map((req) =>
             req.id !== requirementId
               ? req
-              : { ...req, comments: [...(req.comments || []), newComment] }
-          )
+              : {
+                ...req,
+                comments: [...(req.comments || []), newComment],
+                history: [
+                  ...req.history,
+                  createRequirementHistoryEntry({
+                    type: 'comment',
+                    description: `Discussion updated by ${author}`,
+                    actorName: author
+                  })
+                ]
+              }
+          ),
+          notifications: [...commentNotifications, ...previousState.notifications]
         }
       })
     },
@@ -826,7 +1091,19 @@ export function ProjectDataProvider({ children }) {
   )
 
   const updateRequirement = useCallback(
-    ({ requirementId, title, description, actorName }) => {
+    ({
+      requirementId,
+      title,
+      description,
+      type,
+      priority,
+      acceptanceCriteria,
+      linkedRequirementIds,
+      justification,
+      actorId,
+      actorName,
+      actorRole
+    }) => {
       let result = { ok: false, error: 'Unable to update requirement.' }
 
       updateStoreState((previousState) => {
@@ -841,7 +1118,106 @@ export function ProjectDataProvider({ children }) {
           return previousState
         }
 
+        if (actorRole === 'client') {
+          const isClientOwner = targetRequirement.createdBy?.id === actorId
+          if (!isClientOwner) {
+            result = { ok: false, error: 'Clients can only edit their own requirements.' }
+            return previousState
+          }
+
+          if (targetRequirement.status !== 'draft') {
+            result = { ok: false, error: 'Client edits are only allowed while requirement is Draft.' }
+            return previousState
+          }
+        }
+
+        if (actorRole === 'member') {
+          if (targetRequirement.assigneeId !== actorId) {
+            result = { ok: false, error: 'Team Members can only edit their assigned requirements.' }
+            return previousState
+          }
+
+          if (!['draft', 'review'].includes(targetRequirement.status)) {
+            result = { ok: false, error: 'Team Members can edit only Draft or Review requirements.' }
+            return previousState
+          }
+
+          if (!String(justification || '').trim()) {
+            result = { ok: false, error: 'A non-empty refinement justification is required.' }
+            return previousState
+          }
+        }
+
+        const normalizedTitle = title === undefined ? targetRequirement.title : String(title).trim()
+        const normalizedDescription = description === undefined
+          ? targetRequirement.description
+          : String(description).trim()
+        const normalizedType = type === undefined
+          ? normalizeRequirementType(targetRequirement.type)
+          : normalizeRequirementType(type)
+        const normalizedPriority = priority === undefined
+          ? normalizePriority(targetRequirement.priority)
+          : normalizePriority(priority)
+        const normalizedCriteria = acceptanceCriteria === undefined
+          ? (Array.isArray(targetRequirement.acceptanceCriteria) ? targetRequirement.acceptanceCriteria : [])
+          : acceptanceCriteria
+            .map((criteriaItem) => String(criteriaItem || '').trim())
+            .filter(Boolean)
+        const normalizedLinks = linkedRequirementIds === undefined
+          ? (Array.isArray(targetRequirement.linkedRequirementIds) ? targetRequirement.linkedRequirementIds : [])
+          : [...new Set(
+            linkedRequirementIds
+              .map((linkedId) => String(linkedId || '').trim())
+              .filter((linkedId) => linkedId && linkedId !== requirementId)
+          )]
+
+        if (!normalizedTitle) {
+          result = { ok: false, error: 'Requirement title cannot be empty.' }
+          return previousState
+        }
+
+        if (!normalizedDescription) {
+          result = { ok: false, error: 'Requirement description cannot be empty.' }
+          return previousState
+        }
+
+        const activeProjectRequirements = previousState.requirements.filter(
+          (requirement) => requirement.projectId === targetRequirement.projectId && !requirement.isArchived
+        )
+        const activeRequirementIds = new Set(activeProjectRequirements.map((requirement) => requirement.id))
+        const hasInvalidLinks = normalizedLinks.some((linkedId) => !activeRequirementIds.has(linkedId))
+        if (hasInvalidLinks) {
+          result = { ok: false, error: 'All linked requirements must exist in the current project.' }
+          return previousState
+        }
+
+        const beforeSnapshot = buildRequirementSnapshot(targetRequirement)
+        const afterSnapshot = {
+          title: normalizedTitle,
+          description: normalizedDescription,
+          type: normalizedType,
+          priority: normalizedPriority,
+          acceptanceCriteria: normalizedCriteria,
+          linkedRequirementIds: normalizedLinks
+        }
+
+        const hasChanged =
+          beforeSnapshot.title !== afterSnapshot.title ||
+          beforeSnapshot.description !== afterSnapshot.description ||
+          beforeSnapshot.type !== afterSnapshot.type ||
+          beforeSnapshot.priority !== afterSnapshot.priority ||
+          JSON.stringify(beforeSnapshot.acceptanceCriteria) !== JSON.stringify(afterSnapshot.acceptanceCriteria) ||
+          JSON.stringify(beforeSnapshot.linkedRequirementIds) !== JSON.stringify(afterSnapshot.linkedRequirementIds)
+
+        if (!hasChanged) {
+          result = { ok: false, error: 'No requirement changes were detected.' }
+          return previousState
+        }
+
+        const previousVersionNumber = getRequirementVersionNumber(targetRequirement)
+        const nextVersionNumber = previousVersionNumber + 1
         const now = new Date().toISOString().split('T')[0]
+        const updateSummary = String(justification || '').trim() || 'Requirement content updated'
         result = { ok: true }
         return {
           ...previousState,
@@ -849,15 +1225,33 @@ export function ProjectDataProvider({ children }) {
             if (req.id !== requirementId) return req
             return {
               ...req,
-              title: title ?? req.title,
-              description: description ?? req.description,
+              title: normalizedTitle,
+              description: normalizedDescription,
+              type: normalizedType,
+              priority: normalizedPriority,
+              acceptanceCriteria: normalizedCriteria,
+              linkedRequirementIds: normalizedLinks,
               updatedAt: now,
+              versionNumber: nextVersionNumber,
+              version: toVersionString(nextVersionNumber),
               history: [
                 ...req.history,
                 createRequirementHistoryEntry({
                   type: 'edited',
-                  description: 'Requirement content updated',
+                  description: updateSummary,
                   actorName
+                })
+              ],
+              versions: [
+                ...(Array.isArray(req.versions) ? req.versions : []),
+                createRequirementVersionEntry({
+                  versionNumber: nextVersionNumber,
+                  snapshot: afterSnapshot,
+                  actorName,
+                  summary: updateSummary,
+                  sourceVersionId: (Array.isArray(req.versions) && req.versions.length > 0)
+                    ? req.versions[req.versions.length - 1].id
+                    : null
                 })
               ]
             }
@@ -866,6 +1260,74 @@ export function ProjectDataProvider({ children }) {
             createActivityEntry({
               type: 'edit',
               action: `${requirementId} requirement updated`,
+              actorName
+            }),
+            ...previousState.activityLogs
+          ]
+        }
+      })
+
+      return result
+    },
+    [updateStoreState]
+  )
+
+  const deleteRequirement = useCallback(
+    ({ requirementId, actorId, actorName, actorRole }) => {
+      let result = { ok: false, error: 'Unable to delete requirement.' }
+
+      updateStoreState((previousState) => {
+        const targetRequirement = previousState.requirements.find((requirement) => requirement.id === requirementId)
+        if (!targetRequirement || targetRequirement.isArchived) {
+          result = { ok: false, error: 'Requirement not found.' }
+          return previousState
+        }
+
+        if (targetRequirement.status === 'locked') {
+          result = { ok: false, error: 'Locked requirements cannot be deleted.' }
+          return previousState
+        }
+
+        const isManager = actorRole === 'manager'
+        const isClientOwner = actorRole === 'client' && targetRequirement.createdBy?.id === actorId
+        if (!isManager && !isClientOwner) {
+          result = { ok: false, error: 'You do not have permission to delete this requirement.' }
+          return previousState
+        }
+
+        if (!isManager && targetRequirement.status !== 'draft') {
+          result = { ok: false, error: 'Clients can only delete draft requirements.' }
+          return previousState
+        }
+
+        const updatedRequirements = previousState.requirements.map((requirement) => {
+          if (requirement.id !== requirementId) {
+            return requirement
+          }
+
+          return {
+            ...requirement,
+            isArchived: true,
+            archivedAt: new Date().toISOString(),
+            history: [
+              ...requirement.history,
+              createRequirementHistoryEntry({
+                type: 'deleted',
+                description: 'Requirement archived from active list',
+                actorName
+              })
+            ]
+          }
+        })
+
+        result = { ok: true }
+        return {
+          ...previousState,
+          requirements: updatedRequirements,
+          activityLogs: [
+            createActivityEntry({
+              type: 'deleted',
+              action: `${requirementId} archived`,
               actorName
             }),
             ...previousState.activityLogs
@@ -1016,6 +1478,7 @@ export function ProjectDataProvider({ children }) {
       notifications: projectNotifications,
       managerNotifications,
       getRequirementById,
+      createRequirement,
       addProjectUser,
       updateProjectUserRole,
       setWorkflowStages,
@@ -1026,6 +1489,7 @@ export function ProjectDataProvider({ children }) {
       setRequirementStatus,
       addRequirementComment,
       updateRequirement,
+      deleteRequirement,
       dismissNotification,
       appendActivityLog
     }),
@@ -1041,6 +1505,7 @@ export function ProjectDataProvider({ children }) {
       projectNotifications,
       managerNotifications,
       getRequirementById,
+      createRequirement,
       addProjectUser,
       updateProjectUserRole,
       setWorkflowStages,
@@ -1051,6 +1516,7 @@ export function ProjectDataProvider({ children }) {
       setRequirementStatus,
       addRequirementComment,
       updateRequirement,
+      deleteRequirement,
       dismissNotification,
       appendActivityLog
     ]

@@ -70,26 +70,48 @@ function EditRequirement() {
   const [title, setTitle] = useState(editData.title)
   const [description, setDescription] = useState(editData.description)
   const [versionNote, setVersionNote] = useState('')
-  const [reqType, setReqType] = useState('functional')
+  const [reqType, setReqType] = useState(requirement.type || 'functional')
+  const [reqPriority, setReqPriority] = useState(requirement.priority || 'medium')
   const [showToast, setShowToast] = useState(false)
+  const [saveError, setSaveError] = useState('')
 
   const normalizedStatus = requirement.status?.toLowerCase().replace(/\s+/g, '-') || 'draft'
-  const isLocked = normalizedStatus !== 'draft'
+  const isAssignedMember = requirement.assigneeId === currentUser.id
+  const canClientEdit =
+    currentUser.role === 'client' &&
+    requirement.createdBy?.id === currentUser.id &&
+    normalizedStatus === 'draft'
+  const canMemberEdit =
+    currentUser.role === 'member' &&
+    isAssignedMember &&
+    ['draft', 'review'].includes(normalizedStatus)
+  const canManagerEdit =
+    currentUser.role === 'manager' &&
+    normalizedStatus !== 'locked'
+  const canEditRequirement = canClientEdit || canMemberEdit || canManagerEdit
+  const isLocked = !canEditRequirement
 
   const handleDiscard = () => {
     navigate(`/requirements/${id}`)
   }
 
   const handleSave = () => {
+    setSaveError('')
     const result = updateRequirement({
       requirementId: id,
       title,
       description,
+      type: reqType,
+      priority: reqPriority,
+      justification: versionNote,
+      actorId: currentUser.id,
+      actorRole: currentUser.role,
       actorName: currentUser.name
     })
     if (result.ok) {
       navigate(`/requirements/${id}`)
     } else {
+      setSaveError(result.error || 'Unable to save requirement.')
       setShowToast(true)
       setTimeout(() => setShowToast(false), 3000)
     }
@@ -131,7 +153,9 @@ function EditRequirement() {
         {isLocked && (
           <div className="edit-req__toast edit-req__toast--warning">
             <span className="material-symbols-outlined edit-req__toast-icon">lock</span>
-            <p className="edit-req__toast-text">Editing is disabled — this requirement is in <strong>{normalizedStatus.replace('-', ' ')}</strong> status and can no longer be modified.</p>
+            <p className="edit-req__toast-text">
+              Editing is disabled for your role or the current requirement state.
+            </p>
           </div>
         )}
 
@@ -139,7 +163,7 @@ function EditRequirement() {
         {showToast && (
           <div className="edit-req__toast">
             <span className="material-symbols-outlined edit-req__toast-icon">check_circle</span>
-            <p className="edit-req__toast-text">Draft saved successfully</p>
+            <p className="edit-req__toast-text">{saveError || 'Draft saved successfully'}</p>
             <button className="edit-req__toast-close" onClick={() => setShowToast(false)}>
               <span className="material-symbols-outlined">close</span>
             </button>
@@ -184,6 +208,21 @@ function EditRequirement() {
               </div>
 
               <div className="edit-req__field">
+                <label className="edit-req__label">Priority</label>
+                <select
+                  className="edit-req__type-select"
+                  value={reqPriority}
+                  onChange={(e) => setReqPriority(e.target.value)}
+                  disabled={isLocked}
+                >
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                  <option value="critical">Critical</option>
+                </select>
+              </div>
+
+              <div className="edit-req__field">
                 <label className="edit-req__label">Description</label>
                 <textarea
                   className="edit-req__description-input"
@@ -210,6 +249,11 @@ function EditRequirement() {
                 onChange={(e) => setVersionNote(e.target.value)}
                 disabled={isLocked}
               />
+              {currentUser.role === 'member' && !isLocked && (
+                <p className="edit-req__meta-label" style={{ marginTop: '0.5rem' }}>
+                  Members must provide a change justification before saving.
+                </p>
+              )}
             </div>
           </div>
 

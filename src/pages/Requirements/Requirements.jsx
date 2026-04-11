@@ -9,7 +9,7 @@ import { useProjectData } from '../../context/ProjectDataContext'
 import './Requirements.css'
 
 function Requirements() {
-  const { currentUser, activeRequirements } = useProjectData()
+  const { currentUser, activeRequirements, deleteRequirement } = useProjectData()
   const navigate = useNavigate()
 
   const [activeFilter, setActiveFilter] = useState('all')
@@ -21,6 +21,7 @@ function Requirements() {
   const filteredRequirements = activeRequirements
     .filter(req => {
       if (currentUser.role === 'client' && req.createdBy?.id !== currentUser.id) return false
+      if (currentUser.role === 'member' && req.assigneeId !== currentUser.id) return false
       const displayStatus = req.status === 'review' ? 'under-review' : req.status
       if (activeFilter === 'all') return true
       return displayStatus === activeFilter
@@ -54,8 +55,21 @@ function Requirements() {
 
   const handleDeleteRequirement = (id, e) => {
     e.stopPropagation()
-    // TODO: Show delete confirmation modal
-    console.log('Delete requirement:', id)
+    const shouldDelete = window.confirm(`Delete ${id}?`)
+    if (!shouldDelete) {
+      return
+    }
+
+    const deleteResult = deleteRequirement({
+      requirementId: id,
+      actorId: currentUser.id,
+      actorName: currentUser.name,
+      actorRole: currentUser.role
+    })
+
+    if (!deleteResult.ok) {
+      window.alert(deleteResult.error || 'Unable to delete requirement.')
+    }
   }
 
   return (

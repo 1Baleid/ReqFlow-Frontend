@@ -5,8 +5,8 @@ import TextInput from '../../components/TextInput'
 import TextArea from '../../components/TextArea'
 import Select from '../../components/Select'
 import Button from '../../components/Button'
-import { getCurrentUser } from '../../data/mockData'
 import Toast from '../../components/Toast'
+import { useProjectData } from '../../context/ProjectDataContext'
 import './CreateRequirement.css'
 
 const priorityOptions = [
@@ -26,7 +26,7 @@ const typeOptions = [
 ]
 
 function CreateRequirement() {
-  const currentUser = getCurrentUser()
+  const { currentUser, createRequirement } = useProjectData()
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     title: '',
@@ -53,6 +53,9 @@ function CreateRequirement() {
     if (!formData.title.trim()) {
       newErrors.title = 'Requirement title cannot be empty'
     }
+    if (!formData.description.trim()) {
+      newErrors.description = 'Requirement description cannot be empty'
+    }
     return newErrors
   }
 
@@ -68,11 +71,26 @@ function CreateRequirement() {
     setIsSubmitting(true)
     setShowToast(true)
 
-    // Simulate API call
+    const createResult = createRequirement({
+      title: formData.title,
+      description: formData.description,
+      type: formData.type,
+      priority: formData.priority,
+      actorId: currentUser.id,
+      actorName: currentUser.name
+    })
+
+    if (!createResult.ok) {
+      setErrors({ form: createResult.error || 'Unable to create requirement.' })
+      setIsSubmitting(false)
+      setShowToast(false)
+      return
+    }
+
     setTimeout(() => {
       setIsSubmitting(false)
-      navigate('/requirements')
-    }, 1000)
+      navigate(`/requirements/${createResult.requirement.id}`)
+    }, 400)
   }
 
   const handleCancel = () => {
@@ -163,9 +181,15 @@ function CreateRequirement() {
               placeholder="Describe the goal, context, and acceptance criteria..."
               value={formData.description}
               onChange={handleChange}
+              error={errors.description}
               rows={8}
               showToolbar
             />
+            {errors.form && (
+              <p className="create-req__hint" style={{ color: '#c62828' }}>
+                {errors.form}
+              </p>
+            )}
           </div>
 
           {/* Actions */}
@@ -201,7 +225,7 @@ function CreateRequirement() {
               <div>
                 <h4 className="create-req__tip-heading">Be Specific</h4>
                 <p className="create-req__tip-text">
-                  Avoid vague terms like "fast" or "user-friendly". Use measurable metrics where possible.
+                  Avoid vague terms like &quot;fast&quot; or &quot;user-friendly&quot;. Use measurable metrics where possible.
                 </p>
               </div>
             </div>
@@ -223,7 +247,7 @@ function CreateRequirement() {
                 <span>03</span>
               </div>
               <div>
-                <h4 className="create-req__tip-heading">The 'Who' & 'Why'</h4>
+                <h4 className="create-req__tip-heading">The &apos;Who&apos; &amp; &apos;Why&apos;</h4>
                 <p className="create-req__tip-text">
                   Clearly state which persona benefits from this and what value it creates for the business.
                 </p>

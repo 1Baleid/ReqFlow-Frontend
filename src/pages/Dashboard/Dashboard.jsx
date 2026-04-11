@@ -28,7 +28,8 @@ function Dashboard() {
   // Filter requirements — client sees only their own
   const filteredRequirements = activeRequirements
     .filter(req => {
-      if (req.createdBy?.id !== currentUser.id) return false
+      if (currentUser.role === 'client' && req.createdBy?.id !== currentUser.id) return false
+      if (currentUser.role === 'member' && req.assigneeId !== currentUser.id) return false
       const displayStatus = req.status === 'review' ? 'under-review' : req.status
       const matchesFilter = activeFilter === 'all' || displayStatus === activeFilter
       const matchesSearch = req.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -42,8 +43,7 @@ function Dashboard() {
   }
 
   const handleViewAllLogs = () => {
-    // TODO: Navigate to activity logs
-    console.log('View all logs')
+    navigate('/requirements')
   }
 
   return (

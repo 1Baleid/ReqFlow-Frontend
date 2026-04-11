@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Avatar from '../Avatar'

@@ -5,37 +5,6 @@ import Button from '../../components/Button'
 import { useProjectData } from '../../context/ProjectDataContext'
 import './RequirementDetail.css'
 
-const EXTENDED_REQUIREMENT_DETAILS = {
-  'REQ-042': {
-    originalDescription:
-      'The system needs a way to handle sudden spikes in traffic. It should automatically add more servers when load is high and remove them when load drops to save costs.',
-    acceptanceCriteria: [
-      'Auto-scaling policy activates within 60 seconds of threshold breach.',
-      'Scale-in respects a minimum healthy instance pool of 3 nodes.',
-      'Monitoring metrics are sampled every 1 minute.',
-      'The service remains available if one scaling action fails.'
-    ],
-    linkedRequirements: ['REQ-039', 'REQ-038'],
-    discussion: [
-      {
-        id: 'comment-1',
-        author: 'Marcus Chen',
-        role: 'Lead Architect',
-        timestampLabel: '2 hours ago',
-        message:
-          'Could we add a cooldown period to reduce scale flapping when traffic oscillates around thresholds?'
-      }
-    ]
-  }
-}
-
-const DEFAULT_REQUIREMENT_DETAIL = {
-  originalDescription: 'No extended description is available for this requirement yet.',
-  acceptanceCriteria: [],
-  linkedRequirements: [],
-  discussion: []
-}
-
 const STATUS_STYLE_CONFIG = {
   draft: { className: 'req-detail__status--draft' },
   review: { className: 'req-detail__status--review' },
@@ -73,18 +42,16 @@ function RequirementDetail() {
     assignRequirement,
     setRequirementDeadline,
     setRequirementStatus,
-    addRequirementComment
+    addRequirementComment,
+    updateRequirement
   } = useProjectData()
 
   const requirement = getRequirementById(id)
-  const detailSnapshot = EXTENDED_REQUIREMENT_DETAILS[id] || DEFAULT_REQUIREMENT_DETAIL
 
   const [commentText, setCommentText] = useState('')
-  const displayComments = [...detailSnapshot.discussion, ...(requirement?.comments || [])]
-  const [criteriaList, setCriteriaList] = useState(detailSnapshot.acceptanceCriteria)
+  const displayComments = requirement?.comments || []
   const [newCriteria, setNewCriteria] = useState('')
   const [showAddCriteria, setShowAddCriteria] = useState(false)
-  const [linkedRequirementIds, setLinkedRequirementIds] = useState(detailSnapshot.linkedRequirements)
   const [showLinkModal, setShowLinkModal] = useState(false)
   const [linkSearchQuery, setLinkSearchQuery] = useState('')
 
@@ -98,6 +65,14 @@ function RequirementDetail() {
   const [rejectReason, setRejectReason] = useState('')
   const [actionError, setActionError] = useState('')
   const [feedbackMessage, setFeedbackMessage] = useState('')
+  const linkedRequirementIds = useMemo(
+    () => requirement?.linkedRequirementIds || [],
+    [requirement?.linkedRequirementIds]
+  )
+  const criteriaList = useMemo(
+    () => requirement?.acceptanceCriteria || [],
+    [requirement?.acceptanceCriteria]
+  )
 
   const assignee = useMemo(
     () => projectUsers.find((user) => user.id === requirement?.assigneeId) || null,
@@ -153,7 +128,15 @@ function RequirementDetail() {
 
   const isManager = currentUser.role === 'manager'
   const isLocked = requirement.status === 'locked'
-  const canEditRequirement = !isLocked && ['draft', 'review', 'rejected'].includes(requirement.status)
+  const canClientEdit =
+    currentUser.role === 'client' &&
+    requirement.createdBy?.id === currentUser.id &&
+    requirement.status === 'draft'
+  const canMemberEdit =
+    currentUser.role === 'member' &&
+    requirement.assigneeId === currentUser.id &&
+    ['draft', 'review'].includes(requirement.status)
+  const canEditRequirement = !isLocked && (isManager || canClientEdit || canMemberEdit)
   const canApproveOrReject = currentUser.role === 'client' && !isLocked && requirement.status === 'review'
   const canAssign = isManager && !isLocked
   const canSetDeadline = isManager && !isLocked
@@ -197,20 +180,53 @@ function RequirementDetail() {
   }
 
   const handleAddCriteria = () => {
-    if (!newCriteria.trim() || isLocked) {
+    if (!newCriteria.trim() || !canEditRequirement) {
       return
     }
 
-    setCriteriaList((previousCriteria) => [...previousCriteria, newCriteria.trim()])
+    const updateResult = updateRequirement({
+      requirementId: requirement.id,
+      acceptanceCriteria: [...criteriaList, newCriteria.trim()],
+      actorId: currentUser.id,
+      actorRole: currentUser.role,
+      actorName: currentUser.name,
+      justification: currentUser.role === 'member'
+        ? 'Acceptance criteria updated'
+        : 'Acceptance criteria updated'
+    })
+
+    if (!updateResult.ok) {
+      setActionError(updateResult.error || 'Unable to add acceptance criteria.')
+      return
+    }
+
+    setActionError('')
     setNewCriteria('')
     setShowAddCriteria(false)
   }
 
   const handleLinkRequirement = (requirementId) => {
-    if (isLocked) {
+    if (!canEditRequirement) {
       return
     }
-    setLinkedRequirementIds((previousIds) => [...previousIds, requirementId])
+
+    const updateResult = updateRequirement({
+      requirementId: requirement.id,
+      linkedRequirementIds: [...linkedRequirementIds, requirementId],
+      actorId: currentUser.id,
+      actorRole: currentUser.role,
+      actorName: currentUser.name,
+      justification: currentUser.role === 'member'
+        ? 'Related requirement link added'
+        : 'Related requirement link added'
+    })
+
+    if (!updateResult.ok) {
+      setActionError(updateResult.error || 'Unable to link requirement.')
+      return
+    }
+
+    setActionError('')
     setShowLinkModal(false)
     setLinkSearchQuery('')
   }
@@ -395,7 +411,9 @@ function RequirementDetail() {
                 <h3 className="req-detail__card-title">Original Description</h3>
                 <span className="material-symbols-outlined req-detail__card-icon">history_edu</span>
               </div>
-              <p className="req-detail__description">{detailSnapshot.originalDescription}</p>
+              <p className="req-detail__description">
+                {requirement.originalDescription || requirement.description}
+              </p>
             </section>
 
             {requirement.status === 'review' &&
@@ -433,7 +451,7 @@ function RequirementDetail() {
             <section className="req-detail__card">
               <div className="req-detail__card-header">
                 <h3 className="req-detail__card-title">Acceptance Criteria</h3>
-                {!isLocked && (
+                {canEditRequirement && (
                   <button className="req-detail__add-criteria-btn" onClick={() => setShowAddCriteria(true)}>
                     <span className="material-symbols-outlined">add</span>
                     Add Criteria
@@ -562,7 +580,7 @@ function RequirementDetail() {
                 {linkedRequirementIds.length === 0 && (
                   <span className="req-detail__empty-text">No linked requirements</span>
                 )}
-                {!isLocked && (
+                {canEditRequirement && (
                   <button className="req-detail__link-add" onClick={() => setShowLinkModal(true)}>
                     + Link
                   </button>

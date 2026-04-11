@@ -9,14 +9,11 @@ function Sidebar({ role = 'client', isCollapsed, onToggle, isMobileOpen, onMobil
     client: [
       { path: '/dashboard', icon: 'dashboard', label: 'Dashboard' },
       { path: '/requirements', icon: 'assignment', label: 'Requirements' },
-      { path: '/projects', icon: 'folder_open', label: 'Projects' },
-      { path: '/team', icon: 'group', label: 'Users' },
-      { path: '/settings', icon: 'settings', label: 'Settings' }
+      { path: '/projects', icon: 'folder_open', label: 'Projects' }
     ],
     manager: [
       { path: '/manager', icon: 'dashboard', label: 'Dashboard' },
       { path: '/manager/requirements', icon: 'assignment', label: 'Requirements' },
-      { path: '/traceability', icon: 'account_tree', label: 'Traceability' },
       { path: '/team', icon: 'group', label: 'Project Users' },
       { path: '/projects', icon: 'folder_open', label: 'Projects' },
       { path: '/settings', icon: 'settings', label: 'Settings' }
@@ -24,10 +21,7 @@ function Sidebar({ role = 'client', isCollapsed, onToggle, isMobileOpen, onMobil
     member: [
       { path: '/dashboard', icon: 'dashboard', label: 'Dashboard' },
       { path: '/requirements', icon: 'assignment', label: 'Requirements' },
-      { path: '/traceability', icon: 'account_tree', label: 'Traceability' },
-      { path: '/team', icon: 'group', label: 'Team' },
-      { path: '/projects', icon: 'folder_open', label: 'Projects' },
-      { path: '/settings', icon: 'tune', label: 'Settings' }
+      { path: '/projects', icon: 'folder_open', label: 'Projects' }
     ]
   }
 

@@ -4,18 +4,15 @@ ReqFlow Frontend is an interactive React-based prototype for a lightweight requi
 
 ## Figma Design Reference
 
-- [Figma Prototype](https://www.figma.com/) — *(Replace with your actual Figma link)*
+- [Figma Prototype](https://www.figma.com/design/NsP8x9mWNgFU6T3YU8TLNQ/Untitled?node-id=0-1&t=ZPY055T7Ey6CtXSr-1)
 
-## Team Members
+## Contribution Clarification
 
-| Name | Role | GitHub |
-|------|------|--------|
-| Abdullah Al-Rashid | Client / Frontend Developer | [@abdullah](https://github.com/) |
-| Khalid Hassan | Manager / Frontend Developer | [@khalid](https://github.com/) |
-| Omar Faisal | Team Member / Frontend Developer | [@omar](https://github.com/) |
-| Rayan | Frontend Developer | [@rayan](https://github.com/) |
+Commit distribution in this repository may not look perfectly even by commit count. At project kickoff, Abdullah led the initial planning meeting, and the team produced the baseline on one device (Abdullah's device) to align structure, routing, and shared UI conventions before splitting work.
 
-> **Note:** Replace the names, roles, and GitHub links above with your actual team members.
+After the baseline was created, Faisal, Abdulmajeed, and Rayan each reviewed and tested the frontend individually, then pushed targeted fixes and improvements from their own accounts. This included validation fixes, role-flow corrections, UI behavior adjustments, and final rubric compliance updates.
+
+The practical workload was collaborative and iterative, even where early foundational commits were concentrated.
 
 ## Tech Stack
 
@@ -35,11 +32,9 @@ ReqFlow Frontend is an interactive React-based prototype for a lightweight requi
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/YOUR_USERNAME/ReqFlow-Frontend.git
+git clone <your-repository-url>
 cd ReqFlow-Frontend
 ```
-
-> **Important:** Replace `YOUR_USERNAME` with your actual GitHub username.
 
 2. Install dependencies:
 ```bash
@@ -103,6 +98,7 @@ Use these credentials to log in with different user roles:
 - **Client**: Create requirements, view status, respond to clarifications, track progress
 - **Manager**: Full access, approve/reject requirements, assign to team, manage workflow
 - **Team Member**: View assigned work, refine requirements, submit for review
+- **Project-Scoped Roles (Notion-like)**: Roles are scoped per project. A user can be a Team Member in one project and create/manage another project where they are the Manager.
 
 ## Team Testing Assignments
 
