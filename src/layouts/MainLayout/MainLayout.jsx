@@ -1,12 +1,23 @@
 import { useState } from 'react'
 import Sidebar from '../../components/Sidebar'
 import TopNav from '../../components/TopNav'
-import { getCurrentUser } from '../../data/mockData'
 import './MainLayout.css'
+
+function getStoredUser() {
+  try {
+    const stored = localStorage.getItem('authUser')
+    if (stored) {
+      return JSON.parse(stored)
+    }
+  } catch (e) {
+    console.error('Failed to parse stored user:', e)
+  }
+  return { name: 'User', email: '', role: 'client' }
+}
 
 function MainLayout({ children, user: propUser, role: propRole }) {
   // Use props if provided, otherwise get from localStorage
-  const currentUser = propUser || getCurrentUser()
+  const currentUser = propUser || getStoredUser()
   const role = propRole || currentUser.role || 'client'
   const user = currentUser
 

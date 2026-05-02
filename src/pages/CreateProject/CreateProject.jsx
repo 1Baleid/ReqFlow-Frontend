@@ -1,10 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import MainLayout from '../../layouts/MainLayout'
 import Button from '../../components/Button'
 import TextInput from '../../components/TextInput'
 import TextArea from '../../components/TextArea'
-import { createProject, getCurrentUser, getProjects, updateProject } from '../../data/mockData'
+import { listProjects, createProject as createProjectApi, updateProject as updateProjectApi, getProject } from '../../services/projectsApi'
+import { useProjectData } from '../../context/ProjectDataContext'
 import './CreateProject.css'
 
 const colorOptions = [
@@ -161,20 +162,47 @@ function getInitials(name) {
 }
 
 function CreateProject() {
-  const currentUser = getCurrentUser()
+  const { currentUser } = useProjectData()
   const navigate = useNavigate()
   const { projectId } = useParams()
   const isEditMode = Boolean(projectId)
-  const existingProject = useMemo(
-    () => getProjects().find((project) => project.id === projectId) || null,
-    [projectId]
-  )
-  const projectNotFound = isEditMode && !existingProject
-  const [formData, setFormData] = useState(() => getInitialFormData(existingProject))
-  const [projectUsers, setProjectUsers] = useState(() => getProjectUsers(existingProject, isEditMode, currentUser))
-  const [workflowStages, setWorkflowStages] = useState(() => getWorkflowStages(existingProject))
+  const [existingProject, setExistingProject] = useState(null)
+  const [isLoadingProject, setIsLoadingProject] = useState(isEditMode)
+  const [projectNotFound, setProjectNotFound] = useState(false)
+  const [formData, setFormData] = useState(() => getInitialFormData(null))
+  const [projectUsers, setProjectUsers] = useState(() => getProjectUsers(null, false, currentUser))
+  const [workflowStages, setWorkflowStages] = useState(() => getWorkflowStages(null))
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Load existing project when in edit mode
+  useEffect(() => {
+    if (!isEditMode || !projectId) {
+      setIsLoadingProject(false)
+      return
+    }
+
+    async function loadProject() {
+      try {
+        const result = await getProject(projectId)
+        if (result.project) {
+          setExistingProject(result.project)
+          setFormData(getInitialFormData(result.project))
+          setProjectUsers(getProjectUsers(result.project, true, currentUser))
+          setWorkflowStages(getWorkflowStages(result.project))
+        } else {
+          setProjectNotFound(true)
+        }
+      } catch (error) {
+        console.error('Failed to load project:', error)
+        setProjectNotFound(true)
+      } finally {
+        setIsLoadingProject(false)
+      }
+    }
+
+    loadProject()
+  }, [isEditMode, projectId, currentUser])
 
   const handleFormChange = (event) => {
     const { name, value } = event.target
@@ -290,7 +318,7 @@ function CreateProject() {
     navigate('/projects')
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     const submissionUsers = isEditMode
       ? projectUsers
@@ -314,30 +342,52 @@ function CreateProject() {
       ...formData,
       users: sanitizedUsers,
       workflowStages,
+      members: sanitizedUsers.filter(u => u.role !== 'client').map(u => ({
+        user: u.id,
+        role: u.role
+      })),
       team: sanitizedUsers.map((user) => ({
         id: user.id,
         name: user.name,
         initials: getInitials(user.name)
       }))
     }
-    const saveResult = isEditMode
-      ? updateProject(projectId, projectPayload)
-      : createProject(projectPayload)
 
-    if (!saveResult.ok) {
-      setErrors({ form: saveResult.error || 'Unable to save project.' })
+    try {
+      const saveResult = isEditMode
+        ? await updateProjectApi(projectId, projectPayload)
+        : await createProjectApi(projectPayload)
+
+      window.dispatchEvent(new CustomEvent('projectsChanged', { detail: { project: saveResult.project } }))
+
+      navigate('/projects', {
+        state: { highlightedProjectId: saveResult.project?.id || projectId }
+      })
+    } catch (error) {
+      setErrors({ form: error.message || 'Unable to save project.' })
       setIsSubmitting(false)
-      return
     }
+  }
 
-    navigate('/projects', {
-      state: { highlightedProjectId: saveResult.project.id }
-    })
+  if (isLoadingProject) {
+    return (
+      <MainLayout user={currentUser} role={currentUser?.role}>
+        <div className="create-project-page">
+          <Link to="/projects" className="create-project-page__breadcrumb">
+            <span className="material-symbols-outlined">arrow_back</span>
+            Back to Projects
+          </Link>
+          <div className="create-project-page__empty">
+            <p>Loading project...</p>
+          </div>
+        </div>
+      </MainLayout>
+    )
   }
 
   if (projectNotFound) {
     return (
-      <MainLayout user={currentUser} role={currentUser.role}>
+      <MainLayout user={currentUser} role={currentUser?.role}>
         <div className="create-project-page">
           <Link to="/projects" className="create-project-page__breadcrumb">
             <span className="material-symbols-outlined">arrow_back</span>
@@ -357,7 +407,7 @@ function CreateProject() {
   }
 
   return (
-    <MainLayout user={currentUser} role={currentUser.role}>
+    <MainLayout user={currentUser} role={currentUser?.role}>
       <div className="create-project-page">
         <Link to="/projects" className="create-project-page__breadcrumb">
           <span className="material-symbols-outlined">arrow_back</span>

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import MainLayout from '../../layouts/MainLayout'
 import Button from '../../components/Button'
-import { deleteProject, getCurrentUser, getProjects, setCurrentProject } from '../../data/mockData'
+import { listProjects, deleteProject as deleteProjectApi } from '../../services/projectsApi'
 import { useProjectData } from '../../context/ProjectDataContext'
 import './Projects.css'
 
@@ -11,12 +11,29 @@ function Projects() {
   const navigate = useNavigate()
   const location = useLocation()
   const [filter, setFilter] = useState('all')
-  const [projectList, setProjectList] = useState(getProjects)
+  const [projectList, setProjectList] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   const [highlightedProjectId, setHighlightedProjectId] = useState('')
   const [openMenuProjectId, setOpenMenuProjectId] = useState('')
   const projectRefs = useRef({})
   const scrollTimeoutRef = useRef(null)
   const highlightTimeoutRef = useRef(null)
+
+  const loadProjects = useCallback(async () => {
+    try {
+      const result = await listProjects()
+      setProjectList(result.projects || [])
+    } catch (error) {
+      console.error('Failed to load projects:', error)
+      setProjectList([])
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    loadProjects()
+  }, [loadProjects])
 
   const focusProjectCard = useCallback((projectId) => {
     if (!projectId) {
@@ -42,7 +59,7 @@ function Projects() {
 
   useEffect(() => {
     const syncProjects = (event) => {
-      setProjectList(getProjects())
+      loadProjects()
 
       if (!event?.detail?.deletedProjectId && event?.detail?.project?.id) {
         focusProjectCard(event.detail.project.id)
@@ -51,7 +68,7 @@ function Projects() {
 
     window.addEventListener('projectsChanged', syncProjects)
     return () => window.removeEventListener('projectsChanged', syncProjects)
-  }, [focusProjectCard])
+  }, [focusProjectCard, loadProjects])
 
   useEffect(() => {
     const closeProjectMenu = () => setOpenMenuProjectId('')
@@ -71,10 +88,10 @@ function Projects() {
       return
     }
 
-    setProjectList(getProjects())
+    loadProjects()
     focusProjectCard(createdProjectId)
     navigate('/projects', { replace: true, state: null })
-  }, [focusProjectCard, location.state, navigate])
+  }, [focusProjectCard, location.state, navigate, loadProjects])
 
   const filteredProjects = useMemo(() => projectList.filter(project => {
     if (filter === 'all') return true
@@ -106,7 +123,7 @@ function Projects() {
 
   const handleProjectClick = (projectId) => {
     const selectedProject = projectList.find((project) => project.id === projectId)
-    const sessionUser = getCurrentUser()
+    const sessionUser = currentUser
     const sessionEmail = String(sessionUser?.email || '').trim().toLowerCase()
     const projectUserMatch = selectedProject?.users?.find((user) => {
       if (sessionUser?.id && user.id === sessionUser.id) {
@@ -121,7 +138,8 @@ function Projects() {
     })
     const targetRole = projectUserMatch?.role || sessionUser?.role || 'client'
 
-    setCurrentProject(projectId)
+    localStorage.setItem('currentProjectId', projectId)
+    window.dispatchEvent(new CustomEvent('projectChanged', { detail: { projectId } }))
     navigate(targetRole === 'manager' ? '/manager' : '/dashboard')
   }
 
@@ -138,7 +156,7 @@ function Projects() {
     navigate(`/projects/${projectId}/edit`)
   }
 
-  const handleDeleteProject = (event, project) => {
+  const handleDeleteProject = async (event, project) => {
     event.stopPropagation()
     setOpenMenuProjectId('')
 
@@ -147,17 +165,32 @@ function Projects() {
       return
     }
 
-    const deleteResult = deleteProject(project.id)
-    if (!deleteResult.ok) {
-      window.alert(deleteResult.error || 'Unable to delete project.')
-      return
+    try {
+      await deleteProjectApi(project.id)
+      setProjectList((prev) => prev.filter((p) => p.id !== project.id))
+      window.dispatchEvent(new CustomEvent('projectsChanged', { detail: { deletedProjectId: project.id } }))
+    } catch (error) {
+      window.alert(error.message || 'Unable to delete project.')
     }
+  }
 
-    setProjectList(deleteResult.projects)
+  if (isLoading) {
+    return (
+      <MainLayout user={currentUser} role={currentUser?.role}>
+        <div className="projects">
+          <div className="projects__header">
+            <div className="projects__header-content">
+              <h1 className="projects__title">Projects</h1>
+              <p className="projects__subtitle">Loading projects...</p>
+            </div>
+          </div>
+        </div>
+      </MainLayout>
+    )
   }
 
   return (
-    <MainLayout user={currentUser} role={currentUser.role}>
+    <MainLayout user={currentUser} role={currentUser?.role}>
       <div className="projects">
         {/* Header */}
         <div className="projects__header">
@@ -229,7 +262,7 @@ function Projects() {
                 <div className="projects__card-header">
                   <div
                     className="projects__card-icon"
-                    style={{ background: project.color }}
+                    style={{ background: project.color || '#1353d8' }}
                   >
                     <span className="material-symbols-outlined">folder_open</span>
                   </div>
@@ -279,14 +312,14 @@ function Projects() {
                 <div className="projects__progress">
                   <div className="projects__progress-header">
                     <span className="projects__progress-label">Progress</span>
-                    <span className="projects__progress-value">{project.progress}%</span>
+                    <span className="projects__progress-value">{project.progress || 0}%</span>
                   </div>
                   <div className="projects__progress-bar">
                     <div
                       className="projects__progress-fill"
                       style={{
-                        width: `${project.progress}%`,
-                        background: project.color
+                        width: `${project.progress || 0}%`,
+                        background: project.color || '#1353d8'
                       }}
                     />
                   </div>
@@ -311,7 +344,7 @@ function Projects() {
                           style={{ zIndex: 3 - index }}
                           title={member.name}
                         >
-                          {member.initials}
+                          {member.initials || member.name?.charAt(0) || '?'}
                         </div>
                       ))
                     ) : (
@@ -324,7 +357,7 @@ function Projects() {
                     )}
                   </div>
                   <span className="projects__updated">
-                    Updated {project.updatedAt}
+                    Updated {project.updatedAt || 'recently'}
                   </span>
                 </div>
               </div>

@@ -1,67 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Avatar from '../Avatar'
-import {
-  getCurrentProject,
-  getProjects,
-  setCurrentProject
-} from '../../data/mockData'
+import { listProjects } from '../../services/projectsApi'
+import { listNotifications, markAsRead, markAllAsRead } from '../../services/notificationsApi'
 import { clearStoredAuthSession } from '../../member-a-auth-entry/session'
 import './TopNav.css'
-
-// Mock notifications data
-const MOCK_NOTIFICATIONS = [
-  {
-    id: 'notif-1',
-    type: 'approval',
-    title: 'Requirement Approved',
-    message: 'REQ-042 has been approved by Sarah Chen',
-    time: '5 min ago',
-    read: false,
-    icon: 'check_circle',
-    color: 'success'
-  },
-  {
-    id: 'notif-2',
-    type: 'comment',
-    title: 'New Comment',
-    message: 'John Doe commented on REQ-038',
-    time: '15 min ago',
-    read: false,
-    icon: 'chat_bubble',
-    color: 'primary'
-  },
-  {
-    id: 'notif-3',
-    type: 'deadline',
-    title: 'Deadline Approaching',
-    message: 'REQ-045 is due in 2 days',
-    time: '1 hour ago',
-    read: false,
-    icon: 'schedule',
-    color: 'warning'
-  },
-  {
-    id: 'notif-4',
-    type: 'assignment',
-    title: 'New Assignment',
-    message: 'You have been assigned to REQ-051',
-    time: '3 hours ago',
-    read: true,
-    icon: 'assignment_ind',
-    color: 'primary'
-  },
-  {
-    id: 'notif-5',
-    type: 'rejection',
-    title: 'Requirement Rejected',
-    message: 'REQ-039 needs revisions',
-    time: 'Yesterday',
-    read: true,
-    icon: 'cancel',
-    color: 'error'
-  }
-]
 
 function TopNav({ user, onMenuClick, onProjectChange, isMobileMenuOpen = false }) {
   const navigate = useNavigate()
@@ -69,14 +12,54 @@ function TopNav({ user, onMenuClick, onProjectChange, isMobileMenuOpen = false }
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false)
-  const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS)
-  const [projectList, setProjectList] = useState(getProjects)
-  const [activeProject, setActiveProject] = useState(getCurrentProject())
+  const [notifications, setNotifications] = useState([])
+  const [projectList, setProjectList] = useState([])
+  const [activeProject, setActiveProject] = useState(null)
   const searchInputRef = useRef(null)
   const userMenuRef = useRef(null)
   const notificationRef = useRef(null)
 
   const unreadCount = notifications.filter(n => !n.read).length
+
+  // Load projects from API
+  useEffect(() => {
+    async function loadProjects() {
+      try {
+        const result = await listProjects()
+        const projects = result.projects || []
+        setProjectList(projects)
+
+        // Set active project from localStorage or first project
+        const storedProjectId = localStorage.getItem('currentProjectId')
+        const currentProject = projects.find(p => p.id === storedProjectId) || projects[0]
+        if (currentProject) {
+          setActiveProject(currentProject)
+        }
+      } catch (error) {
+        console.error('Failed to load projects:', error)
+        // Fall back to empty state
+        setProjectList([])
+      }
+    }
+
+    loadProjects()
+  }, [])
+
+  // Load notifications from API
+  useEffect(() => {
+    async function loadNotifications() {
+      try {
+        const result = await listNotifications({ limit: 10 })
+        setNotifications(result.notifications || [])
+      } catch (error) {
+        console.error('Failed to load notifications:', error)
+        // Fall back to empty state
+        setNotifications([])
+      }
+    }
+
+    loadNotifications()
+  }, [])
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -119,35 +102,22 @@ function TopNav({ user, onMenuClick, onProjectChange, isMobileMenuOpen = false }
     return () => document.removeEventListener('keydown', handleEscape)
   }, [])
 
-  const handleNotificationToggle = () => {
-    setIsNotificationOpen(!isNotificationOpen)
-    setIsUserMenuOpen(false)
-    setIsProjectDropdownOpen(false)
-  }
-
-  const handleMarkAsRead = (notifId) => {
-    setNotifications(prev =>
-      prev.map(n => n.id === notifId ? { ...n, read: true } : n)
-    )
-  }
-
-  const handleMarkAllAsRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })))
-  }
-
-  const handleNotificationClick = (notif) => {
-    handleMarkAsRead(notif.id)
-    setIsNotificationOpen(false)
-    // Navigate based on notification type
-    if (notif.type === 'comment' || notif.type === 'approval' || notif.type === 'rejection') {
-      navigate('/requirements')
-    }
-  }
-
+  // Sync with project events
   useEffect(() => {
-    const syncProjects = () => {
-      setProjectList(getProjects())
-      setActiveProject(getCurrentProject())
+    const syncProjects = async () => {
+      try {
+        const result = await listProjects()
+        const projects = result.projects || []
+        setProjectList(projects)
+
+        const storedProjectId = localStorage.getItem('currentProjectId')
+        const currentProject = projects.find(p => p.id === storedProjectId) || projects[0]
+        if (currentProject) {
+          setActiveProject(currentProject)
+        }
+      } catch (error) {
+        console.error('Failed to sync projects:', error)
+      }
     }
 
     window.addEventListener('projectsChanged', syncProjects)
@@ -158,10 +128,50 @@ function TopNav({ user, onMenuClick, onProjectChange, isMobileMenuOpen = false }
     }
   }, [])
 
+  const handleNotificationToggle = () => {
+    setIsNotificationOpen(!isNotificationOpen)
+    setIsUserMenuOpen(false)
+    setIsProjectDropdownOpen(false)
+  }
+
+  const handleMarkAsRead = async (notifId) => {
+    try {
+      await markAsRead(notifId)
+      setNotifications(prev =>
+        prev.map(n => n.id === notifId ? { ...n, read: true } : n)
+      )
+    } catch (error) {
+      console.error('Failed to mark as read:', error)
+    }
+  }
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await markAllAsRead()
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })))
+    } catch (error) {
+      console.error('Failed to mark all as read:', error)
+    }
+  }
+
+  const handleNotificationClick = (notif) => {
+    handleMarkAsRead(notif.id)
+    setIsNotificationOpen(false)
+    // Navigate based on notification type
+    if (notif.relatedId) {
+      navigate(`/requirements/${notif.relatedId}`)
+    } else if (notif.type === 'comment' || notif.type === 'approval' || notif.type === 'rejection') {
+      navigate('/requirements')
+    }
+  }
+
   const handleProjectSelect = (project) => {
     setActiveProject(project)
-    setCurrentProject(project.id)
+    localStorage.setItem('currentProjectId', project.id)
     setIsProjectDropdownOpen(false)
+
+    // Emit event for other components
+    window.dispatchEvent(new CustomEvent('projectChanged', { detail: { projectId: project.id } }))
 
     // Trigger callback if provided
     if (onProjectChange) {
@@ -185,6 +195,38 @@ function TopNav({ user, onMenuClick, onProjectChange, isMobileMenuOpen = false }
 
   const handleMobileSearchToggle = () => {
     setIsMobileSearchOpen(!isMobileSearchOpen)
+  }
+
+  // Show loading state if no active project yet
+  if (!activeProject && projectList.length === 0) {
+    return (
+      <header className={`topnav ${isMobileSearchOpen ? 'topnav--search-open' : ''}`}>
+        <button
+          className={`topnav__menu-btn ${isMobileMenuOpen ? 'topnav__menu-btn--active' : ''}`}
+          onClick={onMenuClick}
+          aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={isMobileMenuOpen}
+        >
+          <span className="topnav__hamburger">
+            <span className="topnav__hamburger-line"></span>
+            <span className="topnav__hamburger-line"></span>
+            <span className="topnav__hamburger-line"></span>
+          </span>
+        </button>
+        <div className="topnav__search">
+          <span className="material-symbols-outlined topnav__search-icon">search</span>
+          <input
+            type="text"
+            className="topnav__search-input"
+            placeholder="Loading..."
+            disabled
+          />
+        </div>
+        <div className="topnav__actions">
+          <span>Loading...</span>
+        </div>
+      </header>
+    )
   }
 
   return (
@@ -235,60 +277,62 @@ function TopNav({ user, onMenuClick, onProjectChange, isMobileMenuOpen = false }
       {/* Right Section */}
       <div className="topnav__actions">
         {/* Project Switcher */}
-        <div className="topnav__project-wrapper">
-          <button
-            className="topnav__switcher"
-            onClick={() => setIsProjectDropdownOpen(!isProjectDropdownOpen)}
-          >
-            <span
-              className="topnav__project-dot"
-              style={{ background: activeProject.color }}
-            />
-            <span className="topnav__project-name">{activeProject.name}</span>
-            <span className="material-symbols-outlined topnav__switcher-arrow">
-              {isProjectDropdownOpen ? 'expand_less' : 'expand_more'}
-            </span>
-          </button>
+        {activeProject && (
+          <div className="topnav__project-wrapper">
+            <button
+              className="topnav__switcher"
+              onClick={() => setIsProjectDropdownOpen(!isProjectDropdownOpen)}
+            >
+              <span
+                className="topnav__project-dot"
+                style={{ background: activeProject.color || '#1353d8' }}
+              />
+              <span className="topnav__project-name">{activeProject.name}</span>
+              <span className="material-symbols-outlined topnav__switcher-arrow">
+                {isProjectDropdownOpen ? 'expand_less' : 'expand_more'}
+              </span>
+            </button>
 
-          {isProjectDropdownOpen && (
-            <div className="topnav__project-dropdown">
-              <div className="topnav__dropdown-header">
-                <span className="topnav__dropdown-title">Switch Project</span>
-              </div>
-              <div className="topnav__dropdown-list">
-                {projectList.map((project) => (
-                  <button
-                    key={project.id}
-                    className={`topnav__dropdown-item ${project.id === activeProject.id ? 'topnav__dropdown-item--active' : ''}`}
-                    onClick={() => handleProjectSelect(project)}
-                  >
-                    <div className="topnav__dropdown-item-left">
-                      <span
-                        className="topnav__dropdown-dot"
-                        style={{ background: project.color }}
-                      />
-                      <div className="topnav__dropdown-item-info">
-                        <span className="topnav__dropdown-item-name">{project.name}</span>
-                        <span className="topnav__dropdown-item-count">
-                          {project.requirementsCount} requirements
-                        </span>
+            {isProjectDropdownOpen && (
+              <div className="topnav__project-dropdown">
+                <div className="topnav__dropdown-header">
+                  <span className="topnav__dropdown-title">Switch Project</span>
+                </div>
+                <div className="topnav__dropdown-list">
+                  {projectList.map((project) => (
+                    <button
+                      key={project.id}
+                      className={`topnav__dropdown-item ${project.id === activeProject.id ? 'topnav__dropdown-item--active' : ''}`}
+                      onClick={() => handleProjectSelect(project)}
+                    >
+                      <div className="topnav__dropdown-item-left">
+                        <span
+                          className="topnav__dropdown-dot"
+                          style={{ background: project.color || '#1353d8' }}
+                        />
+                        <div className="topnav__dropdown-item-info">
+                          <span className="topnav__dropdown-item-name">{project.name}</span>
+                          <span className="topnav__dropdown-item-count">
+                            {project.requirementsCount || 0} requirements
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    {project.id === activeProject.id && (
-                      <span className="material-symbols-outlined topnav__dropdown-check">check</span>
-                    )}
+                      {project.id === activeProject.id && (
+                        <span className="material-symbols-outlined topnav__dropdown-check">check</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+                <div className="topnav__dropdown-footer">
+                  <button className="topnav__dropdown-action" onClick={handleOpenCreateProject}>
+                    <span className="material-symbols-outlined">add</span>
+                    Create New Project
                   </button>
-                ))}
+                </div>
               </div>
-              <div className="topnav__dropdown-footer">
-                <button className="topnav__dropdown-action" onClick={handleOpenCreateProject}>
-                  <span className="material-symbols-outlined">add</span>
-                  Create New Project
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
 
         {/* Icons */}
         <div className="topnav__icons">
@@ -335,8 +379,8 @@ function TopNav({ user, onMenuClick, onProjectChange, isMobileMenuOpen = false }
                         className={`topnav__notification-item ${!notif.read ? 'topnav__notification-item--unread' : ''}`}
                         onClick={() => handleNotificationClick(notif)}
                       >
-                        <div className={`topnav__notification-icon topnav__notification-icon--${notif.color}`}>
-                          <span className="material-symbols-outlined">{notif.icon}</span>
+                        <div className={`topnav__notification-icon topnav__notification-icon--${notif.color || 'primary'}`}>
+                          <span className="material-symbols-outlined">{notif.icon || 'notifications'}</span>
                         </div>
                         <div className="topnav__notification-content">
                           <span className="topnav__notification-item-title">{notif.title}</span>
@@ -349,25 +393,9 @@ function TopNav({ user, onMenuClick, onProjectChange, isMobileMenuOpen = false }
                   )}
                 </div>
 
-                <div className="topnav__notification-footer">
-                  <button
-                    className="topnav__notification-view-all"
-                    onClick={() => {
-                      setIsNotificationOpen(false)
-                      navigate('/notifications')
-                    }}
-                  >
-                    View all notifications
-                    <span className="material-symbols-outlined">arrow_forward</span>
-                  </button>
-                </div>
               </div>
             )}
           </div>
-
-          <button className="topnav__icon-btn" aria-label="Help">
-            <span className="material-symbols-outlined">help_outline</span>
-          </button>
         </div>
 
         {/* User Avatar with Dropdown */}

@@ -6,12 +6,9 @@ import {
   useMemo,
   useState
 } from 'react'
-import {
-  getCurrentProject,
-  getCurrentUser,
-  requirements as seededRequirements,
-  teamMembers as seededUsers
-} from '../data/mockData'
+import { listProjects, getProject } from '../services/projectsApi'
+import { listRequirements } from '../services/requirementsApi'
+import { listUsers } from '../services/usersApi'
 
 const PROJECT_DATA_STORAGE_KEY = 'reqflow-project-data-v1'
 const OVERDUE_NOTIFICATION_CHECK_INTERVAL = 30 * 1000
@@ -219,54 +216,10 @@ function normalizeRequirementRecord(requirement, fallbackActorName = 'System') {
 }
 
 function getInitialStoreState() {
-  const now = new Date().toISOString().split('T')[0]
-  const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-
   return {
     workflowStages: WORKFLOW_STAGE_DEFAULTS,
-    projectUsers: seededUsers.map((user) => ({
-      ...user,
-      managedProjectIds: ['proj-1']
-    })),
-    requirements: seededRequirements.map((requirement, index) => {
-      const normalizedStatus = toNormalizedStatus(requirement.status)
-      const initialDeadline =
-        index === 0
-          ? yesterday
-          : index === 3
-            ? now
-            : null
-
-      const normalizedRequirement = normalizeRequirementRecord(
-        {
-          ...requirement,
-          type: requirement.type || 'functional',
-          acceptanceCriteria: requirement.acceptanceCriteria || [],
-          linkedRequirementIds: requirement.linkedRequirementIds || [],
-          projectId: 'proj-1',
-          status: normalizedStatus,
-          assigneeId: requirement.assignee?.id ?? null,
-          duplicateGroupId: null,
-          isArchived: false,
-          archivedAt: null,
-          mergedFromIds: [],
-          deadline: initialDeadline,
-          originalDescription: requirement.description,
-          rejectionReason: null,
-          comments: [],
-          history: [
-            createRequirementHistoryEntry({
-              type: 'created',
-              description: `Requirement ${requirement.id} initialized in the project`,
-              actorName: requirement.createdBy?.name || 'System'
-            })
-          ]
-        },
-        requirement.createdBy?.name || 'System'
-      )
-
-      return normalizedRequirement
-    }),
+    projectUsers: [],
+    requirements: [],
     notifications: [],
     activityLogs: [
       createActivityEntry({
@@ -276,6 +229,22 @@ function getInitialStoreState() {
       })
     ]
   }
+}
+
+function getStoredUser() {
+  try {
+    const stored = localStorage.getItem('authUser')
+    if (stored) {
+      return JSON.parse(stored)
+    }
+  } catch (e) {
+    console.error('Failed to parse stored user:', e)
+  }
+  return null
+}
+
+function getStoredProjectId() {
+  return localStorage.getItem('currentProjectId')
 }
 
 function normalizeLoadedStore(store) {
@@ -329,20 +298,99 @@ function persistStoreState(storeState) {
 
 export function ProjectDataProvider({ children }) {
   const [storeState, setStoreState] = useState(() => loadStoreState())
-  const [sessionUser, setSessionUser] = useState(getCurrentUser)
-  const [currentProject, setCurrentProjectState] = useState(getCurrentProject)
+  const [sessionUser, setSessionUser] = useState(getStoredUser)
+  const [currentProject, setCurrentProjectState] = useState({ id: getStoredProjectId(), name: 'Loading...', color: '#1353d8' })
+  const [isInitialized, setIsInitialized] = useState(false)
+
+  // Load initial data from API
+  useEffect(() => {
+    async function loadInitialData() {
+      try {
+        // Load projects
+        const projectsResult = await listProjects().catch(() => ({ projects: [] }))
+        const projects = projectsResult.projects || []
+
+        // Find current project
+        const storedProjectId = getStoredProjectId()
+        let project = projects.find(p => p.id === storedProjectId)
+
+        if (!project && projects.length > 0) {
+          project = projects[0]
+          localStorage.setItem('currentProjectId', project.id)
+        }
+
+        if (project) {
+          setCurrentProjectState(project)
+
+          // Load requirements for this project
+          try {
+            const reqResult = await listRequirements({ projectId: project.id })
+            const requirements = (reqResult.requirements || []).map(r => normalizeRequirementRecord(r, r.createdBy?.name || 'System'))
+
+            setStoreState(prev => ({
+              ...prev,
+              requirements
+            }))
+          } catch (e) {
+            console.error('Failed to load requirements:', e)
+          }
+
+          // Load users
+          try {
+            const usersResult = await listUsers({ projectId: project.id })
+            const users = (usersResult.users || []).map(u => ({
+              ...u,
+              managedProjectIds: [project.id]
+            }))
+
+            setStoreState(prev => ({
+              ...prev,
+              projectUsers: users
+            }))
+          } catch (e) {
+            console.error('Failed to load users:', e)
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load initial data:', error)
+      } finally {
+        setIsInitialized(true)
+      }
+    }
+
+    loadInitialData()
+  }, [])
 
   useEffect(() => {
     function handleUserChanged() {
-      setSessionUser(getCurrentUser())
+      setSessionUser(getStoredUser())
     }
     window.addEventListener('userChanged', handleUserChanged)
     return () => window.removeEventListener('userChanged', handleUserChanged)
   }, [])
 
   useEffect(() => {
-    function handleProjectChanged() {
-      setCurrentProjectState(getCurrentProject())
+    async function handleProjectChanged(event) {
+      const projectId = event?.detail?.projectId || getStoredProjectId()
+      if (!projectId) return
+
+      try {
+        const result = await getProject(projectId)
+        if (result.project) {
+          setCurrentProjectState(result.project)
+
+          // Reload requirements for new project
+          const reqResult = await listRequirements({ projectId }).catch(() => ({ requirements: [] }))
+          const requirements = (reqResult.requirements || []).map(r => normalizeRequirementRecord(r, r.createdBy?.name || 'System'))
+
+          setStoreState(prev => ({
+            ...prev,
+            requirements
+          }))
+        }
+      } catch (error) {
+        console.error('Failed to load project:', error)
+      }
     }
 
     window.addEventListener('projectChanged', handleProjectChanged)

@@ -12,32 +12,99 @@ import ActivityFeed from '../../components/ActivityFeed'
 import { DonutChart, ProgressChart, MiniChart } from '../../components/Charts'
 import { getDashboardStats } from '../../services/dashboardApi'
 import { listRequirements as listRequirementsApi } from '../../services/requirementsApi'
-import {
-  activities,
-  statusFilters,
-  getCurrentProject
-} from '../../data/mockData'
+import { getRecentActivities } from '../../services/activitiesApi'
 import { useProjectData } from '../../context/ProjectDataContext'
 import './Dashboard.css'
 
+const STATUS_FILTERS = [
+  { value: 'all', label: 'All Requirements' },
+  { value: 'draft', label: 'Draft' },
+  { value: 'under-review', label: 'Under Review' },
+  { value: 'approved', label: 'Approved' },
+  { value: 'rejected', label: 'Rejected' },
+  { value: 'locked', label: 'Locked', icon: 'lock' }
+]
+
+function formatTimeAgo(timestamp) {
+  if (!timestamp) return 'Just now'
+
+  const now = new Date()
+  const past = new Date(timestamp)
+  const diffMs = now - past
+  const diffMins = Math.floor(diffMs / 60000)
+  const diffHours = Math.floor(diffMins / 60)
+  const diffDays = Math.floor(diffHours / 24)
+
+  if (diffMins < 1) return 'Just now'
+  if (diffMins < 60) return `${diffMins} min${diffMins > 1 ? 's' : ''} ago`
+  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`
+  if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`
+
+  return past.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
 function Dashboard() {
-  const { currentUser, activeRequirements } = useProjectData()
+  const { currentUser, currentProject, activeRequirements, activityLogs } = useProjectData()
   const navigate = useNavigate()
   const [activeFilter, setActiveFilter] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [dashboardStats, setDashboardStats] = useState(null)
   const [apiRequirements, setApiRequirements] = useState(null)
+  const [activities, setActivities] = useState([])
   const [isLoadingApi, setIsLoadingApi] = useState(false)
-  const currentProject = getCurrentProject()
 
   // Fetch dashboard stats
   useEffect(() => {
     const fetchStats = async () => {
-      const stats = await getDashboardStats(currentProject?.id)
-      setDashboardStats(stats)
+      try {
+        const stats = await getDashboardStats(currentProject?.id)
+        setDashboardStats(stats)
+      } catch (error) {
+        console.error('Failed to fetch dashboard stats:', error)
+      }
     }
     fetchStats()
   }, [currentProject?.id])
+
+  // Fetch activities from API, fall back to context activityLogs
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadActivities() {
+      try {
+        const result = await getRecentActivities(currentProject?.id, 10)
+        if (isMounted && result.activities?.length > 0) {
+          setActivities(result.activities)
+        } else if (isMounted) {
+          // Fall back to context activity logs
+          setActivities(activityLogs.slice(0, 10).map(log => ({
+            id: log.id,
+            type: log.type,
+            actor: log.actorName,
+            action: log.action,
+            time: formatTimeAgo(log.timestamp)
+          })))
+        }
+      } catch (error) {
+        // Fall back to context activity logs on error
+        if (isMounted) {
+          setActivities(activityLogs.slice(0, 10).map(log => ({
+            id: log.id,
+            type: log.type,
+            actor: log.actorName,
+            action: log.action,
+            time: formatTimeAgo(log.timestamp)
+          })))
+        }
+      }
+    }
+
+    loadActivities()
+
+    return () => {
+      isMounted = false
+    }
+  }, [currentProject?.id, activityLogs])
 
   // Fetch requirements from API
   useEffect(() => {
@@ -123,7 +190,7 @@ function Dashboard() {
     })
     .map(req => ({ ...req, status: req.status === 'review' ? 'under-review' : req.status }))
 
-  const activeFilterLabel = statusFilters.find((filter) => filter.value === activeFilter)?.label || 'Requirements'
+  const activeFilterLabel = STATUS_FILTERS.find((filter) => filter.value === activeFilter)?.label || 'Requirements'
 
   const emptyStateTitle = searchQuery.trim()
     ? 'No matching requirements found'
@@ -170,7 +237,7 @@ function Dashboard() {
 
       {/* Filter Bar */}
       <FilterChips
-        filters={statusFilters}
+        filters={STATUS_FILTERS}
         activeFilter={activeFilter}
         onFilterChange={setActiveFilter}
       />

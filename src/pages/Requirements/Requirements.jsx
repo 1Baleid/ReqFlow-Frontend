@@ -4,13 +4,21 @@ import MainLayout from '../../layouts/MainLayout'
 import Button from '../../components/Button'
 import FilterChips from '../../components/FilterChips'
 import RequirementCard from '../../components/RequirementCard'
-import { statusFilters } from '../../data/mockData'
 import { useProjectData } from '../../context/ProjectDataContext'
 import {
   archiveRequirement as archiveRequirementApi,
   listRequirements as listRequirementsApi
 } from '../../services/requirementsApi'
 import './Requirements.css'
+
+const statusFilters = [
+  { value: 'all', label: 'All Requirements' },
+  { value: 'draft', label: 'Draft' },
+  { value: 'under-review', label: 'Under Review' },
+  { value: 'approved', label: 'Approved' },
+  { value: 'rejected', label: 'Rejected' },
+  { value: 'locked', label: 'Locked', icon: 'lock' }
+]
 
 function canClientSeeRequirement(requirement, currentUser) {
   if (requirement.createdBy?.id === currentUser.id) {
