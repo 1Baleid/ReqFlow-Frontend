@@ -1,6 +1,6 @@
 import './AuthLayout.css'
 
-function AuthLayout({ children }) {
+function AuthLayout({ children, title, subtitle }) {
   return (
     <div className="auth-layout">
       {/* Left Panel - Branding */}
@@ -23,12 +23,15 @@ function AuthLayout({ children }) {
 
           {/* Headline */}
           <h1 className="auth-layout__headline">
-            Structure the chaos,<br />
-            <span className="auth-layout__headline-accent">perfect the flow.</span>
+            {title || (
+              <>
+                Structure the chaos,<br />
+                <span className="auth-layout__headline-accent">perfect the flow.</span>
+              </>
+            )}
           </h1>
           <p className="auth-layout__description">
-            Enterprise requirements management designed for clarity. Create, trace,
-            and manage complex systems with a digital sanctuary for critical thinking.
+            {subtitle || 'Enterprise requirements management designed for clarity. Create, trace, and manage complex systems with a digital sanctuary for critical thinking.'}
           </p>
 
           {/* Visual Grid */}
@@ -60,6 +63,12 @@ function AuthLayout({ children }) {
       {/* Right Panel - Form */}
       <div className="auth-layout__form-panel">
         <div className="auth-layout__form-container">
+          <div className="auth-layout__mobile-logo">
+            <div className="auth-layout__mobile-logo-icon">
+              <span className="material-symbols-outlined">account_tree</span>
+            </div>
+            <span className="auth-layout__mobile-logo-text">ReqFlow</span>
+          </div>
           {children}
         </div>
 
