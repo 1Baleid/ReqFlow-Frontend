@@ -1,0 +1,393 @@
+/* Charts Base Styles */
+.chart {
+  font-family: 'Inter', sans-serif;
+}
+
+/* ============================================
+   BAR CHART - Vertical
+   ============================================ */
+.chart--bar {
+  display: flex;
+  flex-direction: column;
+}
+
+.chart__bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: 100%;
+  gap: 8px;
+  padding-bottom: 24px;
+}
+
+.chart__bar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  max-width: 60px;
+  height: 100%;
+}
+
+.chart__bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+  width: 100%;
+}
+
+.chart__bar {
+  width: 100%;
+  max-width: 40px;
+  border-radius: 6px 6px 0 0;
+  min-height: 4px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.chart__bar:hover {
+  filter: brightness(1.1);
+  transform: scaleX(1.05);
+}
+
+.chart__bar--animate {
+  animation: barGrow 0.6s ease-out forwards;
+  transform-origin: bottom;
+}
+
+@keyframes barGrow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.chart__bar-value-top {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 4px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: all 0.2s ease;
+}
+
+.chart__bar-value--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.chart__bar-label-bottom {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 8px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* ============================================
+   BAR CHART - Horizontal
+   ============================================ */
+.chart--bar-horizontal {
+  display: flex;
+  flex-direction: column;
+}
+
+.chart__bars-horizontal {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chart__bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chart__bar-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #2b3437;
+  min-width: 80px;
+  white-space: nowrap;
+}
+
+.chart__bar-track {
+  flex: 1;
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.chart__bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.chart__bar-fill--animate {
+  animation: barFillGrow 0.8s ease-out forwards;
+}
+
+@keyframes barFillGrow {
+  from {
+    width: 0;
+  }
+}
+
+.chart__bar-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  min-width: 32px;
+  text-align: right;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.chart__bar-row:hover .chart__bar-value {
+  opacity: 1;
+}
+
+/* ============================================
+   DONUT CHART
+   ============================================ */
+.chart--donut {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.chart__donut-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart__donut-svg {
+  display: block;
+}
+
+.chart__donut-segment {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chart__donut-segment--animate {
+  animation: donutDraw 1s ease-out forwards;
+  stroke-dashoffset: 1000;
+}
+
+@keyframes donutDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.chart__donut-center {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.chart__donut-center-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2b3437;
+  line-height: 1.2;
+}
+
+.chart__donut-center-label {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* Legend */
+.chart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  justify-content: center;
+}
+
+.chart__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.chart__legend-item:hover,
+.chart__legend-item--active {
+  background: #f1f5f9;
+}
+
+.chart__legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.chart__legend-label {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.chart__legend-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2b3437;
+}
+
+.chart__legend-percent {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+/* ============================================
+   PROGRESS CHART
+   ============================================ */
+.chart--progress {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chart__progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chart__progress-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #2b3437;
+}
+
+.chart__progress-percent {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.chart__progress-track {
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.chart--progress-sm .chart__progress-track {
+  height: 4px;
+}
+
+.chart--progress-lg .chart__progress-track {
+  height: 12px;
+}
+
+.chart__progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.chart__progress-fill--animate {
+  animation: progressFill 0.8s ease-out forwards;
+}
+
+@keyframes progressFill {
+  from {
+    width: 0;
+  }
+}
+
+/* ============================================
+   MINI CHART (Sparklines)
+   ============================================ */
+.chart__mini {
+  display: block;
+}
+
+.chart__mini--animate .chart__mini-line {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: miniLineDraw 1s ease-out forwards;
+}
+
+@keyframes miniLineDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.chart__mini--animate .chart__mini-area {
+  opacity: 0;
+  animation: miniAreaFade 0.5s ease-out 0.5s forwards;
+}
+
+@keyframes miniAreaFade {
+  to {
+    opacity: 1;
+  }
+}
+
+.chart__mini--animate .chart__mini-dot {
+  opacity: 0;
+  transform: scale(0);
+  animation: miniDotPop 0.3s ease-out 0.8s forwards;
+  transform-origin: center;
+}
+
+@keyframes miniDotPop {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.chart__mini--animate .chart__mini-bar {
+  transform: scaleY(0);
+  transform-origin: bottom;
+  animation: miniBarGrow 0.4s ease-out forwards;
+}
+
+@keyframes miniBarGrow {
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 640px) {
+  .chart__legend {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .chart__bar-label {
+    min-width: 60px;
+    font-size: 12px;
+  }
+}
