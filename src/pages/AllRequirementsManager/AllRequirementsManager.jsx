@@ -1,8 +1,15 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MainLayout from '../../layouts/MainLayout'
 import Button from '../../components/Button'
 import { useProjectData } from '../../context/ProjectDataContext'
+import {
+  listRequirements as listRequirementsApi,
+  markRequirementsAsDuplicates as markRequirementsAsDuplicatesApi,
+  mergeDuplicateRequirements as mergeDuplicateRequirementsApi,
+  setRequirementDeadline as setRequirementDeadlineApi,
+  setRequirementStatus as setRequirementStatusApi
+} from '../../services/requirementsApi'
 import './AllRequirementsManager.css'
 
 function formatDateForDisplay(dateOnlyString) {
@@ -26,6 +33,7 @@ function AllRequirementsManager() {
   const navigate = useNavigate()
   const {
     currentUser,
+    currentProject,
     activeRequirements,
     projectUsers,
     workflowStageMap,
@@ -48,6 +56,42 @@ function AllRequirementsManager() {
   const [primaryRequirementId, setPrimaryRequirementId] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [feedbackMessage, setFeedbackMessage] = useState('')
+  const [apiRequirements, setApiRequirements] = useState(null)
+
+  const refreshBackendRequirements = async () => {
+    const result = await listRequirementsApi({
+      projectId: currentProject?.id || 'proj-1'
+    })
+    setApiRequirements(result.requirements)
+  }
+
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadRequirements() {
+      try {
+        const result = await listRequirementsApi({
+          projectId: currentProject?.id || 'proj-1'
+        })
+
+        if (isMounted) {
+          setApiRequirements(result.requirements)
+        }
+      } catch (error) {
+        if (isMounted && !(error instanceof TypeError)) {
+          setErrorMessage(error.message || 'Unable to load backend requirements.')
+        }
+      }
+    }
+
+    loadRequirements()
+
+    return () => {
+      isMounted = false
+    }
+  }, [currentProject?.id])
+
+  const requirementsSource = apiRequirements || activeRequirements
 
   const assigneeById = useMemo(
     () =>
@@ -59,7 +103,7 @@ function AllRequirementsManager() {
   )
 
   const duplicateGroups = useMemo(() => {
-    return activeRequirements.reduce((accumulator, requirement) => {
+    return requirementsSource.reduce((accumulator, requirement) => {
       if (!requirement.duplicateGroupId) {
         return accumulator
       }
@@ -70,7 +114,7 @@ function AllRequirementsManager() {
       accumulator[requirement.duplicateGroupId].push(requirement)
       return accumulator
     }, {})
-  }, [activeRequirements])
+  }, [requirementsSource])
 
   const duplicateGroupOptions = useMemo(
     () => Object.keys(duplicateGroups),
@@ -83,13 +127,28 @@ function AllRequirementsManager() {
   )
 
   const selectedRequirements = useMemo(
-    () => activeRequirements.filter((requirement) => selectedIds.includes(requirement.id)),
-    [activeRequirements, selectedIds]
+    () => requirementsSource.filter((requirement) => selectedIds.includes(requirement.id)),
+    [requirementsSource, selectedIds]
   )
 
   const overdueRequirementIdSet = useMemo(
-    () => new Set(overdueRequirements.map((requirement) => requirement.id)),
-    [overdueRequirements]
+    () => {
+      if (!apiRequirements) {
+        return new Set(overdueRequirements.map((requirement) => requirement.id))
+      }
+
+      const today = new Date().toISOString().split('T')[0]
+      return new Set(
+        requirementsSource
+          .filter((requirement) =>
+            requirement.deadline &&
+            !['approved', 'locked'].includes(requirement.status) &&
+            requirement.deadline < today
+          )
+          .map((requirement) => requirement.id)
+      )
+    },
+    [apiRequirements, overdueRequirements, requirementsSource]
   )
 
   const openRequirement = (requirementId) => {
@@ -98,7 +157,7 @@ function AllRequirementsManager() {
 
   const toggleSelectAll = (event) => {
     if (event.target.checked) {
-      setSelectedIds(activeRequirements.map((requirement) => requirement.id))
+      setSelectedIds(requirementsSource.map((requirement) => requirement.id))
       return
     }
     setSelectedIds([])
@@ -122,7 +181,29 @@ function AllRequirementsManager() {
     setShowDuplicateConfirm(true)
   }
 
-  const confirmMarkDuplicate = () => {
+  const confirmMarkDuplicate = async () => {
+    if (apiRequirements) {
+      try {
+        const result = await markRequirementsAsDuplicatesApi({
+          requirementIds: selectedIds,
+          actor: {
+            id: currentUser.id,
+            name: currentUser.name,
+            role: currentUser.role
+          }
+        })
+        await refreshBackendRequirements()
+        setShowDuplicateConfirm(false)
+        setSelectedIds([])
+        setErrorMessage('')
+        setFeedbackMessage(`Selected requirements marked as duplicates (${result.duplicateGroupId}).`)
+        window.setTimeout(() => setFeedbackMessage(''), 3000)
+      } catch (error) {
+        setErrorMessage(error.message || 'Unable to mark duplicates.')
+      }
+      return
+    }
+
     const markResult = markRequirementsAsDuplicates({
       requirementIds: selectedIds,
       actorName: currentUser.name
@@ -159,7 +240,32 @@ function AllRequirementsManager() {
     setPrimaryRequirementId(groupRequirements[0]?.id || '')
   }
 
-  const confirmMergeDuplicates = () => {
+  const confirmMergeDuplicates = async () => {
+    if (apiRequirements) {
+      try {
+        await mergeDuplicateRequirementsApi({
+          duplicateGroupId: selectedDuplicateGroupId,
+          primaryRequirementId,
+          actor: {
+            id: currentUser.id,
+            name: currentUser.name,
+            role: currentUser.role
+          }
+        })
+        await refreshBackendRequirements()
+        setShowMergeModal(false)
+        setSelectedDuplicateGroupId('')
+        setPrimaryRequirementId('')
+        setSelectedIds([])
+        setErrorMessage('')
+        setFeedbackMessage('Duplicate requirements merged and archived successfully.')
+        window.setTimeout(() => setFeedbackMessage(''), 3000)
+      } catch (error) {
+        setErrorMessage(error.message || 'Unable to merge duplicates.')
+      }
+      return
+    }
+
     const mergeResult = mergeDuplicateRequirements({
       duplicateGroupId: selectedDuplicateGroupId,
       primaryRequirementId,
@@ -180,7 +286,7 @@ function AllRequirementsManager() {
   }
 
   const openDeadlineModal = (requirementId) => {
-    const selectedRequirement = activeRequirements.find(
+    const selectedRequirement = requirementsSource.find(
       (requirement) => requirement.id === requirementId
     )
     if (!selectedRequirement) {
@@ -193,7 +299,30 @@ function AllRequirementsManager() {
     setShowDeadlineModal(true)
   }
 
-  const confirmSetDeadline = () => {
+  const confirmSetDeadline = async () => {
+    if (apiRequirements) {
+      try {
+        await setRequirementDeadlineApi(deadlineRequirementId, {
+          deadline: deadlineDate,
+          actor: {
+            id: currentUser.id,
+            name: currentUser.name,
+            role: currentUser.role
+          }
+        })
+        await refreshBackendRequirements()
+        setShowDeadlineModal(false)
+        setDeadlineRequirementId('')
+        setDeadlineDate('')
+        setErrorMessage('')
+        setFeedbackMessage('Requirement deadline updated.')
+        window.setTimeout(() => setFeedbackMessage(''), 3000)
+      } catch (error) {
+        setErrorMessage(error.message || 'Unable to save deadline.')
+      }
+      return
+    }
+
     const setResult = setRequirementDeadline({
       requirementId: deadlineRequirementId,
       deadline: deadlineDate,
@@ -219,7 +348,29 @@ function AllRequirementsManager() {
     setShowLockConfirm(true)
   }
 
-  const confirmLockRequirement = () => {
+  const confirmLockRequirement = async () => {
+    if (apiRequirements) {
+      try {
+        await setRequirementStatusApi(lockRequirementId, {
+          status: 'locked',
+          actor: {
+            id: currentUser.id,
+            name: currentUser.name,
+            role: currentUser.role
+          }
+        })
+        await refreshBackendRequirements()
+        setShowLockConfirm(false)
+        setLockRequirementId('')
+        setErrorMessage('')
+        setFeedbackMessage('Approved requirement locked successfully.')
+        window.setTimeout(() => setFeedbackMessage(''), 3000)
+      } catch (error) {
+        setErrorMessage(error.message || 'Unable to lock requirement.')
+      }
+      return
+    }
+
     const lockResult = setRequirementStatus({
       requirementId: lockRequirementId,
       status: 'locked',
@@ -305,7 +456,7 @@ function AllRequirementsManager() {
                 <th className="all-reqs__th all-reqs__th--checkbox">
                   <input
                     type="checkbox"
-                    checked={selectedIds.length > 0 && selectedIds.length === activeRequirements.length}
+                    checked={selectedIds.length > 0 && selectedIds.length === requirementsSource.length}
                     onChange={toggleSelectAll}
                   />
                 </th>
@@ -319,7 +470,7 @@ function AllRequirementsManager() {
               </tr>
             </thead>
             <tbody>
-              {activeRequirements.map((requirement) => {
+              {requirementsSource.map((requirement) => {
                 const assignee = requirement.assigneeId
                   ? assigneeById[requirement.assigneeId]
                   : null
