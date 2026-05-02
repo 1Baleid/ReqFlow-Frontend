@@ -1,1 +1,1 @@
-export { default } from './Skeleton'
+export { default, Spinner, PageLoader, InlineLoader, ButtonLoader } from './Skeleton'

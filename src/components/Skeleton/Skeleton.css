@@ -1,7 +1,15 @@
+/* ============================================
+   SKELETON BASE
+   ============================================ */
 .skeleton {
   background: linear-gradient(90deg, #eaeff1 25%, #f1f4f6 50%, #eaeff1 75%);
   background-size: 200% 100%;
-  animation: skeleton-loading 1.5s infinite;
+  animation: skeleton-loading 1.5s infinite ease-in-out;
+}
+
+.skeleton--static {
+  animation: none;
+  background: #eaeff1;
 }
 
 @keyframes skeleton-loading {
@@ -31,39 +39,291 @@
   border-radius: 9999px;
 }
 
-/* Skeleton Card */
+/* ============================================
+   SKELETON CARD
+   ============================================ */
 .skeleton-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background: #ffffff;
-  border-radius: 0.75rem;
-  padding: 1.5rem;
+  border-radius: 12px;
+  padding: 20px 24px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
 }
 
 .skeleton-card__left {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 16px;
   flex: 1;
 }
 
 .skeleton-card__text {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 8px;
   flex: 1;
 }
 
 .skeleton-card__right {
   display: flex;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
-/* Skeleton List */
+/* ============================================
+   SKELETON LIST
+   ============================================ */
 .skeleton-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 12px;
+}
+
+/* ============================================
+   SKELETON TABLE
+   ============================================ */
+.skeleton-table {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.skeleton-table__header {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 16px 24px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.skeleton-table__body {
+  padding: 8px 0;
+}
+
+.skeleton-table__row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 16px 24px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.skeleton-table__row:last-child {
+  border-bottom: none;
+}
+
+/* ============================================
+   SKELETON CHART
+   ============================================ */
+.skeleton-chart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.skeleton-chart--bar .skeleton-chart__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  height: 100%;
+  width: 100%;
+}
+
+.skeleton-chart--donut {
+  padding: 32px;
+}
+
+/* ============================================
+   SKELETON DASHBOARD
+   ============================================ */
+.skeleton-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.skeleton-dashboard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.skeleton-dashboard__title {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeleton-dashboard__actions {
+  display: flex;
+  gap: 12px;
+}
+
+.skeleton-dashboard__filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.skeleton-dashboard__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 1024px) {
+  .skeleton-dashboard__grid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.skeleton-dashboard__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ============================================
+   SPINNER
+   ============================================ */
+.spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner__svg {
+  animation: spinner-rotate 1.4s linear infinite;
+}
+
+.spinner__track {
+  stroke: rgba(0, 0, 0, 0.1);
+}
+
+.spinner__progress {
+  stroke: currentColor;
+  stroke-dasharray: 80, 200;
+  stroke-dashoffset: 0;
+  animation: spinner-dash 1.4s ease-in-out infinite;
+}
+
+@keyframes spinner-rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinner-dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
+  }
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
+  }
+}
+
+/* Spinner Sizes */
+.spinner--xs {
+  width: 16px;
+  height: 16px;
+}
+
+.spinner--sm {
+  width: 24px;
+  height: 24px;
+}
+
+.spinner--md {
+  width: 40px;
+  height: 40px;
+}
+
+.spinner--lg {
+  width: 56px;
+  height: 56px;
+}
+
+/* Spinner Colors */
+.spinner--primary {
+  color: #1353d8;
+}
+
+.spinner--white {
+  color: #ffffff;
+}
+
+.spinner--gray {
+  color: #64748b;
+}
+
+/* ============================================
+   PAGE LOADER
+   ============================================ */
+.page-loader {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.page-loader__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.page-loader__message {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+  margin: 0;
+}
+
+/* ============================================
+   INLINE LOADER
+   ============================================ */
+.inline-loader {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.inline-loader__text {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* ============================================
+   BUTTON LOADER
+   ============================================ */
+.button-loader {
+  margin-right: 8px;
 }
