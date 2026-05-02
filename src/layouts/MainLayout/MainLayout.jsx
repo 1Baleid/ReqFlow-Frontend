@@ -27,8 +27,8 @@ function MainLayout({ children, user: propUser, role: propRole }) {
     })
   }
 
-  const handleMobileMenuOpen = () => {
-    setIsMobileMenuOpen(true)
+  const handleMobileMenuToggle = () => {
+    setIsMobileMenuOpen(prev => !prev)
   }
 
   const handleMobileMenuClose = () => {
@@ -46,7 +46,8 @@ function MainLayout({ children, user: propUser, role: propRole }) {
       />
       <TopNav
         user={user}
-        onMenuClick={handleMobileMenuOpen}
+        onMenuClick={handleMobileMenuToggle}
+        isMobileMenuOpen={isMobileMenuOpen}
       />
       <main className="main-layout__content">
         <div className="main-layout__container">

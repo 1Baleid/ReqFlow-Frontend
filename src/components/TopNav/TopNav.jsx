@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Avatar from '../Avatar'
 import {
@@ -8,21 +8,51 @@ import {
 } from '../../data/mockData'
 import './TopNav.css'
 
-function TopNav({ user, onMenuClick, onProjectChange }) {
+function TopNav({ user, onMenuClick, onProjectChange, isMobileMenuOpen = false }) {
   const navigate = useNavigate()
   const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false)
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false)
   const [projectList, setProjectList] = useState(getProjects)
   const [activeProject, setActiveProject] = useState(getCurrentProject())
+  const searchInputRef = useRef(null)
+  const userMenuRef = useRef(null)
 
-  // Close dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (!e.target.closest('.topnav__project-wrapper')) {
         setIsProjectDropdownOpen(false)
       }
+      if (!e.target.closest('.topnav__user-wrapper')) {
+        setIsUserMenuOpen(false)
+      }
+      if (!e.target.closest('.topnav__search') && !e.target.closest('.topnav__search-toggle')) {
+        setIsMobileSearchOpen(false)
+      }
     }
     document.addEventListener('click', handleClickOutside)
     return () => document.removeEventListener('click', handleClickOutside)
+  }, [])
+
+  // Focus search input when mobile search opens
+  useEffect(() => {
+    if (isMobileSearchOpen && searchInputRef.current) {
+      searchInputRef.current.focus()
+    }
+  }, [isMobileSearchOpen])
+
+  // Close mobile search on Escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        setIsMobileSearchOpen(false)
+        setIsUserMenuOpen(false)
+        setIsProjectDropdownOpen(false)
+      }
+    }
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
   }, [])
 
   useEffect(() => {
@@ -55,21 +85,62 @@ function TopNav({ user, onMenuClick, onProjectChange }) {
     navigate('/projects/new')
   }
 
+  const handleUserMenuToggle = () => {
+    setIsUserMenuOpen(!isUserMenuOpen)
+  }
+
+  const handleProfileClick = () => {
+    setIsUserMenuOpen(false)
+    navigate('/settings')
+  }
+
+  const handleMobileSearchToggle = () => {
+    setIsMobileSearchOpen(!isMobileSearchOpen)
+  }
+
   return (
-    <header className="topnav">
-      {/* Mobile Menu Button */}
-      <button className="topnav__menu-btn" onClick={onMenuClick} aria-label="Open menu">
-        <span className="material-symbols-outlined">menu</span>
+    <header className={`topnav ${isMobileSearchOpen ? 'topnav--search-open' : ''}`}>
+      {/* Mobile Menu Button - Animated Hamburger */}
+      <button
+        className={`topnav__menu-btn ${isMobileMenuOpen ? 'topnav__menu-btn--active' : ''}`}
+        onClick={onMenuClick}
+        aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+        aria-expanded={isMobileMenuOpen}
+      >
+        <span className="topnav__hamburger">
+          <span className="topnav__hamburger-line"></span>
+          <span className="topnav__hamburger-line"></span>
+          <span className="topnav__hamburger-line"></span>
+        </span>
+      </button>
+
+      {/* Mobile Search Toggle */}
+      <button
+        className="topnav__search-toggle"
+        onClick={handleMobileSearchToggle}
+        aria-label="Toggle search"
+      >
+        <span className="material-symbols-outlined">
+          {isMobileSearchOpen ? 'close' : 'search'}
+        </span>
       </button>
 
       {/* Search */}
-      <div className="topnav__search">
+      <div className={`topnav__search ${isMobileSearchOpen ? 'topnav__search--mobile-open' : ''}`}>
         <span className="material-symbols-outlined topnav__search-icon">search</span>
         <input
+          ref={searchInputRef}
           type="text"
           className="topnav__search-input"
           placeholder="Search requirements, projects, or users..."
         />
+        <button
+          className="topnav__search-close"
+          onClick={() => setIsMobileSearchOpen(false)}
+          aria-label="Close search"
+        >
+          <span className="material-symbols-outlined">close</span>
+        </button>
       </div>
 
       {/* Right Section */}
@@ -141,13 +212,62 @@ function TopNav({ user, onMenuClick, onProjectChange }) {
           </button>
         </div>
 
-        {/* User Avatar */}
-        <div className="topnav__user">
-          <Avatar
-            src={user?.avatar}
-            name={user?.name || 'User'}
-            size="sm"
-          />
+        {/* User Avatar with Dropdown */}
+        <div className="topnav__user-wrapper" ref={userMenuRef}>
+          <button
+            className="topnav__user"
+            onClick={handleUserMenuToggle}
+            aria-label="User menu"
+            aria-expanded={isUserMenuOpen}
+          >
+            <Avatar
+              src={user?.avatar}
+              name={user?.name || 'User'}
+              size="sm"
+            />
+          </button>
+
+          {isUserMenuOpen && (
+            <div className="topnav__user-dropdown">
+              <div className="topnav__user-header">
+                <Avatar
+                  src={user?.avatar}
+                  name={user?.name || 'User'}
+                  size="md"
+                />
+                <div className="topnav__user-info">
+                  <span className="topnav__user-name">{user?.name || 'User'}</span>
+                  <span className="topnav__user-email">{user?.email || 'user@email.com'}</span>
+                </div>
+              </div>
+              <div className="topnav__user-menu">
+                <button className="topnav__user-menu-item" onClick={handleProfileClick}>
+                  <span className="material-symbols-outlined">person</span>
+                  Profile Settings
+                </button>
+                <button className="topnav__user-menu-item" onClick={handleProfileClick}>
+                  <span className="material-symbols-outlined">notifications</span>
+                  Notification Preferences
+                </button>
+                <button className="topnav__user-menu-item" onClick={handleProfileClick}>
+                  <span className="material-symbols-outlined">help</span>
+                  Help & Support
+                </button>
+              </div>
+              <div className="topnav__user-footer">
+                <button
+                  className="topnav__user-logout"
+                  onClick={() => {
+                    setIsUserMenuOpen(false)
+                    navigate('/login')
+                  }}
+                >
+                  <span className="material-symbols-outlined">logout</span>
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
