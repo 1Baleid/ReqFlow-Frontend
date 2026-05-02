@@ -14,5 +14,8 @@ export const env = {
   port: Number.parseInt(process.env.PORT, 10) || 5000,
   mongodbUri: process.env.MONGODB_URI,
   jwtSecret: process.env.JWT_SECRET,
-  clientUrl: process.env.CLIENT_URL
+  clientUrl: process.env.CLIENT_URL,
+  dnsServers: process.env.DNS_SERVERS
+    ? process.env.DNS_SERVERS.split(',').map((server) => server.trim()).filter(Boolean)
+    : []
 }

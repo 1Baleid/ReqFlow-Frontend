@@ -1,5 +1,6 @@
 import app from './app.js'
 import { connectToDatabase } from './config/database.js'
+import { configureDnsServers } from './config/dns.js'
 import { env } from './config/env.js'
 
 function logStartupError(error) {
@@ -16,6 +17,7 @@ function logStartupError(error) {
 
 async function startServer() {
   try {
+    configureDnsServers()
     await connectToDatabase()
     app.listen(env.port, () => {
       console.log(`ReqFlow API listening on http://localhost:${env.port}`)
