@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom'
+import { clearStoredAuthSession } from '../../member-a-auth-entry/session'
 import './Sidebar.css'
 
 function Sidebar({ role = 'client', isCollapsed, onToggle, isMobileOpen, onMobileClose }) {
@@ -33,14 +34,8 @@ function Sidebar({ role = 'client', isCollapsed, onToggle, isMobileOpen, onMobil
   }
 
   const handleLogout = () => {
-    localStorage.removeItem('userRole')
-    localStorage.removeItem('userEmail')
-    window.dispatchEvent(new Event('userChanged'))
+    clearStoredAuthSession()
     navigate('/login', { replace: true })
-    // Force a clean app bootstrap after logout to avoid stale in-memory UI state.
-    window.setTimeout(() => {
-      window.location.replace('/login')
-    }, 0)
   }
 
   const handleNavClick = () => {

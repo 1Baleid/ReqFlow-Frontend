@@ -8,6 +8,7 @@ export const organization = {
 }
 
 const PROJECTS_STORAGE_KEY = 'reqflow-projects-v1'
+const AUTH_USER_STORAGE_KEY = 'authUser'
 
 // Projects
 export const projects = [
@@ -326,6 +327,18 @@ export const demoUsers = {
 
 // Get current user based on localStorage (defaults to client)
 export const getCurrentUser = () => {
+  try {
+    const storedAuthUser = localStorage.getItem(AUTH_USER_STORAGE_KEY)
+    if (storedAuthUser) {
+      const parsedUser = JSON.parse(storedAuthUser)
+      if (parsedUser?.email && parsedUser?.role) {
+        return parsedUser
+      }
+    }
+  } catch {
+    // Fall back to demo session behavior.
+  }
+
   const email = localStorage.getItem('userEmail') || 'abdullah@kfupm.edu.sa'
   const user = demoUsers[email] || demoUsers['abdullah@kfupm.edu.sa']
   const roleOverride = localStorage.getItem('userRole')

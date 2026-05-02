@@ -1,13 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { getDefaultRouteForRole, setStoredAuthSession } from '../../member-a-auth-entry/session'
+import { loginUser } from '../../services/authApi'
 import './Login.css'
-
-// Demo user accounts
-const DEMO_USERS = {
-  'abdullah@kfupm.edu.sa': { password: 'abdullah123', role: 'client', redirect: '/dashboard' },
-  'omar@kfupm.edu.sa': { password: 'omar123', role: 'member', redirect: '/dashboard' },
-  'khalid@kfupm.edu.sa': { password: 'khalid123', role: 'manager', redirect: '/manager' }
-}
 
 function Login() {
   const navigate = useNavigate()
@@ -18,6 +13,7 @@ function Login() {
   })
   const [errors, setErrors] = useState({})
   const [isLoading, setIsLoading] = useState(false)
+  const [serverMessage, setServerMessage] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [eyeOffset, setEyeOffset] = useState({ x: 0, y: 0 })
   const creatureRef = useRef(null)
@@ -49,6 +45,10 @@ function Login() {
     return re.test(email)
   }
 
+  const wait = (duration) => new Promise((resolve) => {
+    window.setTimeout(resolve, duration)
+  })
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
     setFormData(prev => ({
@@ -58,6 +58,10 @@ function Login() {
 
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }))
+    }
+
+    if (serverMessage) {
+      setServerMessage('')
     }
   }
 
@@ -80,23 +84,23 @@ function Login() {
       return
     }
 
-    // Check demo credentials
-    const user = DEMO_USERS[formData.email.toLowerCase()]
-    if (!user || user.password !== formData.password) {
-      setErrors({ email: 'Invalid email or password' })
-      return
-    }
-
-    // Store user role in localStorage for session persistence
-    localStorage.setItem('userRole', user.role)
-    localStorage.setItem('userEmail', formData.email.toLowerCase())
-    window.dispatchEvent(new Event('userChanged'))
-
     setIsLoading(true)
-    setTimeout(() => {
+
+    try {
+      const [payload] = await Promise.all([
+        loginUser(formData),
+        wait(500)
+      ])
+      setStoredAuthSession({
+        token: payload.token,
+        user: payload.user
+      })
+      navigate(getDefaultRouteForRole(payload.user.role), { replace: true })
+    } catch (error) {
+      setServerMessage(error.message || 'Unable to sign in right now.')
+    } finally {
       setIsLoading(false)
-      navigate(user.redirect)
-    }, 800)
+    }
   }
 
   return (
@@ -273,6 +277,13 @@ function Login() {
             </div>
           </div>
 
+          {serverMessage && (
+            <div className="login__banner login__banner--error">
+              <span className="material-symbols-outlined">priority_high</span>
+              <span>{serverMessage}</span>
+            </div>
+          )}
+
           {/* Form */}
           <form className="login__form" onSubmit={handleSubmit}>
             {/* Email Field */}
@@ -303,7 +314,7 @@ function Login() {
             <div className="login__field">
               <div className="login__label-row">
                 <label className="login__label" htmlFor="password">Password</label>
-                <a href="#" className="login__forgot">Forgot password?</a>
+                <Link to="/forgot-password" className="login__forgot">Forgot password?</Link>
               </div>
               <div className="login__input-wrapper">
                 <span className="login__input-icon material-symbols-outlined">lock</span>
@@ -383,7 +394,7 @@ function Login() {
 
           {/* Contact Admin */}
           <p className="login__contact">
-            Don&apos;t have an account? <a href="#">Contact your admin</a>
+            Don&apos;t have an account? <Link to="/signup">Create one</Link>
           </p>
         </div>
 
