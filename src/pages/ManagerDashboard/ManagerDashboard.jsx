@@ -340,14 +340,14 @@ function ManagerDashboard() {
 
                   return (
                     <tr key={requirement.id}>
-                      <td>
+                      <td data-label="Requirement">
                         <div className="manager-dash__req-title">{requirement.title}</div>
                         <div className="manager-dash__req-project">{requirement.id}</div>
                       </td>
-                      <td className="manager-dash__td--center">
+                      <td className="manager-dash__td--center" data-label="Status">
                         {renderStatusBadge(requirement.status)}
                       </td>
-                      <td>
+                      <td data-label="Assignee">
                         <div className="manager-dash__owner">
                           <div className="manager-dash__owner-avatar">
                             {assignee ? assignee.name.charAt(0) : '?'}
@@ -357,10 +357,10 @@ function ManagerDashboard() {
                           </span>
                         </div>
                       </td>
-                      <td className={`manager-dash__timeline ${overdueRequirementIdSet.has(requirement.id) ? 'manager-dash__timeline--overdue' : ''}`}>
+                      <td data-label="Deadline" className={`manager-dash__timeline ${overdueRequirementIdSet.has(requirement.id) ? 'manager-dash__timeline--overdue' : ''}`}>
                         {formatDateForDisplay(requirement.deadline)}
                       </td>
-                      <td className="manager-dash__td--right">
+                      <td className="manager-dash__td--right" data-label="">
                         <div className="manager-dash__actions">
                           <button
                             className="manager-dash__reassign-btn"
