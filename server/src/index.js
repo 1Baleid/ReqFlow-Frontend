@@ -15,17 +15,40 @@ function logStartupError(error) {
   console.error(error)
 }
 
-async function startServer() {
+// Connect to database for serverless
+let isConnected = false
+
+async function connectDB() {
+  if (isConnected) return
   try {
     configureDnsServers()
     await connectToDatabase()
-    app.listen(env.port, () => {
-      console.log(`ReqFlow API listening on http://localhost:${env.port}`)
-    })
+    isConnected = true
   } catch (error) {
     logStartupError(error)
-    process.exit(1)
+    throw error
   }
 }
 
-startServer()
+// For Vercel serverless
+export default async function handler(req, res) {
+  await connectDB()
+  return app(req, res)
+}
+
+// For local development
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  async function startServer() {
+    try {
+      await connectDB()
+      app.listen(env.port, () => {
+        console.log(`ReqFlow API listening on http://localhost:${env.port}`)
+      })
+    } catch (error) {
+      logStartupError(error)
+      process.exit(1)
+    }
+  }
+
+  startServer()
+}
