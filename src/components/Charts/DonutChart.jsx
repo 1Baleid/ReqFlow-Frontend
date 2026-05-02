@@ -88,10 +88,10 @@ function DonutChart({
         {/* Center content */}
         {showCenter && (
           <div className="chart__donut-center">
-            {centerValue && (
+            {centerValue !== '' && centerValue != null && (
               <span className="chart__donut-center-value">{centerValue}</span>
             )}
-            {centerLabel && (
+            {centerLabel !== '' && centerLabel != null && (
               <span className="chart__donut-center-label">{centerLabel}</span>
             )}
           </div>

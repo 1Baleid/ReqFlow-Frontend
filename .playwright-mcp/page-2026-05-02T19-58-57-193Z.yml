@@ -1,0 +1,64 @@
+- generic [ref=e4]:
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e8]: account_tree
+      - generic [ref=e9]: ReqFlow
+    - generic [ref=e10]:
+      - heading "Welcome back" [level=2] [ref=e11]
+      - paragraph [ref=e12]: Enter your credentials to access your workspace.
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - generic [ref=e15]: info
+        - text: Demo Credentials
+        - generic [ref=e16]: Click to copy
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - generic [ref=e19]: "Client:"
+          - button "abdullah@kfupm.edu.sa" [ref=e20] [cursor=pointer]
+          - button "abdullah123" [ref=e21] [cursor=pointer]
+        - generic [ref=e22]:
+          - generic [ref=e23]: "Manager:"
+          - button "khalid@kfupm.edu.sa" [ref=e24] [cursor=pointer]
+          - button "khalid123" [ref=e25] [cursor=pointer]
+        - generic [ref=e26]:
+          - generic [ref=e27]: "Member:"
+          - button "omar@kfupm.edu.sa" [ref=e28] [cursor=pointer]
+          - button "omar123" [ref=e29] [cursor=pointer]
+    - generic [ref=e30]:
+      - generic [ref=e31]:
+        - generic [ref=e32]: Email address
+        - generic [ref=e33]:
+          - generic: mail
+          - textbox "Email address" [ref=e34]:
+            - /placeholder: name@company.com
+      - generic [ref=e35]:
+        - generic [ref=e36]:
+          - generic [ref=e37]: Password
+          - link "Forgot password?" [ref=e38] [cursor=pointer]:
+            - /url: /forgot-password
+        - generic [ref=e39]:
+          - generic: lock
+          - textbox "Password" [ref=e40]:
+            - /placeholder: ••••••••
+          - button "Show password" [ref=e41] [cursor=pointer]:
+            - generic [ref=e42]: visibility
+      - generic [ref=e43]:
+        - checkbox "Keep me logged in" [ref=e44] [cursor=pointer]
+        - generic [ref=e45] [cursor=pointer]: Keep me logged in
+      - button "Log In arrow_forward" [ref=e46] [cursor=pointer]:
+        - generic [ref=e47]: Log In
+        - generic [ref=e48]: arrow_forward
+    - generic [ref=e49]: Or continue with
+    - generic [ref=e50]:
+      - button "Google" [ref=e51] [cursor=pointer]:
+        - img [ref=e52]
+        - generic [ref=e57]: Google
+      - button "cloud SSO" [ref=e58] [cursor=pointer]:
+        - generic [ref=e59]: cloud
+        - generic [ref=e60]: SSO
+    - paragraph [ref=e61]:
+      - text: Don't have an account?
+      - link "Create one" [ref=e62] [cursor=pointer]:
+        - /url: /signup
+  - contentinfo [ref=e63]:
+    - paragraph [ref=e64]: © 2026 ReqFlow Systems Inc. • Privacy • Security

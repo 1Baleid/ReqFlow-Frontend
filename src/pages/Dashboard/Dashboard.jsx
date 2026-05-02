@@ -80,20 +80,23 @@ function Dashboard() {
     const priorityCounts = { low: 0, medium: 0, high: 0, critical: 0 }
 
     requirementSource.forEach(req => {
-      if (statusCounts[req.status] !== undefined) statusCounts[req.status]++
+      // Normalize 'under-review' (used in requirement data) to 'review' (chart bucket)
+      const statusKey = req.status === 'under-review' ? 'review' : req.status
+      if (statusCounts[statusKey] !== undefined) statusCounts[statusKey]++
       if (priorityCounts[req.priority] !== undefined) priorityCounts[req.priority]++
     })
 
-    const total = activeRequirements.length
+    const total = requirementSource.length
     const approved = statusCounts.approved + statusCounts.locked
     const completionRate = total > 0 ? Math.round((approved / total) * 100) : 0
 
     return {
       statusDistribution: [
         { label: 'Draft', value: statusCounts.draft, color: '#64748b' },
-        { label: 'Review', value: statusCounts.review, color: '#f59e0b' },
+        { label: 'Under Review', value: statusCounts.review, color: '#f59e0b' },
         { label: 'Approved', value: statusCounts.approved, color: '#10b981' },
-        { label: 'Rejected', value: statusCounts.rejected, color: '#ef4444' }
+        { label: 'Rejected', value: statusCounts.rejected, color: '#ef4444' },
+        { label: 'Locked', value: statusCounts.locked, color: '#6366f1' }
       ].filter(s => s.value > 0),
       priorityDistribution: [
         { label: 'Low', value: priorityCounts.low, color: '#94a3b8' },

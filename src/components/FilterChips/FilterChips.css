@@ -40,3 +40,25 @@
 .filter-chips__icon {
   font-size: 16px;
 }
+
+/* Mobile: enable horizontal scroll so chips don't overflow / cramp the layout */
+@media (max-width: 768px) {
+  .filter-chips {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    gap: 4px;
+    padding: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .filter-chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-chips__item {
+    padding: 8px 14px;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+}

@@ -43,3 +43,9 @@
     padding: 24px;
   }
 }
+
+@media (max-width: 480px) {
+  .main-layout__container {
+    padding: 16px;
+  }
+}

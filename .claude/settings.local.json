@@ -4,7 +4,14 @@
       "Bash(npm create:*)",
       "Bash(npm install)",
       "Bash(npm run build:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(timeout 5 npm run dev:*)",
+      "Bash(git merge:*)",
+      "Bash(git fetch:*)",
+      "Bash(git stash:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(curl:*)",
+      "mcp__playwright__browser_navigate"
     ]
   }
 }
