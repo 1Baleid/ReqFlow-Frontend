@@ -46,10 +46,12 @@ npm --version
 
 ## Quick Start
 
+For a complete setup walkthrough, see [docs/setup-guide.md](docs/setup-guide.md).
+
 Clone the repository:
 
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/1Baleid/ReqFlow-Frontend.git
 cd ReqFlow-Frontend
 ```
 
@@ -92,9 +94,10 @@ Update `.env` with local values:
 
 ```env
 PORT=5000
-CLIENT_ORIGIN=http://localhost:5173
 MONGODB_URI=<your-mongodb-connection-string>
 JWT_SECRET=<your-local-secret>
+CLIENT_URL=http://localhost:5173
+DNS_SERVERS=8.8.8.8,1.1.1.1
 ```
 
 Start the backend:
@@ -114,7 +117,7 @@ http://localhost:5000/api/health
 - Keep local secrets in `.env` files only.
 - Do not commit `.env`, database credentials, JWT secrets, or personal access tokens.
 - Use `server/.env.example` as the shared template for teammates.
-- When the frontend and backend run together, confirm that `CLIENT_ORIGIN` matches the Vite URL.
+- When the frontend and backend run together, confirm that `CLIENT_URL` matches the Vite URL.
 - If Vite changes ports because `5173` is busy, update backend CORS settings accordingly.
 
 ## Available Scripts
