@@ -6,71 +6,275 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 64px;
-  background: var(--color-surface-container-lowest);
+  padding: 64px 32px;
+  background: var(--color-surface-container-lowest, #fafafa);
   border: 2px dashed rgba(171, 179, 183, 0.2);
   border-radius: 16px;
+  animation: emptyStateIn 0.3s ease;
 }
 
+@keyframes emptyStateIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   SIZE VARIANTS
+   ============================================ */
+.empty-state--sm {
+  padding: 32px 24px;
+}
+
+.empty-state--sm .empty-state__icon-wrapper {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+}
+
+.empty-state--sm .empty-state__icon {
+  font-size: 32px;
+}
+
+.empty-state--sm .empty-state__title {
+  font-size: 16px;
+}
+
+.empty-state--sm .empty-state__description {
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.empty-state--lg {
+  padding: 80px 48px;
+}
+
+.empty-state--lg .empty-state__icon-wrapper {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 32px;
+}
+
+.empty-state--lg .empty-state__icon {
+  font-size: 56px;
+}
+
+.empty-state--lg .empty-state__title {
+  font-size: 24px;
+}
+
+.empty-state--lg .empty-state__description {
+  font-size: 15px;
+  max-width: 400px;
+}
+
+/* ============================================
+   STYLE VARIANTS
+   ============================================ */
+.empty-state--error {
+  background: rgba(239, 68, 68, 0.05);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.empty-state--error .empty-state__icon-wrapper {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.empty-state--error .empty-state__icon {
+  color: #ef4444;
+  opacity: 1;
+}
+
+.empty-state--warning {
+  background: rgba(245, 158, 11, 0.05);
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.empty-state--warning .empty-state__icon-wrapper {
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.empty-state--warning .empty-state__icon {
+  color: #f59e0b;
+  opacity: 1;
+}
+
+.empty-state--info {
+  background: rgba(59, 130, 246, 0.05);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.empty-state--info .empty-state__icon-wrapper {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.empty-state--info .empty-state__icon {
+  color: #3b82f6;
+  opacity: 1;
+}
+
+.empty-state--success {
+  background: rgba(16, 185, 129, 0.05);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.empty-state--success .empty-state__icon-wrapper {
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.empty-state--success .empty-state__icon {
+  color: #10b981;
+  opacity: 1;
+}
+
+/* ============================================
+   ICON & ILLUSTRATION
+   ============================================ */
 .empty-state__icon-wrapper {
   width: 96px;
   height: 96px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-surface-container-low);
+  background: var(--color-surface-container-low, #f1f5f9);
   border-radius: 50%;
   margin-bottom: 24px;
+  transition: transform 0.2s ease;
+}
+
+.empty-state:hover .empty-state__icon-wrapper {
+  transform: scale(1.05);
 }
 
 .empty-state__icon {
   font-size: 48px;
-  color: var(--color-outline-variant);
-  opacity: 0.4;
+  color: var(--color-outline-variant, #94a3b8);
+  opacity: 0.6;
 }
 
+.empty-state__illustration {
+  margin-bottom: 24px;
+}
+
+.empty-state__illustration-img {
+  max-width: 200px;
+  max-height: 160px;
+  object-fit: contain;
+}
+
+/* ============================================
+   TEXT CONTENT
+   ============================================ */
 .empty-state__title {
   font-family: 'Manrope', sans-serif;
   font-size: 20px;
   font-weight: 700;
-  color: var(--color-on-surface);
+  color: var(--color-on-surface, #2b3437);
   margin: 0 0 8px 0;
 }
 
 .empty-state__description {
   font-family: 'Inter', sans-serif;
   font-size: 14px;
-  color: var(--color-on-surface-variant);
+  color: var(--color-on-surface-variant, #64748b);
   max-width: 320px;
-  margin: 0 0 32px 0;
-  line-height: 1.5;
+  margin: 0 0 28px 0;
+  line-height: 1.6;
+}
+
+/* ============================================
+   ACTIONS
+   ============================================ */
+.empty-state__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .empty-state__action {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 32px;
+  padding: 12px 24px;
   font-family: 'Inter', sans-serif;
   font-size: 14px;
-  font-weight: 700;
-  color: white;
-  background: linear-gradient(135deg, #1353d8 0%, #0047c5 100%);
+  font-weight: 600;
   border: none;
-  border-radius: 12px;
+  border-radius: 10px;
   cursor: pointer;
-  box-shadow: 0px 12px 32px rgba(43, 52, 55, 0.06);
   transition: all 0.15s ease;
 }
 
-.empty-state__action:hover {
-  opacity: 0.9;
+.empty-state__action--primary {
+  color: white;
+  background: linear-gradient(135deg, #1353d8 0%, #0047c5 100%);
+  box-shadow: 0px 4px 12px rgba(19, 83, 216, 0.25);
 }
 
-.empty-state__action:active {
-  transform: scale(0.98);
+.empty-state__action--primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0px 6px 20px rgba(19, 83, 216, 0.3);
+}
+
+.empty-state__action--primary:active {
+  transform: translateY(0);
+}
+
+.empty-state__action--secondary {
+  color: #64748b;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+}
+
+.empty-state__action--secondary:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #2b3437;
 }
 
 .empty-state__action .material-symbols-outlined {
   font-size: 20px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 640px) {
+  .empty-state {
+    padding: 48px 24px;
+  }
+
+  .empty-state__icon-wrapper {
+    width: 80px;
+    height: 80px;
+  }
+
+  .empty-state__icon {
+    font-size: 40px;
+  }
+
+  .empty-state__title {
+    font-size: 18px;
+  }
+
+  .empty-state__description {
+    font-size: 13px;
+  }
+
+  .empty-state__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .empty-state__action {
+    width: 100%;
+    justify-content: center;
+  }
 }
