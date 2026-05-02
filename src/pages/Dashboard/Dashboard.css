@@ -31,12 +31,17 @@
   align-items: center;
 }
 
+.dashboard__toolbar .search-input {
+  min-width: 0;
+}
+
 .dashboard__sort-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 42px;
   height: 42px;
+  flex-shrink: 0;
   background: var(--color-surface-container-lowest);
   border: 1px solid rgba(171, 179, 183, 0.1);
   border-radius: 8px;
@@ -47,6 +52,12 @@
 
 .dashboard__sort-btn:hover {
   background: white;
+}
+
+@media (max-width: 768px) {
+  .dashboard__toolbar {
+    gap: 8px;
+  }
 }
 
 /* Requirements List */
@@ -61,6 +72,13 @@
   display: flex;
   flex-direction: column;
   gap: 32px;
+}
+
+/* Priority Bars */
+.dashboard__priority-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 /* Help Card */

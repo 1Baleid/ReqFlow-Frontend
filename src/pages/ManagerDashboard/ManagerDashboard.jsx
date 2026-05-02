@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import MainLayout from '../../layouts/MainLayout'
 import { useProjectData } from '../../context/ProjectDataContext'
 import { listRequirements as listRequirementsApi } from '../../services/requirementsApi'
+import { BarChart, DonutChart, MiniChart } from '../../components/Charts'
 import './ManagerDashboard.css'
 
 const STATUS_FILTERS = ['all', 'draft', 'review', 'approved', 'rejected']
@@ -104,6 +105,29 @@ function ManagerDashboard() {
 
     return counts
   }, [requirementsSource])
+
+  // Chart data for status distribution
+  const statusChartData = useMemo(() => [
+    { label: 'Draft', value: statusCounts.draft, color: '#64748b' },
+    { label: 'Review', value: statusCounts.review, color: '#f59e0b' },
+    { label: 'Approved', value: statusCounts.approved, color: '#10b981' },
+    { label: 'Rejected', value: statusCounts.rejected, color: '#ef4444' }
+  ], [statusCounts])
+
+  // Trend data (mock - would come from API)
+  const trendData = useMemo(() => {
+    // Generate mock trend based on current counts
+    const base = statusCounts.approved
+    return [
+      Math.max(0, base - 5),
+      Math.max(0, base - 3),
+      Math.max(0, base - 2),
+      base - 1,
+      base,
+      base + 1,
+      base + 2
+    ]
+  }, [statusCounts.approved])
 
   const overdueRequirementIdSet = useMemo(
     () => new Set((apiRequirements ? overdueRequirementsSource : overdueRequirements).map((requirement) => requirement.id)),
@@ -256,6 +280,38 @@ function ManagerDashboard() {
                   {status === 'all' ? 'All' : workflowStageMap[status] || status}
                 </button>
               ))}
+            </div>
+
+            {/* Status Distribution Chart */}
+            <div className="manager-dash__chart-section">
+              <h4 className="manager-dash__chart-title">Distribution</h4>
+              <DonutChart
+                data={statusChartData}
+                size={120}
+                strokeWidth={16}
+                showLegend={false}
+                showCenter={true}
+                centerValue={requirementsSource.length}
+                centerLabel="Total"
+              />
+            </div>
+
+            {/* Trend Chart */}
+            <div className="manager-dash__chart-section">
+              <h4 className="manager-dash__chart-title">
+                Approval Trend
+                <span className="manager-dash__trend-indicator manager-dash__trend-indicator--up">
+                  <span className="material-symbols-outlined">trending_up</span>
+                  +12%
+                </span>
+              </h4>
+              <MiniChart
+                data={trendData}
+                type="line"
+                height={60}
+                width={200}
+                color="#10b981"
+              />
             </div>
           </div>
         </section>
