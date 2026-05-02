@@ -1,8 +1,19 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import MainLayout from '../../layouts/MainLayout'
 import Button from '../../components/Button'
 import { useProjectData } from '../../context/ProjectDataContext'
+import {
+  addAcceptanceCriteria as addAcceptanceCriteriaApi,
+  addRequirementComment as addRequirementCommentApi,
+  assignRequirement as assignRequirementApi,
+  getRequirement as getRequirementApi,
+  linkRequirement as linkRequirementApi,
+  listRequirements as listRequirementsApi,
+  setRequirementDeadline as setRequirementDeadlineApi,
+  setRequirementStatus as setRequirementStatusApi,
+  unlinkRequirement as unlinkRequirementApi
+} from '../../services/requirementsApi'
 import './RequirementDetail.css'
 
 const STATUS_STYLE_CONFIG = {
@@ -11,6 +22,12 @@ const STATUS_STYLE_CONFIG = {
   approved: { className: 'req-detail__status--approved' },
   rejected: { className: 'req-detail__status--rejected' },
   locked: { className: 'req-detail__status--locked' }
+}
+
+const COMMENT_KIND_LABELS = {
+  comment: 'Comment',
+  'clarification-request': 'Clarification request',
+  'clarification-response': 'Clarification response'
 }
 
 function formatDateForDisplay(dateOnlyString) {
@@ -46,7 +63,11 @@ function RequirementDetail() {
     updateRequirement
   } = useProjectData()
 
-  const requirement = getRequirementById(id)
+  const contextRequirement = getRequirementById(id)
+  const [apiRequirement, setApiRequirement] = useState(null)
+  const [apiRequirementList, setApiRequirementList] = useState([])
+  const [isLoadingApiRequirement, setIsLoadingApiRequirement] = useState(false)
+  const requirement = apiRequirement || contextRequirement
 
   const [commentText, setCommentText] = useState('')
   const displayComments = requirement?.comments || []
@@ -69,14 +90,65 @@ function RequirementDetail() {
     () => requirement?.linkedRequirementIds || [],
     [requirement?.linkedRequirementIds]
   )
+
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadRequirement() {
+      setIsLoadingApiRequirement(true)
+
+      try {
+        const result = await getRequirementApi(id)
+        const listResult = await listRequirementsApi({
+          projectId: result.requirement.projectId || 'proj-1'
+        })
+
+        if (isMounted) {
+          setApiRequirement(result.requirement)
+          setApiRequirementList(listResult.requirements)
+        }
+      } catch (error) {
+        if (isMounted && !(error instanceof TypeError)) {
+          setActionError(error.message || 'Unable to load backend requirement.')
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoadingApiRequirement(false)
+        }
+      }
+    }
+
+    loadRequirement()
+
+    return () => {
+      isMounted = false
+    }
+  }, [id])
   const criteriaList = useMemo(
     () => requirement?.acceptanceCriteria || [],
     [requirement?.acceptanceCriteria]
   )
 
+  const linkedRequirementDetails = useMemo(() => {
+    const requirementLookup = new Map(
+      [...activeRequirements, ...apiRequirementList].map((candidateRequirement) => [
+        candidateRequirement.id,
+        candidateRequirement
+      ])
+    )
+
+    return linkedRequirementIds.map((linkedRequirementId) => ({
+      id: linkedRequirementId,
+      title: requirementLookup.get(linkedRequirementId)?.title || ''
+    }))
+  }, [activeRequirements, apiRequirementList, linkedRequirementIds])
+
   const assignee = useMemo(
-    () => projectUsers.find((user) => user.id === requirement?.assigneeId) || null,
-    [projectUsers, requirement?.assigneeId]
+    () =>
+      requirement?.assignee ||
+      projectUsers.find((user) => user.id === requirement?.assigneeId) ||
+      null,
+    [projectUsers, requirement?.assignee, requirement?.assigneeId]
   )
 
   const availableTeamMembers = useMemo(
@@ -85,7 +157,9 @@ function RequirementDetail() {
   )
 
   const availableLinkedRequirements = useMemo(() => {
-    return activeRequirements.filter((candidateRequirement) => {
+    const candidateSource = apiRequirement ? apiRequirementList : activeRequirements
+
+    return candidateSource.filter((candidateRequirement) => {
       if (candidateRequirement.id === id) {
         return false
       }
@@ -104,7 +178,14 @@ function RequirementDetail() {
         candidateRequirement.title.toLowerCase().includes(normalizedQuery)
       )
     })
-  }, [activeRequirements, id, linkedRequirementIds, linkSearchQuery])
+  }, [
+    activeRequirements,
+    apiRequirement,
+    apiRequirementList,
+    id,
+    linkedRequirementIds,
+    linkSearchQuery
+  ])
 
   if (!requirement) {
     return (
@@ -165,23 +246,70 @@ function RequirementDetail() {
     navigate(`/requirements/${id}/edit`)
   }
 
-  const handleAddComment = () => {
+  const handleAddComment = async (kind = currentUser.role === 'client' ? 'clarification-response' : 'comment') => {
     if (!commentText.trim() || isLocked) {
       return
+    }
+
+    if (apiRequirement) {
+      try {
+        await addRequirementCommentApi(id, {
+          message: commentText.trim(),
+          kind,
+          author: {
+            id: currentUser.id,
+            name: currentUser.name,
+            role: currentUser.role
+          }
+        })
+
+        const result = await getRequirementApi(id)
+        setApiRequirement(result.requirement)
+        setCommentText('')
+        setActionError('')
+        return
+      } catch (error) {
+        setActionError(error.message || 'Unable to add comment.')
+        return
+      }
     }
 
     addRequirementComment({
       requirementId: id,
       author: currentUser.name,
       role: currentUser.role,
-      message: commentText.trim()
+      message: commentText.trim(),
+      kind
     })
     setCommentText('')
   }
 
-  const handleAddCriteria = () => {
+  const handleAddCriteria = async () => {
     if (!newCriteria.trim() || !canEditRequirement) {
       return
+    }
+
+    if (apiRequirement) {
+      try {
+        await addAcceptanceCriteriaApi(requirement.id, {
+          text: newCriteria.trim(),
+          createdBy: {
+            id: currentUser.id,
+            name: currentUser.name,
+            role: currentUser.role
+          }
+        })
+
+        const result = await getRequirementApi(requirement.id)
+        setApiRequirement(result.requirement)
+        setActionError('')
+        setNewCriteria('')
+        setShowAddCriteria(false)
+        return
+      } catch (error) {
+        setActionError(error.message || 'Unable to add acceptance criteria.')
+        return
+      }
     }
 
     const updateResult = updateRequirement({
@@ -205,9 +333,32 @@ function RequirementDetail() {
     setShowAddCriteria(false)
   }
 
-  const handleLinkRequirement = (requirementId) => {
+  const handleLinkRequirement = async (requirementId) => {
     if (!canEditRequirement) {
       return
+    }
+
+    if (apiRequirement) {
+      try {
+        await linkRequirementApi(requirement.id, {
+          linkedRequirementId: requirementId,
+          linkedBy: {
+            id: currentUser.id,
+            name: currentUser.name,
+            role: currentUser.role
+          }
+        })
+
+        const result = await getRequirementApi(requirement.id)
+        setApiRequirement(result.requirement)
+        setActionError('')
+        setShowLinkModal(false)
+        setLinkSearchQuery('')
+        return
+      } catch (error) {
+        setActionError(error.message || 'Unable to link requirement.')
+        return
+      }
     }
 
     const updateResult = updateRequirement({
@@ -231,13 +382,92 @@ function RequirementDetail() {
     setLinkSearchQuery('')
   }
 
+  const handleUnlinkRequirement = async (linkedRequirementId) => {
+    if (!canEditRequirement) {
+      return
+    }
+
+    const shouldUnlink = window.confirm(`Unlink ${linkedRequirementId} from ${requirement.id}?`)
+    if (!shouldUnlink) {
+      return
+    }
+
+    if (apiRequirement) {
+      try {
+        await unlinkRequirementApi(requirement.id, linkedRequirementId, {
+          id: currentUser.id,
+          name: currentUser.name,
+          role: currentUser.role
+        })
+
+        const result = await getRequirementApi(requirement.id)
+        setApiRequirement(result.requirement)
+        setActionError('')
+        showFeedback('Requirement unlinked.')
+        return
+      } catch (error) {
+        setActionError(error.message || 'Unable to unlink requirement.')
+        return
+      }
+    }
+
+    const updateResult = updateRequirement({
+      requirementId: requirement.id,
+      linkedRequirementIds: linkedRequirementIds.filter((id) => id !== linkedRequirementId),
+      actorId: currentUser.id,
+      actorRole: currentUser.role,
+      actorName: currentUser.name,
+      justification: 'Related requirement link removed'
+    })
+
+    if (!updateResult.ok) {
+      setActionError(updateResult.error || 'Unable to unlink requirement.')
+      return
+    }
+
+    setActionError('')
+    showFeedback('Requirement unlinked.')
+  }
+
   const openAssignModal = () => {
     setActionError('')
     setSelectedAssigneeId(requirement.assigneeId || availableTeamMembers[0]?.id || '')
     setShowAssignModal(true)
   }
 
-  const handleAssignConfirm = () => {
+  const handleAssignConfirm = async () => {
+    const selectedMember = availableTeamMembers.find((member) => member.id === selectedAssigneeId)
+    if (!selectedMember) {
+      setActionError('Select a valid team member.')
+      return
+    }
+
+    if (apiRequirement) {
+      try {
+        const result = await assignRequirementApi(requirement.id, {
+          member: {
+            id: selectedMember.id,
+            name: selectedMember.name,
+            role: 'member'
+          },
+          actor: {
+            id: currentUser.id,
+            name: currentUser.name,
+            role: currentUser.role
+          }
+        })
+
+        setApiRequirement(result.requirement)
+        setShowAssignModal(false)
+        setActionError('')
+        showFeedback(result.message || 'Requirement assignment updated.')
+        return
+      } catch (error) {
+        setActionError(error.message || 'Unable to assign requirement.')
+        return
+      }
+    }
+
     const assignmentResult = assignRequirement({
       requirementId: requirement.id,
       memberId: selectedAssigneeId,
@@ -260,7 +490,29 @@ function RequirementDetail() {
     setShowDeadlineModal(true)
   }
 
-  const handleDeadlineConfirm = () => {
+  const handleDeadlineConfirm = async () => {
+    if (apiRequirement) {
+      try {
+        const result = await setRequirementDeadlineApi(requirement.id, {
+          deadline: deadlineInput,
+          actor: {
+            id: currentUser.id,
+            name: currentUser.name,
+            role: currentUser.role
+          }
+        })
+
+        setApiRequirement(result.requirement)
+        setShowDeadlineModal(false)
+        setActionError('')
+        showFeedback('Deadline updated.')
+        return
+      } catch (error) {
+        setActionError(error.message || 'Unable to save deadline.')
+        return
+      }
+    }
+
     const deadlineResult = setRequirementDeadline({
       requirementId: requirement.id,
       deadline: deadlineInput,
@@ -277,61 +529,90 @@ function RequirementDetail() {
     showFeedback('Deadline updated.')
   }
 
-  const handleApprove = () => {
-    const approveResult = setRequirementStatus({
+  const handleStatusChange = async ({ status, reason, successMessage }) => {
+    if (apiRequirement) {
+      try {
+        const result = await setRequirementStatusApi(requirement.id, {
+          status,
+          reason,
+          actor: {
+            id: currentUser.id,
+            name: currentUser.name,
+            role: currentUser.role
+          }
+        })
+
+        setApiRequirement(result.requirement)
+        setActionError('')
+        showFeedback(successMessage)
+        return { ok: true }
+      } catch (error) {
+        setActionError(error.message || 'Unable to update requirement status.')
+        return { ok: false }
+      }
+    }
+
+    const statusResult = setRequirementStatus({
       requirementId: requirement.id,
+      status,
+      actorName: currentUser.name,
+      reason
+    })
+
+    if (!statusResult.ok) {
+      setActionError(statusResult.error || 'Unable to update requirement status.')
+      return { ok: false }
+    }
+
+    setActionError('')
+    showFeedback(successMessage)
+    return { ok: true }
+  }
+
+  const handleApprove = async () => {
+    const approveResult = await handleStatusChange({
       status: 'approved',
-      actorName: currentUser.name
+      successMessage: 'Requirement approved.'
     })
 
     if (!approveResult.ok) {
-      setActionError(approveResult.error || 'Unable to approve requirement.')
       return
     }
 
     setShowApproveConfirm(false)
-    setActionError('')
-    showFeedback('Requirement approved.')
   }
 
-  const handleReject = () => {
+  const handleReject = async () => {
     if (!rejectReason.trim()) {
       setActionError('Rejection reason is required.')
       return
     }
 
-    const rejectResult = setRequirementStatus({
-      requirementId: requirement.id,
+    const rejectResult = await handleStatusChange({
       status: 'rejected',
-      actorName: currentUser.name,
-      reason: rejectReason
+      reason: rejectReason,
+      successMessage: 'Requirement rejected.'
     })
 
     if (!rejectResult.ok) {
-      setActionError(rejectResult.error || 'Unable to reject requirement.')
       return
     }
+
     setShowRejectModal(false)
     setRejectReason('')
-    setActionError('')
-    showFeedback('Requirement rejected.')
   }
 
-  const handleLock = () => {
-    const lockResult = setRequirementStatus({
-      requirementId: requirement.id,
+  const handleLock = async () => {
+    const lockResult = await handleStatusChange({
       status: 'locked',
-      actorName: currentUser.name
+      successMessage: 'Requirement locked. Editing disabled for all roles.'
     })
 
     if (!lockResult.ok) {
-      setActionError(lockResult.error || 'Unable to lock requirement.')
       return
     }
 
     setShowLockConfirm(false)
-    setActionError('')
-    showFeedback('Requirement locked. Editing disabled for all roles.')
   }
 
   return (
@@ -341,6 +622,18 @@ function RequirementDetail() {
           <div className="req-detail__feedback">
             <span className="material-symbols-outlined">check_circle</span>
             <span>{feedbackMessage}</span>
+          </div>
+        )}
+        {isLoadingApiRequirement && (
+          <div className="req-detail__feedback">
+            <span className="material-symbols-outlined">sync</span>
+            <span>Loading backend requirement...</span>
+          </div>
+        )}
+        {actionError && (
+          <div className="req-detail__feedback" style={{ background: '#fef2f2', color: '#991b1b' }}>
+            <span className="material-symbols-outlined">error</span>
+            <span>{actionError}</span>
           </div>
         )}
 
@@ -516,6 +809,11 @@ function RequirementDetail() {
                         <span className="req-detail__comment-author">
                           {comment.author}
                           <span className="req-detail__comment-role">{comment.role}</span>
+                          {comment.kind && comment.kind !== 'comment' && (
+                            <span className={`req-detail__comment-kind req-detail__comment-kind--${comment.kind}`}>
+                              {COMMENT_KIND_LABELS[comment.kind] || comment.kind}
+                            </span>
+                          )}
                         </span>
                         <span className="req-detail__comment-time">{comment.timestampLabel}</span>
                       </div>
@@ -531,7 +829,7 @@ function RequirementDetail() {
                   <div className="req-detail__reply-input-wrapper">
                     <textarea
                       className="req-detail__reply-input"
-                      placeholder={isLocked ? 'Requirement is locked. Discussion is read-only.' : 'Add a comment or request clarification...'}
+                      placeholder={isLocked ? 'Requirement is locked. Discussion is read-only.' : 'Write a comment or clarification message...'}
                       rows="3"
                       value={commentText}
                       onChange={(event) => setCommentText(event.target.value)}
@@ -540,11 +838,20 @@ function RequirementDetail() {
                     <div className="req-detail__reply-actions">
                       <button
                         className="req-detail__reply-btn"
-                        onClick={handleAddComment}
+                        onClick={() => handleAddComment()}
                         disabled={isLocked || !commentText.trim()}
                       >
-                        Send Reply
+                        {currentUser.role === 'client' ? 'Post Response' : 'Post Comment'}
                       </button>
+                      {currentUser.role === 'member' && (
+                        <button
+                          className="req-detail__reply-btn req-detail__reply-btn--clarification"
+                          onClick={() => handleAddComment('clarification-request')}
+                          disabled={isLocked || !commentText.trim()}
+                        >
+                          Request Clarification
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -567,15 +874,31 @@ function RequirementDetail() {
             <section className="req-detail__sidebar-card">
               <h3 className="req-detail__sidebar-title">Linked Requirements</h3>
               <div className="req-detail__links">
-                {linkedRequirementIds.map((linkedRequirementId) => (
-                  <button
-                    key={linkedRequirementId}
+                {linkedRequirementDetails.map((linkedRequirement) => (
+                  <span
+                    key={linkedRequirement.id}
                     className="req-detail__link-tag"
-                    onClick={() => navigate(`/requirements/${linkedRequirementId}`)}
+                    title={linkedRequirement.title || linkedRequirement.id}
                   >
-                    <span className="material-symbols-outlined">link</span>
-                    {linkedRequirementId}
-                  </button>
+                    <button
+                      className="req-detail__link-tag-main"
+                      onClick={() => navigate(`/requirements/${linkedRequirement.id}`)}
+                    >
+                      <span className="material-symbols-outlined">link</span>
+                      {linkedRequirement.title
+                        ? `${linkedRequirement.id} - ${linkedRequirement.title}`
+                        : linkedRequirement.id}
+                    </button>
+                    {canEditRequirement && (
+                      <button
+                        className="req-detail__link-remove"
+                        onClick={() => handleUnlinkRequirement(linkedRequirement.id)}
+                        aria-label={`Unlink ${linkedRequirement.id}`}
+                      >
+                        <span className="material-symbols-outlined">close</span>
+                      </button>
+                    )}
+                  </span>
                 ))}
                 {linkedRequirementIds.length === 0 && (
                   <span className="req-detail__empty-text">No linked requirements</span>

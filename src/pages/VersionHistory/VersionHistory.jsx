@@ -3,6 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom'
 import MainLayout from '../../layouts/MainLayout'
 import Button from '../../components/Button'
 import { useProjectData } from '../../context/ProjectDataContext'
+import {
+  getRequirement as getRequirementApi,
+  listRequirementVersions as listRequirementVersionsApi
+} from '../../services/requirementsApi'
 import './VersionHistory.css'
 
 const SNAPSHOT_FIELDS = [
@@ -30,11 +34,14 @@ function VersionHistory() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { currentUser, getRequirementById } = useProjectData()
-  const requirement = getRequirementById(id)
+  const [apiRequirement, setApiRequirement] = useState(null)
+  const [apiVersions, setApiVersions] = useState(null)
+  const [loadError, setLoadError] = useState('')
+  const requirement = apiRequirement || getRequirementById(id)
 
   const versions = useMemo(
-    () => [...(requirement?.versions || [])].sort((leftVersion, rightVersion) => leftVersion.versionNumber - rightVersion.versionNumber),
-    [requirement?.versions]
+    () => [...(apiVersions || requirement?.versions || [])].sort((leftVersion, rightVersion) => leftVersion.versionNumber - rightVersion.versionNumber),
+    [apiVersions, requirement?.versions]
   )
 
   const [selectedVersions, setSelectedVersions] = useState([])
@@ -52,6 +59,36 @@ function VersionHistory() {
 
     setSelectedVersions([])
   }, [versions])
+
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadBackendVersions() {
+      setLoadError('')
+
+      try {
+        const [requirementResult, versionsResult] = await Promise.all([
+          getRequirementApi(id),
+          listRequirementVersionsApi(id)
+        ])
+
+        if (isMounted) {
+          setApiRequirement(requirementResult.requirement)
+          setApiVersions(versionsResult.versions)
+        }
+      } catch (error) {
+        if (isMounted && !(error instanceof TypeError)) {
+          setLoadError(error.message || 'Unable to load backend versions.')
+        }
+      }
+    }
+
+    loadBackendVersions()
+
+    return () => {
+      isMounted = false
+    }
+  }, [id])
 
   const sourceVersion = versions.find((version) => version.id === selectedVersions[0])
   const targetVersion = versions.find((version) => version.id === selectedVersions[1])
@@ -132,6 +169,11 @@ function VersionHistory() {
             <p className="version-history__description">
               Select two versions to compare requirement changes in read-only mode.
             </p>
+            {loadError && (
+              <p className="version-history__description" style={{ color: '#c62828' }}>
+                {loadError}
+              </p>
+            )}
           </div>
           <div className="version-history__actions">
             <Button variant="secondary" icon="history">

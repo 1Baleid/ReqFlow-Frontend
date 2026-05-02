@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MainLayout from '../../layouts/MainLayout'
 import { useProjectData } from '../../context/ProjectDataContext'
+import { listRequirements as listRequirementsApi } from '../../services/requirementsApi'
 import './ManagerDashboard.css'
 
 const STATUS_FILTERS = ['all', 'draft', 'review', 'approved', 'rejected']
@@ -36,6 +37,47 @@ function ManagerDashboard() {
   } = useProjectData()
 
   const [activeStatusFilter, setActiveStatusFilter] = useState('all')
+  const [apiRequirements, setApiRequirements] = useState(null)
+  const [apiError, setApiError] = useState('')
+
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadRequirements() {
+      setApiError('')
+
+      try {
+        const result = await listRequirementsApi({
+          projectId: currentProject?.id || 'proj-1'
+        })
+
+        if (isMounted) {
+          setApiRequirements(result.requirements)
+        }
+      } catch (error) {
+        if (isMounted && !(error instanceof TypeError)) {
+          setApiError(error.message || 'Unable to load backend requirements.')
+        }
+      }
+    }
+
+    loadRequirements()
+
+    return () => {
+      isMounted = false
+    }
+  }, [currentProject?.id])
+
+  const requirementsSource = apiRequirements || activeRequirements
+  const overdueRequirementsSource = useMemo(() => {
+    const today = new Date().toISOString().split('T')[0]
+    return requirementsSource.filter((requirement) => {
+      if (!requirement.deadline || ['approved', 'locked'].includes(requirement.status)) {
+        return false
+      }
+      return requirement.deadline < today
+    })
+  }, [requirementsSource])
 
   const assigneeById = useMemo(
     () =>
@@ -54,26 +96,26 @@ function ManagerDashboard() {
       rejected: 0
     }
 
-    activeRequirements.forEach((requirement) => {
+    requirementsSource.forEach((requirement) => {
       if (Object.prototype.hasOwnProperty.call(counts, requirement.status)) {
         counts[requirement.status] += 1
       }
     })
 
     return counts
-  }, [activeRequirements])
+  }, [requirementsSource])
 
   const overdueRequirementIdSet = useMemo(
-    () => new Set(overdueRequirements.map((requirement) => requirement.id)),
-    [overdueRequirements]
+    () => new Set((apiRequirements ? overdueRequirementsSource : overdueRequirements).map((requirement) => requirement.id)),
+    [apiRequirements, overdueRequirements, overdueRequirementsSource]
   )
 
   const filteredRequirements = useMemo(() => {
     if (activeStatusFilter === 'all') {
-      return activeRequirements
+      return requirementsSource
     }
-    return activeRequirements.filter((requirement) => requirement.status === activeStatusFilter)
-  }, [activeRequirements, activeStatusFilter])
+    return requirementsSource.filter((requirement) => requirement.status === activeStatusFilter)
+  }, [activeStatusFilter, requirementsSource])
 
   const renderStatusBadge = (status) => {
     const classMap = {
@@ -105,7 +147,7 @@ function ManagerDashboard() {
           <div className="manager-dash__status-badge">
             <span className="manager-dash__status-dot"></span>
             <span className="manager-dash__status-text">
-              {activeRequirements.length} active requirements
+              {requirementsSource.length} active requirements
             </span>
           </div>
         </div>
@@ -129,7 +171,9 @@ function ManagerDashboard() {
           </div>
           <div className="manager-dash__kpi-card manager-dash__kpi-card--error">
             <span className="manager-dash__kpi-label manager-dash__kpi-label--error">Overdue</span>
-            <div className="manager-dash__kpi-value manager-dash__kpi-value--error">{overdueRequirements.length}</div>
+            <div className="manager-dash__kpi-value manager-dash__kpi-value--error">
+              {(apiRequirements ? overdueRequirementsSource : overdueRequirements).length}
+            </div>
             <div className="manager-dash__kpi-trend manager-dash__kpi-trend--warning">
               <span className="material-symbols-outlined">warning</span>
               Needs manager action
@@ -147,6 +191,17 @@ function ManagerDashboard() {
             </div>
 
             <div className="manager-dash__alerts">
+              {apiError && (
+                <div className="manager-dash__alert-card">
+                  <div className="manager-dash__alert-icon manager-dash__alert-icon--error">
+                    <span className="material-symbols-outlined">error</span>
+                  </div>
+                  <div className="manager-dash__alert-content">
+                    <h3 className="manager-dash__alert-title">Backend requirements unavailable</h3>
+                    <p className="manager-dash__alert-desc">{apiError}</p>
+                  </div>
+                </div>
+              )}
               {managerNotifications.length === 0 && (
                 <div className="manager-dash__alert-card">
                   <div className="manager-dash__alert-icon manager-dash__alert-icon--primary">

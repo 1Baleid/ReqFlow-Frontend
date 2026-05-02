@@ -1,8 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import MainLayout from '../../layouts/MainLayout'
 import Button from '../../components/Button'
 import { useProjectData } from '../../context/ProjectDataContext'
+import {
+  getRequirement as getRequirementApi,
+  updateRequirement as updateRequirementApi
+} from '../../services/requirementsApi'
 import './EditRequirement.css'
 
 // Extended mock data for editable requirements
@@ -47,7 +51,10 @@ function EditRequirement() {
   const navigate = useNavigate()
   const { currentUser, getRequirementById, updateRequirement } = useProjectData()
 
-  const requirement = getRequirementById(id) || {
+  const [apiRequirement, setApiRequirement] = useState(null)
+  const [isLoadingRequirement, setIsLoadingRequirement] = useState(false)
+
+  const requirement = apiRequirement || getRequirementById(id) || {
     id: id,
     title: 'Unknown Requirement',
     description: '',
@@ -75,6 +82,41 @@ function EditRequirement() {
   const [showToast, setShowToast] = useState(false)
   const [saveError, setSaveError] = useState('')
 
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadRequirement() {
+      setIsLoadingRequirement(true)
+      setSaveError('')
+
+      try {
+        const result = await getRequirementApi(id)
+
+        if (isMounted) {
+          setApiRequirement(result.requirement)
+          setTitle(result.requirement.title || '')
+          setDescription(result.requirement.description || '')
+          setReqType(result.requirement.type || 'functional')
+          setReqPriority(result.requirement.priority || 'medium')
+        }
+      } catch (error) {
+        if (isMounted && !(error instanceof TypeError)) {
+          setSaveError(error.message || 'Unable to load requirement.')
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoadingRequirement(false)
+        }
+      }
+    }
+
+    loadRequirement()
+
+    return () => {
+      isMounted = false
+    }
+  }, [id])
+
   const normalizedStatus = requirement.status?.toLowerCase().replace(/\s+/g, '-') || 'draft'
   const isAssignedMember = requirement.assigneeId === currentUser.id
   const canClientEdit =
@@ -90,13 +132,46 @@ function EditRequirement() {
     normalizedStatus !== 'locked'
   const canEditRequirement = canClientEdit || canMemberEdit || canManagerEdit
   const isLocked = !canEditRequirement
+  const requiresVersionNote = currentUser.role === 'member' && !isLocked
 
   const handleDiscard = () => {
     navigate(`/requirements/${id}`)
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setSaveError('')
+
+    if (requiresVersionNote && !versionNote.trim()) {
+      setSaveError('A non-empty refinement justification is required.')
+      setShowToast(true)
+      setTimeout(() => setShowToast(false), 3000)
+      return
+    }
+
+    if (apiRequirement) {
+      try {
+        await updateRequirementApi(id, {
+          title,
+          description,
+          type: reqType,
+          priority: reqPriority,
+          changeSummary: versionNote || 'Requirement content updated',
+          editedBy: {
+            id: currentUser.id,
+            name: currentUser.name,
+            role: currentUser.role
+          }
+        })
+        navigate(`/requirements/${id}`)
+        return
+      } catch (error) {
+        setSaveError(error.message || 'Unable to save requirement.')
+        setShowToast(true)
+        setTimeout(() => setShowToast(false), 3000)
+        return
+      }
+    }
+
     const result = updateRequirement({
       requirementId: id,
       title,
@@ -142,7 +217,11 @@ function EditRequirement() {
               Discard Changes
             </button>
             {!isLocked && (
-              <Button variant="primary" onClick={handleSave}>
+              <Button
+                variant="primary"
+                onClick={handleSave}
+                disabled={requiresVersionNote && !versionNote.trim()}
+              >
                 Save Version
               </Button>
             )}
@@ -150,6 +229,20 @@ function EditRequirement() {
         </section>
 
         {/* Edit Restriction Banner */}
+        {isLoadingRequirement && (
+          <div className="edit-req__toast">
+            <span className="material-symbols-outlined edit-req__toast-icon">sync</span>
+            <p className="edit-req__toast-text">Loading backend requirement...</p>
+          </div>
+        )}
+
+        {saveError && !showToast && (
+          <div className="edit-req__toast edit-req__toast--warning">
+            <span className="material-symbols-outlined edit-req__toast-icon">error</span>
+            <p className="edit-req__toast-text">{saveError}</p>
+          </div>
+        )}
+
         {isLocked && (
           <div className="edit-req__toast edit-req__toast--warning">
             <span className="material-symbols-outlined edit-req__toast-icon">lock</span>
@@ -244,7 +337,9 @@ function EditRequirement() {
               <input
                 type="text"
                 className="edit-req__version-input"
-                placeholder="Explain what changed in this draft (e.g., 'Updated latency benchmarks')..."
+                placeholder={requiresVersionNote
+                  ? 'Required: explain what changed and why...'
+                  : "Explain what changed in this draft (e.g., 'Updated latency benchmarks')..."}
                 value={versionNote}
                 onChange={(e) => setVersionNote(e.target.value)}
                 disabled={isLocked}

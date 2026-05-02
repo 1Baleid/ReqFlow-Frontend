@@ -1025,7 +1025,7 @@ export function ProjectDataProvider({ children }) {
   )
 
   const addRequirementComment = useCallback(
-    ({ requirementId, author, role, message }) => {
+    ({ requirementId, author, role, message, kind = 'comment' }) => {
       updateStoreState((previousState) => {
         const targetRequirement = previousState.requirements.find((req) => req.id === requirementId)
         if (!targetRequirement || targetRequirement.isArchived) {
@@ -1041,6 +1041,7 @@ export function ProjectDataProvider({ children }) {
           id: createId('comment'),
           author,
           role,
+          kind,
           timestampLabel: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
           message: normalizedMessage
         }
@@ -1052,7 +1053,7 @@ export function ProjectDataProvider({ children }) {
           targetRequirement.createdBy?.id,
           ...managerRecipients
         ].filter(Boolean))]
-        const commentNotifications = role === 'member'
+        const commentNotifications = kind === 'clarification-request'
           ? notificationRecipients.map((recipientId) => ({
             id: createId('notification'),
             type: 'clarification',
@@ -1077,7 +1078,11 @@ export function ProjectDataProvider({ children }) {
                   ...req.history,
                   createRequirementHistoryEntry({
                     type: 'comment',
-                    description: `Discussion updated by ${author}`,
+                    description: kind === 'clarification-request'
+                      ? `Clarification requested by ${author}`
+                      : kind === 'clarification-response'
+                        ? `Clarification response added by ${author}`
+                        : `Discussion updated by ${author}`,
                     actorName: author
                   })
                 ]

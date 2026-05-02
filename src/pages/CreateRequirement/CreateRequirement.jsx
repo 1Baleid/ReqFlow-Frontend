@@ -7,6 +7,7 @@ import Select from '../../components/Select'
 import Button from '../../components/Button'
 import Toast from '../../components/Toast'
 import { useProjectData } from '../../context/ProjectDataContext'
+import { createRequirement as createRequirementApi } from '../../services/requirementsApi'
 import './CreateRequirement.css'
 
 const priorityOptions = [
@@ -26,7 +27,7 @@ const typeOptions = [
 ]
 
 function CreateRequirement() {
-  const { currentUser, createRequirement } = useProjectData()
+  const { currentUser, currentProject, createRequirement } = useProjectData()
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     title: '',
@@ -71,7 +72,36 @@ function CreateRequirement() {
     setIsSubmitting(true)
     setShowToast(true)
 
-    const createResult = createRequirement({
+    try {
+      const createResult = await createRequirementApi({
+        projectId: currentProject?.id || 'proj-1',
+        title: formData.title,
+        description: formData.description,
+        type: formData.type,
+        priority: formData.priority,
+        status: formData.status,
+        createdBy: {
+          id: currentUser.id,
+          name: currentUser.name,
+          role: currentUser.role
+        }
+      })
+
+      setTimeout(() => {
+        setIsSubmitting(false)
+        navigate(`/requirements/${createResult.requirement.id}`)
+      }, 400)
+      return
+    } catch (error) {
+      if (!(error instanceof TypeError)) {
+        setErrors({ form: error.message || 'Unable to create requirement.' })
+        setIsSubmitting(false)
+        setShowToast(false)
+        return
+      }
+    }
+
+    const fallbackResult = createRequirement({
       title: formData.title,
       description: formData.description,
       type: formData.type,
@@ -80,8 +110,8 @@ function CreateRequirement() {
       actorName: currentUser.name
     })
 
-    if (!createResult.ok) {
-      setErrors({ form: createResult.error || 'Unable to create requirement.' })
+    if (!fallbackResult.ok) {
+      setErrors({ form: fallbackResult.error || 'Unable to create requirement.' })
       setIsSubmitting(false)
       setShowToast(false)
       return
@@ -89,7 +119,7 @@ function CreateRequirement() {
 
     setTimeout(() => {
       setIsSubmitting(false)
-      navigate(`/requirements/${createResult.requirement.id}`)
+      navigate(`/requirements/${fallbackResult.requirement.id}`)
     }, 400)
   }
 
