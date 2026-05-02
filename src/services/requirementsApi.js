@@ -125,8 +125,15 @@ export async function listRequirements(query = {}) {
   const searchParams = new URLSearchParams()
 
   Object.entries(query).forEach(([key, value]) => {
-    if (value) {
-      searchParams.set(key, value)
+    if (value !== undefined && value !== null && value !== '') {
+      // Handle arrays (for multi-select filters)
+      if (Array.isArray(value)) {
+        if (value.length > 0) {
+          searchParams.set(key, value.join(','))
+        }
+      } else {
+        searchParams.set(key, value)
+      }
     }
   })
 

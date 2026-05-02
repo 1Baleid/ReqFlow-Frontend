@@ -121,8 +121,10 @@ export async function listRequirements(request, response, next) {
       projectId = 'proj-1',
       status,
       priority,
+      type,
       assigneeId,
-      search
+      search,
+      sort = 'newest'
     } = request.query
 
     const query = {
@@ -130,23 +132,73 @@ export async function listRequirements(request, response, next) {
       isArchived: false
     }
 
+    // Support multiple status values (comma-separated or array)
     if (status) {
-      query.status = status
+      const statusArray = Array.isArray(status) ? status : status.split(',')
+      if (statusArray.length === 1) {
+        query.status = statusArray[0]
+      } else if (statusArray.length > 1) {
+        query.status = { $in: statusArray }
+      }
     }
 
+    // Support multiple priority values
     if (priority) {
-      query.priority = priority
+      const priorityArray = Array.isArray(priority) ? priority : priority.split(',')
+      if (priorityArray.length === 1) {
+        query.priority = priorityArray[0]
+      } else if (priorityArray.length > 1) {
+        query.priority = { $in: priorityArray }
+      }
     }
 
+    // Support multiple type values
+    if (type) {
+      const typeArray = Array.isArray(type) ? type : type.split(',')
+      if (typeArray.length === 1) {
+        query.type = typeArray[0]
+      } else if (typeArray.length > 1) {
+        query.type = { $in: typeArray }
+      }
+    }
+
+    // Support multiple assignee values
     if (assigneeId) {
-      query['assignee.id'] = assigneeId
+      const assigneeArray = Array.isArray(assigneeId) ? assigneeId : assigneeId.split(',')
+      if (assigneeArray.length === 1) {
+        query['assignee.id'] = assigneeArray[0]
+      } else if (assigneeArray.length > 1) {
+        query['assignee.id'] = { $in: assigneeArray }
+      }
     }
 
     if (search) {
       query.$text = { $search: String(search) }
     }
 
-    const requirements = await Requirement.find(query).sort({ updatedAt: -1 })
+    // Build sort options
+    let sortOption = { updatedAt: -1 } // default: newest
+    switch (sort) {
+      case 'oldest':
+        sortOption = { createdAt: 1 }
+        break
+      case 'newest':
+        sortOption = { createdAt: -1 }
+        break
+      case 'priority-high':
+        sortOption = { priority: -1, createdAt: -1 }
+        break
+      case 'priority-low':
+        sortOption = { priority: 1, createdAt: -1 }
+        break
+      case 'deadline':
+        sortOption = { deadline: 1, createdAt: -1 }
+        break
+      default:
+        sortOption = { updatedAt: -1 }
+    }
+
+    const requirements = await Requirement.find(query).sort(sortOption)
     requirements.forEach(ensureOriginalDescription)
     response.status(200).json({ requirements })
   } catch (error) {

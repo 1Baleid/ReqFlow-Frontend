@@ -1,0 +1,109 @@
+/* FilterBar Component */
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.filter-bar--compact {
+  padding: 12px;
+  gap: 8px;
+}
+
+.filter-bar--compact .dropdown__trigger {
+  padding: 6px 10px;
+  font-size: 12px;
+  min-width: 110px;
+}
+
+/* Filters Group */
+.filter-bar__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Actions Group */
+.filter-bar__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Clear Button */
+.filter-bar__clear {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: transparent;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #ef4444;
+  transition: all 0.15s ease;
+}
+
+.filter-bar__clear:hover {
+  background: #fef2f2;
+  border-color: #ef4444;
+}
+
+.filter-bar__clear .material-symbols-outlined {
+  font-size: 16px;
+}
+
+/* Active filter indicator */
+.filter-bar__active-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background: #1353d8;
+  color: white;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-bar__filters {
+    flex-wrap: wrap;
+  }
+
+  .filter-bar__filters .dropdown {
+    flex: 1;
+    min-width: calc(50% - 4px);
+  }
+
+  .filter-bar__actions {
+    justify-content: space-between;
+    padding-top: 8px;
+    border-top: 1px solid #e2e8f0;
+  }
+}
+
+@media (max-width: 480px) {
+  .filter-bar__filters .dropdown {
+    min-width: 100%;
+  }
+}
