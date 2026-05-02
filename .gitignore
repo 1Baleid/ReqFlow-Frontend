@@ -7,9 +7,33 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
+**/node_modules/
+
+# Build output
 dist
 dist-ssr
+build
+coverage
+**/dist/
+**/build/
+**/coverage/
+
+# Cache and test output
+.cache
+.vite
+.eslintcache
+test-results/
+playwright-report/
+blob-report/
+*.tsbuildinfo
+
+# Local tool state
+.playwright-mcp/
+.claude/settings.local.json
+
+# Local machine files
 *.local
 
 # Editor directories and files
@@ -25,8 +49,12 @@ dist-ssr
 
 # Environment files
 .env
+.env.*
+**/.env
+**/.env.*
+!.env.example
+!**/.env.example
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-
