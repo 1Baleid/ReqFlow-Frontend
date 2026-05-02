@@ -1,5 +1,8 @@
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom'
 import Login from './pages/Login'
+import Signup from './pages/Signup'
+import ForgotPassword from './pages/ForgotPassword'
+import AuthStatus from './pages/AuthStatus'
 import Dashboard from './pages/Dashboard'
 import Requirements from './pages/Requirements'
 import CreateRequirement from './pages/CreateRequirement'
@@ -13,12 +16,12 @@ import Settings from './pages/Settings'
 import Projects from './pages/Projects'
 import CreateProject from './pages/CreateProject'
 import { ProjectDataProvider, useProjectData } from './context/ProjectDataContext'
+import { getDefaultRouteForRole, isAuthenticated } from './member-a-auth-entry/session'
 
 function AuthGate({ children }) {
   const { currentUser } = useProjectData()
-  const isAuthenticated = Boolean(localStorage.getItem('userEmail'))
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated()) {
     return <Navigate to="/login" replace />
   }
 
@@ -31,10 +34,10 @@ function AuthGate({ children }) {
 
 function RoleGate({ allowedRoles, children }) {
   const { currentUser } = useProjectData()
-  const fallbackRoute = currentUser?.role === 'manager' ? '/manager' : '/dashboard'
+  const fallbackRoute = currentUser ? getDefaultRouteForRole(currentUser.role) : '/login'
 
   if (!allowedRoles.includes(currentUser.role)) {
-    return <Navigate to={fallbackRoute} replace />
+    return <Navigate to="/unauthorized" replace state={{ from: fallbackRoute }} />
   }
 
   return children
@@ -52,14 +55,26 @@ function TraceabilityRedirect() {
 
 function AppRoutes() {
   const { currentUser } = useProjectData()
-  const isAuthenticated = Boolean(localStorage.getItem('userEmail'))
-  const defaultRoute = currentUser?.role === 'manager' ? '/manager' : '/dashboard'
+  const hasSession = isAuthenticated()
+  const defaultRoute = getDefaultRouteForRole(currentUser?.role)
 
   return (
     <Routes>
       <Route
         path="/login"
-        element={isAuthenticated ? <Navigate to={defaultRoute} replace /> : <Login />}
+        element={hasSession ? <Navigate to={defaultRoute} replace /> : <Login />}
+      />
+      <Route
+        path="/signup"
+        element={hasSession ? <Navigate to={defaultRoute} replace /> : <Signup />}
+      />
+      <Route
+        path="/forgot-password"
+        element={hasSession ? <Navigate to={defaultRoute} replace /> : <ForgotPassword />}
+      />
+      <Route
+        path="/unauthorized"
+        element={<AuthStatus variant="unauthorized" />}
       />
 
       <Route
@@ -187,8 +202,8 @@ function AppRoutes() {
         }
       />
 
-      <Route path="/" element={<Navigate to={isAuthenticated ? defaultRoute : '/login'} replace />} />
-      <Route path="*" element={<Navigate to={isAuthenticated ? defaultRoute : '/login'} replace />} />
+      <Route path="/" element={<Navigate to={hasSession ? defaultRoute : '/login'} replace />} />
+      <Route path="*" element={<AuthStatus variant="notFound" />} />
     </Routes>
   )
 }
