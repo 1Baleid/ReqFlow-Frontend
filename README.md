@@ -242,6 +242,8 @@ Use these credentials to test the role-based flows:
 
 ## QA Checklist
 
+Final QA notes are tracked in [docs/testing/final-qa-notes.md](docs/testing/final-qa-notes.md).
+
 Before opening a pull request or marking a feature as complete, run through this checklist:
 
 - The app starts with `npm run dev`.
