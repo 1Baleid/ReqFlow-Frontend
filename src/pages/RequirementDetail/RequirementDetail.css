@@ -205,6 +205,31 @@
   font-variation-settings: 'FILL' 1;
 }
 
+.req-detail__review-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(15, 118, 110, 0.18);
+  transition: all 0.15s ease;
+}
+
+.req-detail__review-btn:hover {
+  opacity: 0.95;
+}
+
+.req-detail__review-btn .material-symbols-outlined {
+  font-size: 18px;
+}
+
 .req-detail__assign-btn {
   display: flex;
   align-items: center;

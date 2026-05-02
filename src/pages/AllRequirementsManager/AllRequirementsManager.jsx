@@ -348,6 +348,44 @@ function AllRequirementsManager() {
     setShowLockConfirm(true)
   }
 
+  const sendRequirementToReview = async (requirementId) => {
+    if (apiRequirements) {
+      try {
+        await setRequirementStatusApi(requirementId, {
+          status: 'review',
+          actor: {
+            id: currentUser.id,
+            name: currentUser.name,
+            role: currentUser.role
+          }
+        })
+        await refreshBackendRequirements()
+        setErrorMessage('')
+        setFeedbackMessage('Requirement sent to client review.')
+        window.setTimeout(() => setFeedbackMessage(''), 3000)
+      } catch (error) {
+        setErrorMessage(error.message || 'Unable to send requirement to review.')
+      }
+      return
+    }
+
+    const statusResult = setRequirementStatus({
+      requirementId,
+      status: 'review',
+      actorName: currentUser.name,
+      actorRole: currentUser.role
+    })
+
+    if (!statusResult.ok) {
+      setErrorMessage(statusResult.error || 'Unable to send requirement to review.')
+      return
+    }
+
+    setErrorMessage('')
+    setFeedbackMessage('Requirement sent to client review.')
+    window.setTimeout(() => setFeedbackMessage(''), 3000)
+  }
+
   const confirmLockRequirement = async () => {
     if (apiRequirements) {
       try {
@@ -374,7 +412,8 @@ function AllRequirementsManager() {
     const lockResult = setRequirementStatus({
       requirementId: lockRequirementId,
       status: 'locked',
-      actorName: currentUser.name
+      actorName: currentUser.name,
+      actorRole: currentUser.role
     })
 
     if (!lockResult.ok) {
@@ -534,6 +573,15 @@ function AllRequirementsManager() {
                         >
                           <span className="material-symbols-outlined">calendar_month</span>
                         </button>
+                        {requirement.status === 'draft' && (
+                          <button
+                            className="all-reqs__action-btn"
+                            title="Send to Review"
+                            onClick={() => sendRequirementToReview(requirement.id)}
+                          >
+                            <span className="material-symbols-outlined">send</span>
+                          </button>
+                        )}
                         {requirement.status === 'approved' && (
                           <button
                             className="all-reqs__action-btn all-reqs__action-btn--lock"

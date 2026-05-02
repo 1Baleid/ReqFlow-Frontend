@@ -958,7 +958,7 @@ export function ProjectDataProvider({ children }) {
   )
 
   const setRequirementStatus = useCallback(
-    ({ requirementId, status, actorName, reason }) => {
+    ({ requirementId, status, actorName, actorRole, reason }) => {
       if (!ALLOWED_REQUIREMENT_STATUSES.includes(status)) {
         return { ok: false, error: 'Unsupported requirement status.' }
       }
@@ -977,8 +977,50 @@ export function ProjectDataProvider({ children }) {
           return previousState
         }
 
-        if (status === 'locked' && targetRequirement.status !== 'approved') {
-          result = { ok: false, error: 'Only approved requirements can be locked.' }
+        if (targetRequirement.status === status) {
+          result = { ok: false, error: `Requirement is already ${status}.` }
+          return previousState
+        }
+
+        const transitionRules = {
+          review: {
+            from: 'draft',
+            role: 'manager',
+            roleError: 'Only Managers can send requirements to review.',
+            stateError: 'Only Draft requirements can be sent to review.'
+          },
+          approved: {
+            from: 'review',
+            role: 'client',
+            roleError: 'Only Clients can approve requirements.',
+            stateError: 'Only requirements under review can be approved.'
+          },
+          rejected: {
+            from: 'review',
+            role: 'client',
+            roleError: 'Only Clients can reject requirements.',
+            stateError: 'Only requirements under review can be rejected.'
+          },
+          locked: {
+            from: 'approved',
+            role: 'manager',
+            roleError: 'Only Managers can lock requirements.',
+            stateError: 'Only approved requirements can be locked.'
+          }
+        }
+        const transitionRule = transitionRules[status]
+        if (!transitionRule) {
+          result = { ok: false, error: 'Unsupported requirement status transition.' }
+          return previousState
+        }
+
+        if (actorRole && actorRole !== transitionRule.role) {
+          result = { ok: false, error: transitionRule.roleError }
+          return previousState
+        }
+
+        if (targetRequirement.status !== transitionRule.from) {
+          result = { ok: false, error: transitionRule.stateError }
           return previousState
         }
 

@@ -21,7 +21,7 @@ export function validateCreateRequirementPayload(body) {
   const projectId = normalizeText(body.projectId) || 'proj-1'
   const type = normalizeText(body.type) || 'functional'
   const priority = normalizeText(body.priority) || 'medium'
-  const status = normalizeText(body.status) || 'draft'
+  const status = 'draft'
 
   if (title.length < 3) {
     return { ok: false, status: 400, message: 'Title must be at least 3 characters long.' }
