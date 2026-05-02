@@ -96,6 +96,93 @@ function getCommentHistoryAction(kind) {
   return 'Added comment'
 }
 
+function getStatusHistoryAction(status) {
+  if (status === 'review') {
+    return 'Sent requirement to review'
+  }
+
+  if (status === 'approved') {
+    return 'Approved requirement'
+  }
+
+  if (status === 'rejected') {
+    return 'Rejected requirement'
+  }
+
+  if (status === 'locked') {
+    return 'Locked requirement'
+  }
+
+  return `Changed status to ${status}`
+}
+
+function validateStatusTransition(requirement, status, actor) {
+  if (requirement.status === 'locked' && status !== 'locked') {
+    return {
+      status: 409,
+      message: 'Locked requirements cannot change status.'
+    }
+  }
+
+  if (requirement.status === status) {
+    return {
+      status: 400,
+      message: `Requirement is already ${status}.`
+    }
+  }
+
+  const transitionRules = {
+    review: {
+      from: 'draft',
+      role: 'manager',
+      roleMessage: 'Only Managers can send requirements to review.',
+      stateMessage: 'Only Draft requirements can be sent to review.'
+    },
+    approved: {
+      from: 'review',
+      role: 'client',
+      roleMessage: 'Only Clients can approve requirements.',
+      stateMessage: 'Only requirements under review can be approved.'
+    },
+    rejected: {
+      from: 'review',
+      role: 'client',
+      roleMessage: 'Only Clients can reject requirements.',
+      stateMessage: 'Only requirements under review can be rejected.'
+    },
+    locked: {
+      from: 'approved',
+      role: 'manager',
+      roleMessage: 'Only Managers can lock requirements.',
+      stateMessage: 'Only approved requirements can be locked.'
+    }
+  }
+
+  const transitionRule = transitionRules[status]
+  if (!transitionRule) {
+    return {
+      status: 400,
+      message: 'Requirements can only move through Draft, Review, Approved or Rejected, then Locked.'
+    }
+  }
+
+  if (actor.role !== transitionRule.role) {
+    return {
+      status: 403,
+      message: transitionRule.roleMessage
+    }
+  }
+
+  if (requirement.status !== transitionRule.from) {
+    return {
+      status: 409,
+      message: transitionRule.stateMessage
+    }
+  }
+
+  return null
+}
+
 function hasChanged(requirement, update) {
   return Object.entries(update).some(([key, value]) => {
     if (key === 'deadline') {
@@ -413,21 +500,10 @@ export async function setRequirementStatus(request, response, next) {
 
     const { status, reason, actor } = validationResult.value
 
-    if (requirement.status === 'locked' && status !== 'locked') {
-      return response.status(409).json({
-        message: 'Locked requirements cannot change status.'
-      })
-    }
-
-    if (status === 'locked' && requirement.status !== 'approved') {
-      return response.status(409).json({
-        message: 'Only approved requirements can be locked.'
-      })
-    }
-
-    if (requirement.status === status) {
-      return response.status(400).json({
-        message: `Requirement is already ${status}.`
+    const transitionError = validateStatusTransition(requirement, status, actor)
+    if (transitionError) {
+      return response.status(transitionError.status).json({
+        message: transitionError.message
       })
     }
 
@@ -435,7 +511,7 @@ export async function setRequirementStatus(request, response, next) {
     requirement.rejectionReason = status === 'rejected' ? reason : null
     requirement.history.push(
       createHistoryEntry({
-        action: status === 'locked' ? 'Locked requirement' : `Changed status to ${status}`,
+        action: getStatusHistoryAction(status),
         details: reason,
         actor
       })
@@ -736,6 +812,19 @@ export async function archiveRequirement(request, response, next) {
       })
     }
 
+    const actor = normalizeActor(request.body?.editedBy)
+    const isManager = actor.role === 'manager'
+    const isClientOwner =
+      actor.role === 'client' &&
+      requirement.createdBy?.id === actor.id &&
+      requirement.status === 'draft'
+
+    if (!isManager && !isClientOwner) {
+      return response.status(403).json({
+        message: 'Only Managers or the Client owner of a Draft requirement can archive it.'
+      })
+    }
+
     requirement.isArchived = true
     requirement.archivedAt = new Date()
     requirement.duplicateGroupId = null
@@ -743,7 +832,7 @@ export async function archiveRequirement(request, response, next) {
     requirement.history.push(
       createHistoryEntry({
         action: 'Archived requirement',
-        actor: normalizeActor(request.body?.editedBy)
+        actor
       })
     )
 
@@ -760,7 +849,7 @@ export async function archiveRequirement(request, response, next) {
         createHistoryEntry({
           action: `Removed link to archived ${requirement.requirementId}`,
           details: requirement.title,
-          actor: normalizeActor(request.body?.editedBy)
+          actor
         })
       )
     })

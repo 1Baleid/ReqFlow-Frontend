@@ -12,6 +12,42 @@ import {
 } from '../../services/requirementsApi'
 import './Requirements.css'
 
+function canClientSeeRequirement(requirement, currentUser) {
+  if (requirement.createdBy?.id === currentUser.id) {
+    return true
+  }
+
+  return ['review', 'approved', 'rejected', 'locked'].includes(requirement.status)
+}
+
+function toBackendStatus(status) {
+  return status === 'under-review' ? 'review' : status
+}
+
+function canEditRequirementFromList(requirement, currentUser) {
+  const status = toBackendStatus(requirement.status)
+
+  if (currentUser.role === 'client') {
+    return requirement.createdBy?.id === currentUser.id && status === 'draft'
+  }
+
+  if (currentUser.role === 'member') {
+    return requirement.assigneeId === currentUser.id && ['draft', 'review'].includes(status)
+  }
+
+  return currentUser.role === 'manager' && status !== 'locked'
+}
+
+function canDeleteRequirementFromList(requirement, currentUser) {
+  const status = toBackendStatus(requirement.status)
+
+  if (currentUser.role === 'client') {
+    return requirement.createdBy?.id === currentUser.id && status === 'draft'
+  }
+
+  return currentUser.role === 'manager' && status !== 'locked'
+}
+
 function Requirements() {
   const { currentUser, currentProject, activeRequirements, deleteRequirement } = useProjectData()
   const navigate = useNavigate()
@@ -59,10 +95,10 @@ function Requirements() {
 
   const requirementSource = apiRequirements || activeRequirements
 
-  // Filter requirements — client sees only their own
+  // Clients see their own drafts plus project requirements sent for review/validation.
   const filteredRequirements = requirementSource
     .filter(req => {
-      if (currentUser.role === 'client' && req.createdBy?.id !== currentUser.id) return false
+      if (currentUser.role === 'client' && !canClientSeeRequirement(req, currentUser)) return false
       if (currentUser.role === 'member' && req.assigneeId !== currentUser.id) return false
       const displayStatus = req.status === 'review' ? 'under-review' : req.status
       if (activeFilter === 'all') return true
@@ -206,20 +242,24 @@ function Requirements() {
                   >
                     <span className="material-symbols-outlined">visibility</span>
                   </button>
-                  <button
-                    className="requirements__action-btn"
-                    onClick={(e) => handleEditRequirement(req.id, e)}
-                    aria-label="Edit"
-                  >
-                    <span className="material-symbols-outlined">edit</span>
-                  </button>
-                  <button
-                    className="requirements__action-btn requirements__action-btn--danger"
-                    onClick={(e) => handleDeleteRequirement(req.id, e)}
-                    aria-label="Delete"
-                  >
-                    <span className="material-symbols-outlined">delete</span>
-                  </button>
+                  {canEditRequirementFromList(req, currentUser) && (
+                    <button
+                      className="requirements__action-btn"
+                      onClick={(e) => handleEditRequirement(req.id, e)}
+                      aria-label="Edit"
+                    >
+                      <span className="material-symbols-outlined">edit</span>
+                    </button>
+                  )}
+                  {canDeleteRequirementFromList(req, currentUser) && (
+                    <button
+                      className="requirements__action-btn requirements__action-btn--danger"
+                      onClick={(e) => handleDeleteRequirement(req.id, e)}
+                      aria-label="Delete"
+                    >
+                      <span className="material-symbols-outlined">delete</span>
+                    </button>
+                  )}
                 </div>
               }
             />

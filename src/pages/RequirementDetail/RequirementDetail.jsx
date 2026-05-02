@@ -221,6 +221,7 @@ function RequirementDetail() {
   const canApproveOrReject = currentUser.role === 'client' && !isLocked && requirement.status === 'review'
   const canAssign = isManager && !isLocked
   const canSetDeadline = isManager && !isLocked
+  const canSendToReview = isManager && !isLocked && requirement.status === 'draft'
 
   const statusDisplayName =
     requirement.status === 'locked'
@@ -556,6 +557,7 @@ function RequirementDetail() {
       requirementId: requirement.id,
       status,
       actorName: currentUser.name,
+      actorRole: currentUser.role,
       reason
     })
 
@@ -615,6 +617,13 @@ function RequirementDetail() {
     setShowLockConfirm(false)
   }
 
+  const handleSendToReview = async () => {
+    await handleStatusChange({
+      status: 'review',
+      successMessage: 'Requirement sent to client review.'
+    })
+  }
+
   return (
     <MainLayout user={currentUser} role={currentUser.role}>
       <div className="req-detail">
@@ -666,6 +675,13 @@ function RequirementDetail() {
               <button className="req-detail__deadline-btn" onClick={openDeadlineModal}>
                 <span className="material-symbols-outlined">calendar_month</span>
                 {requirement.deadline ? `Due: ${formatDateForDisplay(requirement.deadline)}` : 'Set Deadline'}
+              </button>
+            )}
+
+            {canSendToReview && (
+              <button className="req-detail__review-btn" onClick={handleSendToReview}>
+                <span className="material-symbols-outlined">send</span>
+                Send to Review
               </button>
             )}
 

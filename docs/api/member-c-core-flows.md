@@ -29,7 +29,6 @@ Optional query parameters:
   "description": "The system shall export approved requirements as a PDF report.",
   "type": "functional",
   "priority": "medium",
-  "status": "draft",
   "createdBy": {
     "id": "user-1",
     "name": "Abdullah Al-Rashid",
@@ -37,6 +36,8 @@ Optional query parameters:
   }
 }
 ```
+
+New requirements are always created in `draft`.
 
 ### Get requirement detail
 
@@ -70,6 +71,28 @@ Locked requirements return `409 Conflict`.
 `DELETE /requirements/:id`
 
 Archives a non-locked requirement instead of deleting the database record.
+
+### Change requirement status
+
+`PATCH /requirements/:id/status`
+
+```json
+{
+  "status": "review",
+  "actor": {
+    "id": "user-2",
+    "name": "Khalid Hassan",
+    "role": "manager"
+  }
+}
+```
+
+Allowed lifecycle transitions:
+
+- Manager: `draft` -> `review`
+- Client: `review` -> `approved`
+- Client: `review` -> `rejected` with `reason`
+- Manager: `approved` -> `locked`
 
 ## Comments and Clarifications
 
